@@ -139,7 +139,8 @@ section, .iv-foot { position: relative; }
   background:
     radial-gradient(70% 45% at 0% 0%, rgba(0,0,0,.46), transparent 70%), /* taste-skill-ignore: neutral scrim under text on a photo */
     radial-gradient(75% 50% at 100% 100%, rgba(0,0,0,.5), transparent 70%), /* taste-skill-ignore: neutral scrim under text on a photo */
-    linear-gradient(rgba(0,0,0,.12), rgba(0,0,0,.12)); /* taste-skill-ignore: neutral scrim under text on a photo */
+    linear-gradient(90deg, rgba(0,0,0,.42), transparent 66%), /* taste-skill-ignore: neutral scrim under the date and venue line */
+    linear-gradient(rgba(0,0,0,.14), rgba(0,0,0,.14)); /* taste-skill-ignore: neutral scrim under text on a photo */
 }
 .iv-hero-floral { position: absolute; z-index: 0; right: -6vw; top: 18svh; width: min(64vw, 760px); pointer-events: none; }
 .iv-nav { position: absolute; z-index: 4; top: 22px; right: var(--m); display: flex; gap: 22px; font-size: var(--step-small); font-weight: 500; }
@@ -176,7 +177,7 @@ section, .iv-foot { position: relative; }
 .iv-story-pin { position: sticky; top: 14vh; align-self: start; }
 .iv-story-title { font-size: var(--step-big); line-height: 0.88; text-wrap: balance; max-width: 8ch; }
 .iv-story-run { display: flex; flex-direction: column; gap: 18vh; }
-.iv-portrait { width: 62%; }
+.iv-portrait { width: 62%; overflow: clip; }
 .iv-portrait.r { align-self: flex-end; }
 .iv-portrait img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block; }
 .iv-portrait figcaption { margin-top: 16px; max-width: 34ch; }
@@ -334,12 +335,12 @@ details[open] .chev { transform: rotate(-135deg) translateY(-3px); }
 }
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .iv-portrait img { animation: drift linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+    .iv-portrait img { animation: iv-drift linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
   }
 }
 @keyframes line-up { from { transform: translateY(105%); } to { transform: none; } }
 @keyframes settle { from { transform: scale(1.08); } to { transform: none; } }
-@keyframes drift { from { transform: scale(1.06) translateY(-2%); } to { transform: scale(1.06) translateY(2%); } }
+@keyframes iv-drift { from { object-position: 50% 25%; } to { object-position: 50% 75%; } }
 @media (prefers-reduced-motion: reduce) {
   .env, .env-names, .env-date, .env-cta { animation: none !important; }
   .iv-names [data-line] { transform: none !important; animation: none !important; }

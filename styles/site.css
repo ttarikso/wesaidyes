@@ -73,8 +73,8 @@
 .live-box img { width: 100%; height: 100%; display: block; }
 .live-initials { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .live-initials text { font-family: inherit; font-weight: 600; font-size: 50px; fill: #3c5a3a; mix-blend-mode: multiply; }
-@media (prefers-reduced-motion: no-preference) { .live-box { animation: drift 24s ease-in-out infinite alternate; } }
-@keyframes drift { from { transform: translate(-50%, -50%) scale(1); } to { transform: translate(-50%, -50%) scale(1.04); } }
+@media (prefers-reduced-motion: no-preference) { .live-box { animation: site-drift 24s ease-in-out infinite alternate; } }
+@keyframes site-drift { from { transform: translate(-50%, -50%) scale(1); } to { transform: translate(-50%, -50%) scale(1.04); } }
 .live-card {
   position: relative; z-index: 1; grid-column: 2; min-height: 52svh; padding: 28px 24px 24px;
   background: var(--ink); color: var(--accent-ink); display: flex; flex-direction: column; gap: 16px;
@@ -124,8 +124,8 @@
 .band-track { display: flex; white-space: nowrap; font-size: 8vw; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
 .band-item { display: inline-flex; align-items: center; }
 .band-dot { display: inline-block; width: 0.22em; height: 0.22em; border-radius: 50%; background: currentColor; margin: 0 0.4em; }
-@media (prefers-reduced-motion: no-preference) { .band-track { animation: marquee 40s linear infinite; } }
-@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: no-preference) { .band-track { animation: site-marquee 40s linear infinite; } }
+@keyframes site-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .band-note { padding: 32px var(--m) 0; max-width: calc(52ch + 2 * var(--m)); font-size: var(--t-lead); line-height: 1.35; }
 @media (max-width: 699px) { .band { height: 22vh; } .band-track { font-size: 15vw; } }
 
@@ -176,8 +176,8 @@
 .faq-q[aria-selected="true"] .dot { background: var(--accent); }
 .faq-inline { display: none; }
 .faq-pane { grid-column: 8 / 13; position: sticky; top: 120px; align-self: start; padding-top: calc(var(--t-head) + 28px); }
-.faq-a { font-size: var(--t-sub); line-height: 1.25; max-width: 26ch; animation: fadein 150ms ease; }
-@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+.faq-a { font-size: var(--t-sub); line-height: 1.25; max-width: 26ch; animation: site-fadein 150ms ease; }
+@keyframes site-fadein { from { opacity: 0; } to { opacity: 1; } }
 @media (max-width: 699px) {
   .qa { padding: 96px var(--m); }
   .faq { display: block; }
@@ -215,8 +215,8 @@
   .js .site [data-reveal] { opacity: 0; transform: translateY(24px); transition: opacity 700ms var(--ease-out), transform 900ms var(--ease-expo); }
   .js .site [data-reveal].is-in { opacity: 1; transform: none; }
   .js .site .live-card[data-reveal] { transition-delay: 80ms; }
-  .h-title { animation: title-in 900ms var(--ease-expo) both 100ms; }
-  .h-lead, .site .h-btn { animation: rise 500ms var(--ease-out) both 420ms; }
+  .h-title { animation: site-title-in 900ms var(--ease-expo) both 100ms; }
+  .h-lead, .site .h-btn { animation: site-rise 500ms var(--ease-out) both 420ms; }
 }
-@keyframes title-in { from { opacity: 0; transform: translateY(0.25em); } to { opacity: 1; transform: none; } }
-@keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes site-title-in { from { opacity: 0; transform: translateY(0.25em); } to { opacity: 1; transform: none; } }
+@keyframes site-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
