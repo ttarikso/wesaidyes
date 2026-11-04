@@ -9,9 +9,9 @@ import { FaqIndex, HeroInk, LiveNames, Reveal, SongList } from "@/components/sit
 const PAPER = "#f7f9f8";
 const RUN: { id: string; ground: string; ink: string; caption: string }[] = [
   { id: "dusty-blue", ground: "#485e75", ink: PAPER, caption: "Dusty Blue & Silver, with eucalyptus and a silver laurel seal" },
+  { id: "emerald-gold", ground: "#1a4436", ink: "#ecdcae", caption: "Emerald & Gold, with white orchids and gold-leaf ferns" },
   { id: "blush-peony", ground: "#d1ada6", ink: "#3f1f22", caption: "Blush Peony, with peonies and a rose-gold seal" },
-  { id: "midnight-gold", ground: "#12213f", ink: PAPER, caption: "Midnight & Gold, with gold leaf, magnolia and stars" },
-  { id: "olive-grove", ground: "#4b572c", ink: PAPER, caption: "Olive Grove, with white garden roses and olive branches" },
+  { id: "plum-gold", ground: "#372031", ink: "#ecdcc0", caption: "Plum & Gold, with dark dahlias, blackberries and a gold seal" },
   { id: "black-tie", ground: "#191919", ink: PAPER, caption: "Black Tie, with calla lilies on black" },
 ];
 
@@ -113,7 +113,7 @@ export default function Home() {
 
       {/* 4. The designs, by name, running off the edges */}
       <section aria-labelledby="band-h">
-        <h2 id="band-h" className="sr-only">The eight designs</h2>
+        <h2 id="band-h" className="sr-only">The twenty designs</h2>
         <div className="band">
           <div className="band-track" aria-hidden>
             {[0, 1].map((k) => (
@@ -124,7 +124,7 @@ export default function Home() {
           </div>
         </div>
         <p className="band-note" data-reveal>
-          Eight designs, each with its own paper, wax seal, flowers and typefaces: {THEMES.map((t) => t.name).join(", ")}. Switch any time; your words and photos stay.
+          Twenty designs, each with its own paper, wax seal, flowers and typefaces: {THEMES.map((t) => t.name).join(", ")}. Switch any time; your words and photos stay.
         </p>
       </section>
 

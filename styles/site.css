@@ -124,7 +124,7 @@
 .band-track { display: flex; white-space: nowrap; font-size: 8vw; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
 .band-item { display: inline-flex; align-items: center; }
 .band-dot { display: inline-block; width: 0.22em; height: 0.22em; border-radius: 50%; background: currentColor; margin: 0 0.4em; }
-@media (prefers-reduced-motion: no-preference) { .band-track { animation: site-marquee 40s linear infinite; } }
+@media (prefers-reduced-motion: no-preference) { .band-track { animation: site-marquee 110s linear infinite; } }
 @keyframes site-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .band-note { padding: 32px var(--m) 0; max-width: calc(52ch + 2 * var(--m)); font-size: var(--t-lead); line-height: 1.35; }
 @media (max-width: 699px) { .band { height: 22vh; } .band-track { font-size: 15vw; } }

@@ -68,7 +68,13 @@ const T = {
     id: "bodoni-jost", display: '"Bodoni Moda Variable", Didot, Georgia, serif', displayWeight: 500, displayTrack: "-0.02em", displayLead: 0.95,
     upper: true, connectorItalic: false, sealWeight: 500, text: '"Jost Variable", "Helvetica Neue", Arial, sans-serif', textTrack: "0.01em", bodyLead: 1.6, monumentMax: 12,
   },
+  erode: {
+    id: "erode-sharp", display: '"Erode", Georgia, serif', displayWeight: 500, displayTrack: "-0.025em", displayLead: 0.95,
+    upper: false, connectorItalic: false, sealWeight: 500, text: '"Erode", Georgia, serif', textTrack: "0", bodyLead: 1.5, monumentMax: 14,
+  },
 } satisfies Record<string, TypeSystem>;
+
+const GOLD_INK = "rgba(92,64,10,.88)";
 
 export const THEMES: Theme[] = [
   { id: "dusty-blue", name: "Dusty Blue & Silver", mood: "Eucalyptus and a silver laurel seal", art: "blue",
@@ -87,6 +93,31 @@ export const THEMES: Theme[] = [
     bg: "#b7a6cf", onBg: "#2c2342", onBgSoft: "#3f3458", card: "#f2f0f5", ink: "#2c2342", accent: "#5a4780", sealInk: "rgba(66,48,98,.82)", type: T.imbue },
   { id: "black-tie", name: "Black Tie", mood: "Calla lilies on black", art: "noir",
     bg: "#151515", onBg: "#f1f1ef", onBgSoft: "#cfcfcb", card: "#f0f0ee", ink: "#151515", accent: "#151515", sealInk: "rgba(225,225,225,.82)", type: T.bodoni },
+  // the luxury collection: jewel tones, metallic wax and soft neutrals
+  { id: "emerald-gold", name: "Emerald & Gold", mood: "White orchids and gold-leaf ferns", art: "emerald",
+    bg: "#1e4a3b", onBg: "#ecdcae", onBgSoft: "#d9caa1", card: "#eef1ee", ink: "#15352a", accent: "#6f5418", sealInk: GOLD_INK, type: T.bodoni },
+  { id: "ivory-pearl", name: "Ivory Pearl", mood: "White roses, lily of the valley and a pearl seal", art: "pearl",
+    bg: "#ebe5d9", onBg: "#3a3226", onBgSoft: "#574c3c", card: "#f6f3ee", ink: "#3a3226", accent: "#7d5f2a", sealInk: "rgba(120,108,92,.8)", type: T.erode },
+  { id: "champagne-gold", name: "Champagne & Gold", mood: "Cream ranunculus and gilded eucalyptus", art: "champagne",
+    bg: "#d6c3a1", onBg: "#3b2d1a", onBgSoft: "#4e3e29", card: "#f5f1ea", ink: "#3b2d1a", accent: "#7a5618", sealInk: "rgba(110,78,30,.85)", type: T.imbue },
+  { id: "marble-gold", name: "Marble & Gold", mood: "White tulips on Carrara marble", art: "marble",
+    bg: "#e9e8e5", onBg: "#2a2a2a", onBgSoft: "#474744", card: "#f4f3f1", ink: "#2a2a2a", accent: "#7b5d1a", sealInk: GOLD_INK, type: T.zodiak },
+  { id: "plum-gold", name: "Plum & Gold", mood: "Dark dahlias, blackberries and gold", art: "plum",
+    bg: "#3c2237", onBg: "#ecdcc0", onBgSoft: "#dccab0", card: "#f3eff2", ink: "#2e1a29", accent: "#6e3c62", sealInk: GOLD_INK, type: T.gambarino },
+  { id: "mocha-cream", name: "Mocha & Cream", mood: "Café-au-lait roses and a bronze seal", art: "mocha",
+    bg: "#4a3226", onBg: "#f3e9dc", onBgSoft: "#e3d3c0", card: "#f4efea", ink: "#3a281d", accent: "#74492a", sealInk: "rgba(70,34,14,.85)", type: T.sentient },
+  { id: "slate-silver", name: "Slate & Silver", mood: "White anemones and dusty miller", art: "slate",
+    bg: "#4b5159", onBg: "#f1f2f3", onBgSoft: "#dde0e3", card: "#eff0f2", ink: "#262a30", accent: "#4b5159", sealInk: "rgba(50,54,60,.8)", type: T.erode },
+  { id: "peacock-gold", name: "Peacock & Gold", mood: "Peacock feathers and white roses", art: "peacock",
+    bg: "#0f4448", onBg: "#ead9a8", onBgSoft: "#d7c89f", card: "#edf2f1", ink: "#0d3236", accent: "#0f5a60", sealInk: GOLD_INK, type: T.zodiak },
+  { id: "ice-blue", name: "Ice Blue & Silver", mood: "White roses and frosted leaves", art: "ice",
+    bg: "#cfdbe3", onBg: "#22344a", onBgSoft: "#33465c", card: "#f1f4f7", ink: "#22344a", accent: "#3f6083", sealInk: "rgba(64,86,110,.8)", type: T.newsreader },
+  { id: "ivory-noir", name: "Ivory & Noir", mood: "White peonies and black wax", art: "ivorynoir",
+    bg: "#efebe3", onBg: "#151515", onBgSoft: "#3a3a37", card: "#f7f5f1", ink: "#151515", accent: "#151515", sealInk: "rgba(230,230,228,.85)", type: T.bodoni },
+  { id: "sage-gold", name: "Sage & Gold", mood: "Ivory roses and eucalyptus", art: "sage",
+    bg: "#8e9b85", onBg: "#121a10", onBgSoft: "#1d271b", card: "#f1f3ef", ink: "#2a3326", accent: "#4f6045", sealInk: GOLD_INK, type: T.boska },
+  { id: "dusty-mauve", name: "Dusty Mauve", mood: "Mauve roses and a rose-gold seal", art: "mauve",
+    bg: "#7d5e6b", onBg: "#fbf6f8", onBgSoft: "#f6edf1", card: "#f5f1f3", ink: "#3e2a32", accent: "#7d4f62", sealInk: "rgba(110,52,46,.8)", type: T.imbue },
 ];
 
 export const DEFAULT_THEME = THEMES[0].id;
