@@ -128,7 +128,9 @@ export function getTheme(id: string | undefined): Theme {
 
 export function themeAssets(t: Theme) {
   return {
-    paper: `/themes/${t.art}-paper.webp`,
+    paper: `/themes/${t.art}-paper.webp`, // 1000px, for small previews
+    paperM: `/themes/${t.art}-paper-m.webp`, // 2400 x 3600, phones and tablets
+    paperD: `/themes/${t.art}-paper-4k.webp`, // 3600 x 5400, desktop and retina screens
     seal: `/themes/${t.art}-seal.webp`,
     floral: `/themes/${t.art}-floral.webp`,
     card: `/themes/ivory-paper.webp`,
@@ -146,7 +148,8 @@ export function themeVars(t: Theme): React.CSSProperties {
     ["--ink" as string]: t.ink,
     ["--accent" as string]: t.accent,
     ["--seal-ink" as string]: t.sealInk,
-    ["--paper-img" as string]: `url(${a.paper})`,
+    ["--paper-m" as string]: `url(${a.paperM})`,
+    ["--paper-d" as string]: `url(${a.paperD})`,
     ["--paper-tone" as string]: t.paperTone || "#ffffff",
     ["--f-display" as string]: y.display,
     ["--f-text" as string]: y.text,

@@ -36,6 +36,9 @@
 .inv .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* grounds: the coloured paper, the ivory sheet (one tone step), and the inverse */
+/* the paper texture: a phone-sized file on small screens, the 4K file where a section is wide and the screen dense */
+.inv { --paper-img: var(--paper-m); }
+@media (min-width: 900px) { .inv { --paper-img: var(--paper-d); } }
 .g-paper { background: var(--paper-img) center / cover var(--paper-tone); background-blend-mode: multiply; color: var(--on-bg); --soft: var(--on-bg-soft); --fill: var(--on-bg); --fill-ink: var(--bg); --tone: color-mix(in srgb, var(--on-bg) 9%, var(--bg)); }
 .g-sheet { background: var(--card); color: var(--ink); --soft: color-mix(in srgb, var(--ink) 78%, var(--card)); --fill: var(--accent); --fill-ink: var(--card); --tone: color-mix(in srgb, var(--ink) 6%, var(--card)); }
 .g-inverse { background: var(--on-bg); color: var(--bg); --soft: color-mix(in srgb, var(--bg) 82%, var(--on-bg)); --fill: var(--bg); --fill-ink: var(--on-bg); --tone: color-mix(in srgb, var(--bg) 8%, var(--on-bg)); }
