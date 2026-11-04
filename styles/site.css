@@ -43,6 +43,7 @@
 .h-mark { text-decoration: none; }
 .h-links { display: flex; gap: 24px; font-weight: 500; }
 .h-links a { text-decoration: none; }
+.h-links .h-buy { text-decoration: underline; text-decoration-thickness: 0.08em; text-underline-offset: 0.22em; }
 @media (hover: hover) { .h-links a:hover, .h-mark:hover { text-decoration: underline; text-underline-offset: 0.2em; } }
 .h-title {
   position: absolute; left: 0; right: 0; top: var(--title-top); text-align: center;
@@ -62,7 +63,8 @@
 .h-panel figcaption { position: absolute; right: var(--m); bottom: 112px; max-width: 18ch; text-align: right; font-size: var(--t-small); font-weight: 500; line-height: 1.4; }
 @media (max-width: 699px) {
   .site { --title-top: 60px; --t-display: 15vw; --title-h: calc(15vw * 0.88 * 2); }
-  .h-links a:not(:last-child) { display: none; }
+  .h-links a:not(.keep) { display: none; }
+  .h-links { gap: 18px; }
   .h-title { font-size: 15vw; white-space: normal; line-height: 0.88; padding: 0 var(--m); text-align: left; }
   .h-lead { bottom: 88px; right: var(--m); max-width: none; }
   .site .h-btn { bottom: 20px; right: var(--m); height: 48px; padding: 0 20px; z-index: 1; }

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Invitation from "@/components/Invitation";
 import { demoInvite } from "@/lib/demo";
 import { THEMES } from "@/lib/themes";
+import Link from "next/link";
 import { BRAND } from "@/lib/brand";
 
 export default function Demo() {
@@ -23,13 +24,16 @@ export default function Demo() {
   return (
     <>
       <Invitation key={nonce} data={data} theme={theme} music="first-light" slug="demo" mode="preview" startOpen={skip} />
-      {!bare && <div className="demo-bar fixed z-50 flex items-center gap-2 bg-[#f7f9f8] text-[#06525c] px-2 py-1.5 text-[14px] left-0 right-0 top-0 h-12 sm:justify-end" style={{ fontFamily: "var(--f-sans)" }}>
-        <span className="pl-2 font-semibold hidden sm:inline sm:mr-auto">Live demo: this is what your guests receive</span>
-        <select aria-label="Theme" value={theme} onChange={(e) => { setTheme(e.target.value); setNonce((n) => n + 1); }} className="flex-1 sm:flex-none bg-[#ebf0ee] px-3 py-2 text-[#06525c]">
+      {!bare && <nav aria-label="Demo" className="demo-bar fixed z-50 flex items-center gap-2 sm:gap-3 bg-[#f7f9f8] text-[#06525c] px-2 py-1.5 text-[14px] left-0 right-0 top-0 h-12" style={{ fontFamily: "var(--f-sans)" }}>
+        <Link href="/" className="pl-2 pr-1 font-semibold no-underline whitespace-nowrap hover:underline underline-offset-4" aria-label="We said yes, back to the homepage">
+          <span aria-hidden className="mr-1.5">&larr;</span>We said yes
+        </Link>
+        <span className="text-[#2f737d] hidden md:inline md:mr-auto">Live demo: this is what your guests receive</span>
+        <select aria-label="Theme" value={theme} onChange={(e) => { setTheme(e.target.value); setNonce((n) => n + 1); }} className="min-w-0 flex-1 md:flex-none bg-[#ebf0ee] px-3 py-2 text-[#06525c]">
           {THEMES.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
-        <a href={BRAND.etsy} className="bg-[#06525c] text-[#f7f9f8] px-4 py-2 font-semibold no-underline whitespace-nowrap">Get yours</a>
-      </div>}
+        <a href={BRAND.etsy} target="_blank" rel="noopener" className="bg-[#06525c] text-[#f7f9f8] px-4 py-2 font-semibold no-underline whitespace-nowrap">Buy on Etsy</a>
+      </nav>}
       {!bare && <style>{`@media (max-width: 639px) { .inv .iv-music { top: 60px; } }
         .inv-main { padding-top: 48px; } .inv .iv-hero { min-height: calc(100svh - 48px); }`}</style>}
     </>

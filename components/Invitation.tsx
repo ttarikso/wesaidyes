@@ -18,6 +18,9 @@ interface Props {
   startOpen?: boolean;
 }
 
+// how much each print in the story album is turned, in order; never the same twice in a row
+const ALBUM_TILT = [-2.4, 1.8, -1.2, 2.6, -1.8, 1.2];
+
 const useIso = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 export default function Invitation({ data, theme, music, slug, mode = "live", startOpen = false }: Props) {
@@ -267,7 +270,7 @@ function Page({ data, floral, slug, mode, open, music }: { data: InviteData; flo
         </div>
       </section>
 
-      {/* STORY: pinned title, portraits pass */}
+      {/* STORY: pinned title; the photos are prints mounted in an album, each laid down as it scrolls in */}
       {s.story && (data.storyText || storyPhotos.length > 0) && (
         storyPhotos.length > 0 ? (
           <section className="iv-story g-paper" id="story">
@@ -276,9 +279,14 @@ function Page({ data, floral, slug, mode, open, music }: { data: InviteData; flo
             </div>
             <div className="iv-story-run">
               {storyPhotos.map((p, i) => (
-                <figure className={`iv-portrait ${i % 2 ? "r" : "l"}`} key={p + i} data-reveal>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p} alt="" loading="lazy" width={800} height={1000} />
+                <figure className={`iv-portrait ${i % 2 ? "r" : "l"}`} key={p + i} data-reveal style={{ ["--rot" as string]: `${ALBUM_TILT[i % ALBUM_TILT.length]}deg` }}>
+                  <div className="iv-print">
+                    <div className="iv-print-photo">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={p} alt="" loading="lazy" width={800} height={1000} />
+                    </div>
+                    <i className="iv-corner tl" aria-hidden /><i className="iv-corner tr" aria-hidden /><i className="iv-corner bl" aria-hidden /><i className="iv-corner br" aria-hidden />
+                  </div>
                   {storyParts[i] && <figcaption>{storyParts[i]}</figcaption>}
                 </figure>
               ))}

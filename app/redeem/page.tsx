@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { setKey } from "@/lib/client";
+import Link from "next/link";
 import { Logo } from "@/components/Brand";
 import { BRAND } from "@/lib/brand";
 
@@ -38,7 +39,11 @@ export default function Redeem() {
 
   return (
     <div className="studio flex flex-col">
-      <header className="s-top"><Logo height={26} /></header>
+      <header className="s-top">
+        <Logo height={26} />
+        <Link href="/demo" className="s-btn-text ml-auto text-[14px]">See the demo</Link>
+        <a href={BRAND.etsy} target="_blank" rel="noopener" className="s-btn s-btn-primary text-[14px]">Buy on Etsy</a>
+      </header>
       <main className="flex-1 grid place-items-center px-5 pb-16">
         <form onSubmit={submit} className="s-sheet w-full max-w-md p-6 space-y-5">
           <div className="flex rounded-full border border-[var(--control)] p-0.5">

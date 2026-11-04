@@ -14,6 +14,8 @@
   --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
   --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
   --step-head: clamp(2rem, 1.3rem + 3.2vw, 4rem);
+  --step-statement: clamp(1.5rem, 1.1rem + 1.6vw, 2.375rem);
+  --step-big: clamp(3.25rem, 1.4rem + 6.4vw, 8rem);
   --open-delay: 2.2s;
   position: relative;
   min-height: 100dvh;
@@ -181,17 +183,33 @@ section, .iv-foot { position: relative; }
 .iv-story-pin { position: sticky; top: 14vh; align-self: start; }
 .iv-story-title { font-size: var(--step-big); line-height: 0.88; text-wrap: balance; max-width: 8ch; }
 .iv-story-run { display: flex; flex-direction: column; gap: 18vh; }
-.iv-portrait { width: 62%; overflow: clip; }
+/* each photo is a print mounted on the album page with four paper corners */
+.iv-portrait { width: 62%; --tilt: var(--rot, 0deg); --corner: color-mix(in srgb, var(--bg) 45%, #17130f); }
 .iv-portrait.r { align-self: flex-end; }
-.iv-portrait img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block; }
-.iv-portrait figcaption { margin-top: 16px; max-width: 34ch; }
+.iv-print { position: relative; padding: 3.4%; background: #fbf8f1; transform: rotate(var(--tilt));
+  box-shadow: 0 1px 1px rgba(0,0,0,.14), 0 2px 4px rgba(0,0,0,.10), 0 18px 34px -14px rgba(0,0,0,.45); }
+.iv-print-photo { overflow: clip; }
+.iv-print-photo img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block; }
+.iv-corner { --s: clamp(26px, 3.4vw, 46px); position: absolute; width: var(--s); height: var(--s); background: var(--corner); opacity: .92; pointer-events: none;
+  background-image: linear-gradient(135deg, rgba(255,255,255,.16), transparent 60%); }
+.iv-corner.tl { left: -5px; top: -5px; clip-path: polygon(0 0, 100% 0, 0 100%); }
+.iv-corner.tr { right: -5px; top: -5px; clip-path: polygon(0 0, 100% 0, 100% 100%); }
+.iv-corner.bl { left: -5px; bottom: -5px; clip-path: polygon(0 0, 100% 100%, 0 100%); }
+.iv-corner.br { right: -5px; bottom: -5px; clip-path: polygon(100% 0, 100% 100%, 0 100%); }
+.iv-portrait figcaption { margin-top: 26px; max-width: 30ch; font-family: var(--f-display); font-style: italic; font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem); line-height: 1.35; letter-spacing: 0; text-transform: none; text-wrap: pretty; }
+.iv-portrait.r figcaption { margin-left: auto; text-align: right; }
+@media (hover: hover) and (pointer: fine) {
+  .iv-print { transition: transform 0.6s var(--ease-out), box-shadow 0.6s var(--ease-out); }
+  .iv-portrait.is-in .iv-print:hover, .js .iv-portrait[data-reveal].is-in > .iv-print:hover { transform: rotate(0deg) translateY(-6px) scale(1.015); box-shadow: 0 1px 1px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.10), 0 34px 50px -18px rgba(0,0,0,.5); }
+}
 .iv-story-plain { padding: clamp(80px, 12vw, 180px) var(--m); display: grid; grid-template-columns: 5fr 7fr; gap: clamp(32px, 6vw, 120px); }
 @media (max-width: 699px) {
   .iv-story { grid-template-columns: 1fr; row-gap: 40px; }
   .iv-story-pin { position: static; }
   .iv-story-title { font-size: 15vw; max-width: none; }
   .iv-story-run { gap: 48px; }
-  .iv-portrait, .iv-portrait.r { width: 78%; }
+  .iv-portrait, .iv-portrait.r { width: 80%; }
+  .iv-portrait { --tilt: calc(var(--rot, 0deg) * 0.7); }
   .iv-story-plain { grid-template-columns: 1fr; }
 }
 
@@ -335,11 +353,22 @@ details[open] .chev { transform: rotate(-135deg) translateY(-3px); }
   .js .iv-names [data-line] { transform: translateY(105%); }
   .js [data-reveal] > * { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ease-out), transform 0.9s var(--ease-expo); transition-delay: calc(var(--i, 0) * 80ms); }
   .js [data-reveal].is-in > * { opacity: 1; transform: none; }
+  .js .iv-portrait[data-reveal] > .iv-print { opacity: 0; transform: translateY(70px) rotate(calc(var(--tilt) * -2.5)) scale(1.06);
+    box-shadow: 0 2px 4px rgba(0,0,0,.10), 0 60px 70px -20px rgba(0,0,0,.35);
+    transition: opacity 0.5s var(--ease-out), transform 1.25s var(--ease-expo), box-shadow 1.25s var(--ease-expo); }
+  .js .iv-portrait[data-reveal].is-in > .iv-print { opacity: 1; transform: rotate(var(--tilt));
+    box-shadow: 0 1px 1px rgba(0,0,0,.14), 0 2px 4px rgba(0,0,0,.10), 0 18px 34px -14px rgba(0,0,0,.45); }
+  .js .iv-portrait[data-reveal] .iv-corner { opacity: 0; transform: scale(1.6); transition: opacity 0.3s ease, transform 0.45s var(--ease-out); }
+  .js .iv-portrait[data-reveal].is-in .iv-corner { opacity: 1; transform: none; transition-delay: 0.75s; }
+  .js .iv-portrait[data-reveal].is-in .iv-corner.tr { transition-delay: 0.83s; }
+  .js .iv-portrait[data-reveal].is-in .iv-corner.bl { transition-delay: 0.91s; }
+  .js .iv-portrait[data-reveal].is-in .iv-corner.br { transition-delay: 0.99s; }
+  .js .iv-portrait[data-reveal] > figcaption { transition-delay: 0.55s; }
   .js .iv-hero-pic img { will-change: transform; }
 }
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .iv-portrait img { animation: iv-drift linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+    .iv-print-photo img { animation: iv-drift linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
   }
 }
 @keyframes line-up { from { transform: translateY(105%); } to { transform: none; } }

@@ -55,7 +55,8 @@ export default function Home() {
               <a href="#designs">Designs</a>
               <a href="#songs">Songs</a>
               <a href="#questions">Questions</a>
-              <Link href="/redeem">Sign in</Link>
+              <Link href="/redeem" className="keep">Sign in</Link>
+              <a href={BRAND.etsy} className="keep h-buy">Buy on Etsy</a>
             </span>
           </nav>
           <h1 className="h-title">We said yes</h1>
