@@ -26,6 +26,9 @@
   line-height: var(--body-lead);
   letter-spacing: var(--text-track);
   font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   overflow-x: clip;
 }
 .inv *, .inv *::before, .inv *::after { box-sizing: border-box; }
@@ -100,11 +103,20 @@
 }
 .env-letter {
   position: absolute; z-index: 2; left: 6%; right: 6%; top: 7%; bottom: 5%;
-  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 4%;
-  padding: 10% 6% 0; background: var(--card); color: var(--ink);
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3%;
+  padding: 8% 6% 0; background: var(--card); color: var(--ink);
 }
 .env-letter-names { font-size: calc(var(--w) * 0.075); line-height: 1; }
 .env-letter-date { font-size: calc(var(--w) * 0.032); }
+.env-letter-heart {
+  width: calc(var(--w) * 0.44);
+  max-width: 175px;
+  height: auto;
+  color: #df444c;
+  display: block;
+  margin-top: calc(var(--w) * 0.012);
+  opacity: 0.95;
+}
 .env-seal { position: absolute; z-index: 6; left: 50%; top: 57%; width: 27%; aspect-ratio: 1; transform: translate(-50%, -50%); display: grid; place-items: center; transition: transform 0.3s var(--ease-out); }
 .env:hover .env-seal { transform: translate(-50%, -50%) scale(1.04); }
 .env-seal img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; user-select: none; }
@@ -172,8 +184,8 @@ section, .iv-foot { position: relative; }
 
 /* intro: the invitation wording, and the live countdown beside it */
 .iv-intro { display: grid; grid-template-columns: 7fr 5fr; gap: clamp(32px, 6vw, 120px); align-items: end; padding: clamp(80px, 12vw, 180px) var(--m); }
-.iv-statement { font-size: var(--step-statement); line-height: 1.2; max-width: 32ch; text-transform: none; text-wrap: balance; }
-.iv-days { font-size: var(--step-head); line-height: 1; }
+.iv-statement { font-size: var(--step-statement); line-height: 1.25; max-width: 32ch; text-transform: none; text-wrap: balance; font-weight: max(var(--display-weight), 400); }
+.iv-days { font-size: var(--step-head); line-height: 1; font-weight: max(var(--display-weight), 500); }
 .iv-ticks { margin-top: 12px !important; font-variant-numeric: tabular-nums; }
 .iv-countdown .iv-soft { margin-top: 18px !important; }
 .iv-row-actions { display: flex; gap: 24px; margin-top: 28px; }

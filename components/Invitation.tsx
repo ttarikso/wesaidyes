@@ -5,6 +5,7 @@ import { getTheme, themeAssets, themeVars } from "@/lib/themes";
 import { getTrack, trackUrl } from "@/lib/music";
 import { dateParts, fmtTime, icsFile, parseWhen } from "@/lib/format";
 import { RsvpForm } from "./RsvpForm";
+import { HeartRibbon } from "./HeartRibbon";
 
 export type InviteMode = "live" | "preview";
 
@@ -115,6 +116,7 @@ function Envelope({ data, seal, floral, onOpen, opening }: { data: InviteData; s
           <span className="env-letter">
             <span className="env-letter-names">{data.partner1} <i>&amp;</i> {data.partner2}</span>
             {dp && <span className="env-letter-date">{dp.short}</span>}
+            <HeartRibbon className="env-letter-heart" />
           </span>
           <span className="env-front" />
           <span className="env-flap" />

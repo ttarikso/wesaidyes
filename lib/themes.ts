@@ -37,15 +37,15 @@ export interface Theme {
 
 const T = {
   newsreader: {
-    id: "newsreader-light", display: '"Newsreader Variable", Georgia, serif', displayWeight: 300, displayTrack: "-0.05em", displayLead: 0.9,
+    id: "newsreader-light", display: '"Newsreader Variable", Georgia, serif', displayWeight: 420, displayTrack: "-0.025em", displayLead: 0.95,
     upper: false, connectorItalic: false, sealWeight: 400, text: '"Newsreader Variable", Georgia, serif', textTrack: "0", bodyLead: 1.6, monumentMax: 14,
   },
   sentient: {
-    id: "sentient-light", display: '"Sentient", Georgia, serif', displayWeight: 300, displayTrack: "-0.015em", displayLead: 1.0,
+    id: "sentient-light", display: '"Sentient", Georgia, serif', displayWeight: 450, displayTrack: "-0.01em", displayLead: 1.0,
     upper: false, connectorItalic: false, sealWeight: 400, text: '"Sentient", Georgia, serif', textTrack: "0", bodyLead: 1.55, monumentMax: 12,
   },
   boska: {
-    id: "boska-roman-italic", display: '"Boska", Georgia, serif', displayWeight: 400, displayTrack: "-0.02em", displayLead: 0.95,
+    id: "boska-roman-italic", display: '"Boska", Georgia, serif', displayWeight: 450, displayTrack: "-0.015em", displayLead: 0.95,
     upper: false, connectorItalic: true, sealWeight: 500, text: '"Boska", Georgia, serif', textTrack: "0.005em", bodyLead: 1.5, monumentMax: 14,
   },
   bricolage: {
@@ -53,19 +53,19 @@ const T = {
     upper: false, connectorItalic: false, sealWeight: 600, text: '"Bricolage Grotesque Variable", "Helvetica Neue", Arial, sans-serif', textTrack: "0", bodyLead: 1.5, monumentMax: 13,
   },
   zodiak: {
-    id: "zodiak-hairline", display: '"Zodiak", Georgia, serif', displayWeight: 100, displayTrack: "-0.01em", displayLead: 1.0,
-    upper: true, connectorItalic: false, sealWeight: 300, text: '"Hanken Grotesk Variable", "Helvetica Neue", Arial, sans-serif', textTrack: "0", bodyLead: 1.5, monumentMax: 11,
+    id: "zodiak-hairline", display: '"Zodiak", Georgia, serif', displayWeight: 300, displayTrack: "0", displayLead: 1.0,
+    upper: true, connectorItalic: false, sealWeight: 400, text: '"Hanken Grotesk Variable", "Helvetica Neue", Arial, sans-serif', textTrack: "0", bodyLead: 1.5, monumentMax: 11,
   },
   gambarino: {
     id: "gambarino-general", display: '"Gambarino", Georgia, serif', displayWeight: 400, displayTrack: "-0.02em", displayLead: 0.92,
     upper: false, connectorItalic: false, sealWeight: 400, text: '"General Sans", "Helvetica Neue", Arial, sans-serif', textTrack: "0", bodyLead: 1.5, monumentMax: 15,
   },
   imbue: {
-    id: "imbue-albert", display: '"Imbue Variable", Georgia, serif', displayWeight: 400, displayTrack: "-0.01em", displayLead: 0.9,
+    id: "imbue-albert", display: '"Imbue Variable", Georgia, serif', displayWeight: 500, displayTrack: "-0.01em", displayLead: 0.92,
     upper: true, connectorItalic: false, sealWeight: 500, text: '"Albert Sans Variable", "Helvetica Neue", Arial, sans-serif', textTrack: "0", bodyLead: 1.55, monumentMax: 15,
   },
   bodoni: {
-    id: "bodoni-jost", display: '"Bodoni Moda Variable", Didot, Georgia, serif', displayWeight: 500, displayTrack: "-0.02em", displayLead: 0.95,
+    id: "bodoni-jost", display: '"Bodoni Moda Variable", Didot, Georgia, serif', displayWeight: 600, displayTrack: "-0.01em", displayLead: 0.95,
     upper: true, connectorItalic: false, sealWeight: 500, text: '"Jost Variable", "Helvetica Neue", Arial, sans-serif', textTrack: "0.01em", bodyLead: 1.6, monumentMax: 12,
   },
   erode: {
