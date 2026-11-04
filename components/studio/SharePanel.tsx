@@ -5,6 +5,7 @@ import type { Invitation } from "@/lib/types";
 import { api } from "@/lib/client";
 import { slugify } from "@/lib/defaults";
 import { Section, Toggle } from "./fields";
+import { DAYS_AFTER_WEDDING, MAX_LIVE_DAYS, endsAt, fmtDay, hasEnded, publishTooEarly } from "@/lib/expiry";
 
 export function SharePanel({ inv, onSaved, beforePublish }: { inv: Invitation; onSaved: (p: Partial<Invitation>) => void; beforePublish: () => Promise<void> }) {
   const [origin, setOrigin] = useState("");
@@ -28,7 +29,7 @@ export function SharePanel({ inv, onSaved, beforePublish }: { inv: Invitation; o
     try {
       await beforePublish();
       const r = await api<{ invite: Invitation }>(`/api/invites/${inv.id}`, { method: "PATCH", body: JSON.stringify(body) });
-      onSaved({ slug: r.invite.slug, published: r.invite.published });
+      onSaved({ slug: r.invite.slug, published: r.invite.published, published_at: r.invite.published_at ?? null });
       setSlug(r.invite.slug);
       setMsg(ok);
     } catch (e) {
@@ -45,6 +46,9 @@ export function SharePanel({ inv, onSaved, beforePublish }: { inv: Invitation; o
 
   const share = encodeURIComponent(`You're invited to the wedding of ${inv.data.partner1} & ${inv.data.partner2}! Open your invitation: ${url}`);
   const clean = slugify(slug);
+  const end = endsAt(inv);
+  const ended = hasEnded(inv);
+  const early = !inv.published_at ? publishTooEarly(inv.data.date) : null;
 
   return (
     <>
@@ -55,6 +59,16 @@ export function SharePanel({ inv, onSaved, beforePublish }: { inv: Invitation; o
           checked={inv.published}
           onChange={(published) => patch({ published }, published ? "Published! Your link is ready to share." : "Unpublished. The link now shows 'not found'.")}
         />
+        {ended && end ? (
+          <p className="s-err">This invitation ended on {fmtDay(end)}. Guests now see a thank-you page, and replies are closed. Your guest list stays here.</p>
+        ) : end ? (
+          <p className="s-hint">Online until <b>{fmtDay(end)}</b>: {DAYS_AFTER_WEDDING} days after your wedding, and at most {MAX_LIVE_DAYS} days after you first published it.</p>
+        ) : (
+          <p className="s-hint">Once published, your invitation stays online until {DAYS_AFTER_WEDDING} days after your wedding, for up to {MAX_LIVE_DAYS} days.</p>
+        )}
+        {early && (
+          <p className="s-err">Your wedding is more than {MAX_LIVE_DAYS} days away. Published today, the invitation would end on {fmtDay(early.endsOn)}, before your wedding. Publish on or after {fmtDay(early.publishFrom)} to keep it online through your day.</p>
+        )}
       </Section>
 
       <Section title="Your link" desc="Choose a short, memorable address. Letters, numbers and dashes only.">

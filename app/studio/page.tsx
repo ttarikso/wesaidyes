@@ -7,6 +7,7 @@ import { api, clearKey, getKey } from "@/lib/client";
 import { dateParts } from "@/lib/format";
 import { getTheme, themeAssets } from "@/lib/themes";
 import { getTrack } from "@/lib/music";
+import { endsAt, fmtDay, hasEnded } from "@/lib/expiry";
 import { Logo } from "@/components/Brand";
 
 type Row = Invitation & { rsvpCount: number };
@@ -73,7 +74,7 @@ export default function Studio() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <h1 className="s-h1">{i.data.partner1} &amp; {i.data.partner2}</h1>
-                    <span className={`s-pill ${i.published ? "s-pill-live" : "s-pill-draft"}`}>{i.published ? "Live" : "Draft"}</span>
+                    <span className={`s-pill ${hasEnded(i) ? "s-pill-no" : i.published ? "s-pill-live" : "s-pill-draft"}`}>{hasEnded(i) ? "Ended" : i.published ? "Live" : "Draft"}</span>
                   </div>
                   <p className="s-sub mt-1">
                     {i.published
@@ -108,6 +109,7 @@ export default function Studio() {
                         <button className="s-btn s-btn-sm shrink-0" onClick={() => copy(url)}>{copied === url ? "Copied" : "Copy"}</button>
                       </span>
                     ) : <span className="text-[var(--muted)]">Appears when you publish</span>],
+                    ["Online until", endsAt(i) ? (hasEnded(i) ? <span className="text-[var(--muted)]">Ended on {fmtDay(endsAt(i)!)}</span> : fmtDay(endsAt(i)!)) : <span className="text-[var(--muted)]">7 days after your wedding, up to 45 days once published</span>],
                     ["Replies", <span key="r" className="num">{i.rsvpCount}</span>],
                     ["Wedding date", dp ? dp.long : <span className="text-[var(--muted)]">–</span>],
                     ["Venue", i.data.venueName || <span className="text-[var(--muted)]">–</span>],

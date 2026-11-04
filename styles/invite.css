@@ -41,7 +41,7 @@
 .g-inverse { background: var(--on-bg); color: var(--bg); --soft: color-mix(in srgb, var(--bg) 82%, var(--on-bg)); --fill: var(--bg); --fill-ink: var(--on-bg); --tone: color-mix(in srgb, var(--bg) 8%, var(--on-bg)); }
 
 /* type roles */
-.inv .iv-h, .iv-day-head, .iv-faq-head, .iv-story-title, .iv-rsvp-head, .iv-days, .iv-statement, .iv-dr, .iv-strip-title, .iv-foot-names, .iv-names, .env-names, .env-letter-names {
+.inv .iv-h, .iv-day-head, .iv-faq-head, .iv-story-title, .iv-rsvp-head, .iv-days, .iv-statement, .iv-dr, .iv-strip-title, .iv-foot-names, .iv-names, .env-names, .env-letter-names, .iv-ended-names {
   font-family: var(--f-display);
   font-weight: var(--display-weight);
   letter-spacing: var(--display-track);
@@ -345,3 +345,11 @@ details[open] .chev { transform: rotate(-135deg) translateY(-3px); }
   .env, .env-names, .env-date, .env-cta { animation: none !important; }
   .iv-names [data-line] { transform: none !important; animation: none !important; }
 }
+
+/* after the end: the names on the couple's paper, a thank-you, nothing to act on */
+.iv-ended { position: relative; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 64px var(--m); overflow: clip; }
+.iv-ended-floral { position: absolute; left: -8vw; bottom: -6vh; width: min(70vw, 640px); pointer-events: none; }
+.iv-ended-names { position: relative; font-size: clamp(2.75rem, 9vw, 7rem); }
+.iv-ended-names .amp { font-size: 0.8em; }
+.iv-ended-date { position: relative; margin-top: 18px !important; font-size: var(--step-lead); color: var(--on-bg-soft); }
+.iv-ended-note { position: relative; margin-top: 40px !important; max-width: 30ch; font-size: var(--step-body); line-height: var(--body-lead); }

@@ -199,6 +199,7 @@ export async function createInvite(license_id: string, data: InviteData): Promis
     theme: DEFAULT_THEME,
     music: "first-light",
     published: false,
+    published_at: null,
     data,
     created_at: t,
     updated_at: t,
@@ -218,7 +219,7 @@ export async function createInvite(license_id: string, data: InviteData): Promis
 export async function updateInvite(
   id: string,
   license_id: string,
-  patch: Partial<Pick<Invitation, "slug" | "theme" | "music" | "published" | "data">>,
+  patch: Partial<Pick<Invitation, "slug" | "theme" | "music" | "published" | "published_at" | "data">>,
 ): Promise<Invitation | null> {
   const p = { ...patch, updated_at: now() };
   const s = supa();
@@ -273,4 +274,15 @@ export async function countRsvps(invitation_id: string): Promise<number> {
     return count || 0;
   }
   return (await readDB()).rsvps.filter((r) => r.invitation_id === invitation_id).length;
+}
+
+/** Every invitation that has ever been published (for the daily clean-up). */
+export async function listEverPublished(): Promise<Invitation[]> {
+  const s = supa();
+  if (s) {
+    const { data } = await s.from("invitations").select("*").not("published_at", "is", null).limit(5000);
+    return (data as Invitation[]) || [];
+  }
+  const db = await readDB();
+  return db.invitations.filter((i) => !!i.published_at);
 }

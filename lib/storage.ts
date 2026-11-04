@@ -23,3 +23,24 @@ export async function savePhoto(license_id: string, bytes: Buffer, type: string)
   await fs.writeFile(path.join(LOCAL_DIR, name), bytes);
   return `/api/files/${name}`;
 }
+
+/** Remove an invitation's own photos from storage. Only paths inside this licence's folder are touched. */
+export async function deletePhotos(license_id: string, urls: string[]): Promise<number> {
+  const s = supa();
+  if (s) {
+    const paths = urls
+      .map((u) => (u.split(`/object/public/${BUCKET}/`)[1] || "").split("?")[0])
+      .filter((p) => p.startsWith(`${license_id}/`));
+    if (!paths.length) return 0;
+    const { data, error } = await s.storage.from(BUCKET).remove(paths);
+    if (error) throw error;
+    return data?.length ?? 0;
+  }
+  let n = 0;
+  for (const u of urls) {
+    const name = path.basename(u.replace(/^\/api\/files\//, ""));
+    if (!u.startsWith("/api/files/") || !name.startsWith(license_id.slice(0, 8))) continue;
+    await fs.unlink(path.join(LOCAL_DIR, name)).then(() => n++).catch(() => {});
+  }
+  return n;
+}

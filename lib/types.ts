@@ -69,6 +69,7 @@ export interface Invitation {
   theme: string;
   music: string; // track id or "none"
   published: boolean;
+  published_at?: string | null; // first publish; the 45-day limit counts from here (lib/expiry.ts)
   data: InviteData;
   created_at: string;
   updated_at: string;

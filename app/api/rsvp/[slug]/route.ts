@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { bad, limited } from "@/lib/auth";
 import { addRsvp, inviteBySlug } from "@/lib/store";
+import { hasEnded } from "@/lib/expiry";
 
 type Ctx = { params: Promise<{ slug: string }> };
 const s = (v: unknown, n: number) => (typeof v === "string" ? v.trim().slice(0, n) : "");
@@ -9,6 +10,7 @@ export async function POST(req: NextRequest, { params }: Ctx) {
   if (limited(req, "rsvp", 30)) return bad("Too many replies from this device. Please try again later.", 429);
   const inv = await inviteBySlug((await params).slug);
   if (!inv || !inv.published || !inv.data.rsvp.enabled) return bad("RSVP is not open for this invitation.", 404);
+  if (hasEnded(inv)) return bad("This invitation has ended, so replies are closed.", 410);
   const r = inv.data.rsvp;
   if (r.deadline && new Date(r.deadline + "T23:59:59") < new Date()) return bad("The RSVP deadline has passed. Please contact the couple directly.");
   const b = await req.json().catch(() => ({}));

@@ -8,6 +8,7 @@ import { TRACKS, trackUrl } from "@/lib/music";
 import { api } from "@/lib/client";
 import { Area, Photos, Section, Text, Toggle, Field } from "./fields";
 import { SharePanel } from "./SharePanel";
+import { hasEnded } from "@/lib/expiry";
 
 const I = {
   theme: "M3 8a5 5 0 0 1 10 0M8 3v10M3 8h10",
@@ -104,7 +105,7 @@ export default function Editor({ initial }: { initial: Invitation }) {
       <header className="flex items-center gap-2 h-12 px-2 lg:px-3 shrink-0">
         <Link href="/studio" className="s-btn s-btn-sm !w-8 !px-0 !border-0 !bg-transparent" aria-label="Back to your invitation"><Icon d={I.back} /></Link>
         <h1 className="text-[16px] leading-6 font-semibold truncate">{d.partner1} &amp; {d.partner2}</h1>
-        <span className={`s-pill ${inv.published ? "s-pill-live" : "s-pill-draft"}`}>{inv.published ? "Live" : "Draft"}</span>
+        <span className={`s-pill ${hasEnded(inv) ? "s-pill-no" : inv.published ? "s-pill-live" : "s-pill-draft"}`}>{hasEnded(inv) ? "Ended" : inv.published ? "Live" : "Draft"}</span>
         <span className="ml-auto text-[12px] text-[var(--muted)] hidden sm:inline" aria-live="polite">
           {save === "saving" ? "Saving…" : save === "dirty" ? "Unsaved changes" : save === "error" ? <button className="s-btn-text !text-[var(--negative)]" onClick={flush}>Not saved. Retry</button> : "Saved"}
         </span>

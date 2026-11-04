@@ -30,6 +30,7 @@ const STEPS = [
 
 const FAQ: [string, string][] = [
   ["Do our guests need an app or an account?", "No. The invitation opens in any phone or computer browser from the link you send."],
+  ["How long does the invitation stay online?", "Until 7 days after your wedding, for up to 45 days from the day you first publish it. Publish within about six weeks of the wedding and it stays online through the day."],
   ["Can we change details after sending the link?", "Yes. Change the time, the venue or anything else, and everyone sees the update on the same link."],
   ["How many guests can reply?", "As many as you invite. There is no limit on guests or replies."],
   ["Can we switch to another design later?", "At any time. Your names, words and photos move to the new design as they are."],

@@ -70,7 +70,13 @@ export function LiveNames() {
 export function SongList() {
   const [playing, setPlaying] = useState<string | null>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
-  useEffect(() => () => audio.current?.pause(), []);
+  useEffect(() => {
+    const stop = () => { if (document.visibilityState === "hidden") { audio.current?.pause(); setPlaying(null); } };
+    const leave = () => { audio.current?.pause(); setPlaying(null); };
+    document.addEventListener("visibilitychange", stop);
+    window.addEventListener("pagehide", leave);
+    return () => { document.removeEventListener("visibilitychange", stop); window.removeEventListener("pagehide", leave); audio.current?.pause(); };
+  }, []);
   function play(id: string) {
     if (!audio.current) audio.current = new Audio();
     const el = audio.current;

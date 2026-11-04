@@ -38,6 +38,27 @@ export default function Invitation({ data, theme, music, slug, mode = "live", st
     if (was && hasMusic) audio.current.play().catch(() => setPlaying(false));
   }, [music, hasMusic]);
 
+  // phones keep an <audio> playing in a background tab or after the page is left: stop it when the page is hidden,
+  // pick it up again when the guest comes back, and stop for good when the invitation goes away
+  useEffect(() => {
+    let resume = false;
+    const hide = () => { const el = audio.current; if (el && !el.paused) { resume = true; el.pause(); setPlaying(false); } };
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") { hide(); return; }
+      const el = audio.current;
+      if (resume && el) { resume = false; el.play().then(() => setPlaying(true)).catch(() => setPlaying(false)); }
+    };
+    const onPageHide = () => { hide(); resume = false; };
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("pagehide", onPageHide);
+    const el = audio.current;
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("pagehide", onPageHide);
+      el?.pause();
+    };
+  }, []);
+
   function open() {
     if (stage !== "closed") return;
     setStage("opening");

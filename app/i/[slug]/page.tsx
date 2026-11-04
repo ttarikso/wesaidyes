@@ -4,6 +4,8 @@ import { inviteBySlug } from "@/lib/store";
 import { dateParts } from "@/lib/format";
 import { getTheme, themeAssets } from "@/lib/themes";
 import Invitation from "@/components/Invitation";
+import InvitationEnded from "@/components/InvitationEnded";
+import { hasEnded } from "@/lib/expiry";
 
 export const dynamic = "force-dynamic";
 type Props = { params: Promise<{ slug: string }> };
@@ -22,5 +24,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const inv = await inviteBySlug((await params).slug);
   if (!inv || !inv.published) notFound();
+  if (hasEnded(inv)) return <InvitationEnded inv={inv} />;
   return <Invitation data={inv.data} theme={inv.theme} music={inv.music} slug={inv.slug} />;
 }

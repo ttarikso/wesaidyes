@@ -27,6 +27,8 @@ export async function PATCH(req: NextRequest, { params }: Ctx) {
   if (typeof b.theme === "string" && THEMES.some((t) => t.id === b.theme)) patch.theme = b.theme;
   if (typeof b.music === "string" && (b.music === "none" || TRACKS.some((t) => t.id === b.music))) patch.music = b.music;
   if (typeof b.published === "boolean") patch.published = b.published;
+  // the 45-day limit starts at the first publish and is never reset by unpublishing
+  if (b.published === true && !cur.published_at) patch.published_at = new Date().toISOString();
   if (typeof b.slug === "string") {
     const s = slugify(b.slug);
     if (s.length < 3) return bad("The link name needs at least 3 letters or numbers.");
