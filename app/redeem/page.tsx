@@ -53,7 +53,7 @@ export default function Redeem() {
             <p className="text-sm text-[var(--s-muted)] mt-1.5">
               {mode === "order"
                 ? "Enter the order number from your Etsy receipt (Purchases & reviews) and your email."
-                : "Enter the EA-XXXX-XXXX-XXXX key from your welcome screen."}
+                : "Enter the WSY-XXXX-XXXX-XXXX key from your welcome screen."}
             </p>
           </div>
           {mode === "order" ? (
@@ -63,7 +63,7 @@ export default function Redeem() {
               <p className="s-hint">Use the same order number and email to sign back in on any device.</p>
             </>
           ) : (
-            <label className="block"><span className="s-label">Access key</span><input className="s-input font-mono uppercase tracking-wider" value={key} onChange={(e) => setK(e.target.value)} placeholder="EA-XXXX-XXXX-XXXX" required /></label>
+            <label className="block"><span className="s-label">Access key</span><input className="s-input font-mono uppercase tracking-wider" value={key} onChange={(e) => setK(e.target.value)} placeholder="WSY-XXXX-XXXX-XXXX" required /></label>
           )}
           {err && <p className="s-err" role="alert">{err}</p>}
           <button className="s-btn s-btn-primary s-btn-lg w-full" disabled={busy}>{busy ? "Checking…" : "Continue"}</button>

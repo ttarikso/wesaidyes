@@ -1,4 +1,4 @@
--- Ever After Invites schema. Run once in the Supabase SQL editor.
+-- We Said Yes schema. Run once in the Supabase SQL editor.
 create extension if not exists pgcrypto;
 
 create table if not exists licenses (

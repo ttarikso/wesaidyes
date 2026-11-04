@@ -35,8 +35,8 @@ export function icsFile(o: { title: string; date: string; time: string; location
     `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}T${String(d.getHours()).padStart(2, "0")}${String(d.getMinutes()).padStart(2, "0")}00`;
   const esc = (s: string) => s.replace(/([,;\\])/g, "\\$1").replace(/\n/g, "\\n");
   return [
-    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Ever After Invites//EN", "BEGIN:VEVENT",
-    `UID:${f(start)}-${Math.random().toString(36).slice(2)}@everafter`,
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//We Said Yes//EN", "BEGIN:VEVENT",
+    `UID:${f(start)}-${Math.random().toString(36).slice(2)}@wesaidyes.site`,
     `DTSTAMP:${f(new Date())}`, `DTSTART:${f(start)}`, `DTEND:${f(end)}`,
     `SUMMARY:${esc(o.title)}`, `LOCATION:${esc(o.location)}`, `DESCRIPTION:${esc(o.description)}`, `URL:${o.url}`,
     "END:VEVENT", "END:VCALENDAR",

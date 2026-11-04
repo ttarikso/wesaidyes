@@ -1,18 +1,18 @@
 "use client";
 /* Browser helpers for the studio: access key storage + fetch wrapper + photo resize. */
-const K = "ea-key";
+const K = "wsy-key";
 export function getKey(): string {
   try { return localStorage.getItem(K) || ""; } catch { return ""; }
 }
 export function setKey(k: string) {
   try { localStorage.setItem(K, k); } catch { /* storage unavailable: key lives for this tab only */ }
-  (globalThis as { __eaKey?: string }).__eaKey = k;
+  (globalThis as { __wsyKey?: string }).__wsyKey = k;
 }
 export function clearKey() {
   try { localStorage.removeItem(K); } catch { /* ignore */ }
 }
 function key() {
-  return getKey() || (globalThis as { __eaKey?: string }).__eaKey || "";
+  return getKey() || (globalThis as { __wsyKey?: string }).__wsyKey || "";
 }
 
 export async function api<T = Record<string, unknown>>(path: string, init: RequestInit = {}): Promise<T> {

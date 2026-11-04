@@ -41,7 +41,7 @@ const ALPHA = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 function code(n: number) {
   return Array.from(randomBytes(n), (x) => ALPHA[x % ALPHA.length]).join("");
 }
-export const newKey = () => `EA-${code(4)}-${code(4)}-${code(4)}`;
+export const newKey = () => `WSY-${code(4)}-${code(4)}-${code(4)}`;
 export const normOrder = (s: string) => String(s || "").replace(/[^0-9A-Za-z]/g, "").toUpperCase();
 const normEmail = (s: string) => String(s || "").trim().toLowerCase();
 const now = () => new Date().toISOString();

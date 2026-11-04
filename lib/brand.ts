@@ -1,7 +1,7 @@
 // Change the product name, shop and links here; everything else reads from this file.
 export const BRAND = {
-  name: "Ever After Invites",
-  short: "Ever After",
+  name: "We Said Yes",
+  short: "We Said Yes",
   tagline: "A digital wedding invitation website with music, countdown and RSVP. Pick a theme, fill in your details, share one link.",
   shop: "DigitarMercato",
   etsy: "https://digitarmercato.etsy.com",
@@ -10,4 +10,4 @@ export const BRAND = {
   invitesPerOrder: Number(process.env.NEXT_PUBLIC_INVITES_PER_ORDER || 1),
 };
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "").replace(/\/$/, "");
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://wesaidyes.site").replace(/\/$/, "");
