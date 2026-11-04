@@ -250,7 +250,7 @@ function CouplePanel({ d, set }: P) {
           <Text label="Second partner" value={d.partner2} max={60} onChange={(partner2) => set({ partner2 })} />
         </div>
         <Text label="Initials on the wax seal" hint="Short works best, e.g. A&J or AJ." value={d.initials} max={8} onChange={(initials) => set({ initials })} />
-        <Photos label="Couple photo (optional)" hint="Shown in an arch frame at the top of your invitation." value={d.heroPhoto ? [d.heroPhoto] : []} max={1} onChange={(v) => set({ heroPhoto: v[0] || "" })} />
+        <Photos label="Couple photo (optional)" hint="Fills the first screen of your invitation, behind your names." value={d.heroPhoto ? [d.heroPhoto] : []} max={1} size={1800} onChange={(v) => set({ heroPhoto: v[0] || "" })} />
       </Section>
       <Section title="Date & time">
         <div className="grid grid-cols-2 gap-3">
@@ -287,7 +287,7 @@ function StoryPanel({ d, set }: P) {
           <>
             <Text label="Title" value={d.storyTitle} max={60} onChange={(storyTitle) => set({ storyTitle })} />
             <Area label="Your story" rows={6} value={d.storyText} max={1500} onChange={(storyText) => set({ storyText })} />
-            <Photos label="Story photos (up to 3)" value={d.storyPhotos} max={3} onChange={(storyPhotos) => set({ storyPhotos })} hint="Shown as polaroids above your story." />
+            <Photos label="Story photos (up to 3)" value={d.storyPhotos} max={3} onChange={(storyPhotos) => set({ storyPhotos })} hint="Shown beside your story as you scroll." />
           </>
         )}
       </Section>

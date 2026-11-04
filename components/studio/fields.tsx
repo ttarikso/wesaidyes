@@ -57,7 +57,7 @@ export function Section({ title, desc, children }: { title: string; desc?: strin
 }
 
 /** One or more photos with upload, reorder (left/right) and remove. */
-export function Photos({ value, onChange, max, label, hint }: { value: string[]; onChange: (v: string[]) => void; max: number; label: string; hint?: string }) {
+export function Photos({ value, onChange, max, label, hint, size = 1200 }: { value: string[]; onChange: (v: string[]) => void; max: number; label: string; hint?: string; size?: number }) {
   const input = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(0);
   const [err, setErr] = useState("");
@@ -69,7 +69,7 @@ export function Photos({ value, onChange, max, label, hint }: { value: string[];
     setBusy(list.length);
     const out = [...value];
     for (const f of list) {
-      try { out.push(await uploadPhoto(f)); onChange([...out]); }
+      try { out.push(await uploadPhoto(f, size)); onChange([...out]); }
       catch (e) { setErr((e as Error).message); }
       setBusy((n) => n - 1);
     }

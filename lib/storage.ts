@@ -13,7 +13,9 @@ export async function savePhoto(license_id: string, bytes: Buffer, type: string)
   const name = `${license_id.slice(0, 8)}-${randomUUID()}.${ext}`;
   const s = supa();
   if (s) {
-    const { error } = await s.storage.from(BUCKET).upload(`${license_id}/${name}`, bytes, { contentType: type, upsert: false });
+    // every file name is unique and never overwritten, so guests' browsers and the CDN may keep it for a year:
+    // a guest who opens the invitation again downloads no photos at all
+    const { error } = await s.storage.from(BUCKET).upload(`${license_id}/${name}`, bytes, { contentType: type, upsert: false, cacheControl: "31536000" });
     if (error) throw error;
     return s.storage.from(BUCKET).getPublicUrl(`${license_id}/${name}`).data.publicUrl;
   }
