@@ -56,7 +56,7 @@ export default function Home() {
               <a href="#songs">Songs</a>
               <a href="#questions">Questions</a>
               <Link href="/redeem" className="keep">Sign in</Link>
-              <a href={BRAND.etsy} className="keep h-buy">Buy on Etsy</a>
+              <a href={BRAND.etsy} target="_blank" rel="noopener noreferrer" className="keep h-buy">Buy on Etsy</a>
             </span>
           </nav>
           <h1 className="h-title">We said yes</h1>
@@ -154,7 +154,7 @@ export default function Home() {
       </section>
 
       {/* 8. One word is the button */}
-      <a className="cta" href={BRAND.etsy}>
+      <a className="cta" href={BRAND.etsy} target="_blank" rel="noopener noreferrer">
         <span className="cta-line">Buy it on Etsy and start your invitation today.</span>
         <svg className="cta-arrow" viewBox="0 0 48 48" aria-hidden><path d="M12 36 36 12M16 12h20v20" fill="none" stroke="currentColor" strokeWidth="3" /></svg>
         <span className="cta-word">Order</span>
@@ -167,12 +167,12 @@ export default function Home() {
           <ul className="foot-places">
             <li><Link href="/demo">Live demo</Link></li>
             <li><Link href="/redeem">Sign in to your studio</Link></li>
-            <li><a href={BRAND.etsyShop}>{BRAND.shop} on Etsy</a></li>
+            <li><a href={BRAND.etsy} target="_blank" rel="noopener noreferrer">Buy on Etsy</a></li>
           </ul>
           <div className="foot-cols">
             <ul><li><a href="#designs">Designs</a></li><li><a href="#songs">Songs</a></li><li><a href="#questions">Questions</a></li></ul>
             <ul><li><Link href="/redeem">Activate an order</Link></li><li><Link href="/demo">See an invitation</Link></li></ul>
-            <ul><li><a href={BRAND.etsy}>Buy on Etsy</a></li></ul>
+            <ul><li><a href={BRAND.etsy} target="_blank" rel="noopener noreferrer">Buy on Etsy</a></li></ul>
           </div>
         </div>
         <div className="foot-legal">

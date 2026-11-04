@@ -5,7 +5,7 @@
    ================================================================ */
 .site {
   --bg: #f7f9f8; --surface: #ebf0ee; --ink: #06525c; --muted: #2f737d; --accent: #06525c; --accent-ink: #f7f9f8;
-  --m: clamp(16px, 1.7vw, 28px);
+  --m: clamp(16px, 4.5vw, 64px);
   --t-small: 14px;
   --t-body: clamp(16px, 15px + 0.2vw, 18px);
   --t-lead: clamp(19px, 16px + 0.55vw, 24px);
@@ -62,7 +62,7 @@
 .h-panel img { position: absolute; left: 50%; top: 50%; width: var(--cw); height: var(--ch); max-width: none; transform: translate(-50%, -50%); display: block; }
 .h-panel figcaption { position: absolute; right: var(--m); bottom: 112px; max-width: 18ch; text-align: right; font-size: var(--t-small); font-weight: 500; line-height: 1.4; }
 @media (max-width: 699px) {
-  .site { --title-top: 60px; --t-display: 15vw; --title-h: calc(15vw * 0.88 * 2); }
+  .site { --title-top: 60px; --t-display: 15vw; --title-h: calc(15vw * 0.88 * 2); --m: 16px; }
   .h-links a:not(.keep) { display: none; }
   .h-links { gap: 18px; }
   .h-title { font-size: 15vw; white-space: normal; line-height: 0.88; padding: 0 var(--m); text-align: left; }
