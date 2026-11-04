@@ -14,6 +14,7 @@ const cinzel = Cinzel({ subsets: ["latin", "latin-ext"], weight: ["400", "500", 
 const sans = DM_Sans({ subsets: ["latin", "latin-ext"], weight: ["400", "500", "600", "700"], variable: "--f-sans", display: "swap" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://wesaidyes.site"),
   title: `${BRAND.name} · Digital Wedding Invitation Website`,
   description: BRAND.tagline,
 };

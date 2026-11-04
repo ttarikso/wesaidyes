@@ -82,7 +82,7 @@ export default function Editor({ initial }: { initial: Invitation }) {
     <div className="studio flex flex-col h-dvh">
       {/* top bar */}
       <header className="flex items-center gap-3 px-4 md:px-6 h-16 border-b border-[var(--s-line)] bg-[var(--s-surface)] shrink-0">
-        <Logo />
+        <Logo height={30} />
         <span className="hidden md:inline text-[var(--s-line)]">/</span>
         <Link href="/studio" className="hidden md:inline text-sm text-[var(--s-muted)] hover:text-[var(--s-ink)] no-underline truncate">
           {d.partner1} &amp; {d.partner2}
