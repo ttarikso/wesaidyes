@@ -90,7 +90,7 @@ export default function Studio() {
                 {/* the envelope guests will see, in this design */}
                 <div className="s-well relative overflow-hidden aspect-[4/3] lg:aspect-auto lg:min-h-[340px] grid place-items-center" style={{ background: `url(${a.paper}) center/cover ${t.paperTone || "#fff"}`, backgroundBlendMode: "multiply" }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={a.floral} alt="" className="absolute -left-[6%] -bottom-[12%] w-[62%]" />
+                  <img src={a.floral} alt="" className="absolute -left-[4%] -bottom-[6%] w-[60%] pointer-events-none select-none" />
                   <div className="relative text-center" style={{ color: t.onBg }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={a.seal} alt="" className="w-24 mx-auto" />

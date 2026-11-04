@@ -221,16 +221,16 @@ function ThemePanel({ value, d, onChange }: { value: string; d: InviteData; onCh
               aria-pressed={on}
               className={`group text-left rounded-2xl overflow-hidden border transition ${on ? "border-[var(--text)] ring-2 ring-[var(--text)]" : "border-[var(--border)] hover:border-[var(--control)]"}`}
             >
-              <span className="relative block aspect-[4/3]" style={{ background: `url(${a.paper}) center/cover ${t.bg}` }}>
+              <span className="relative block aspect-[4/3] overflow-hidden" style={{ background: `url(${a.paper}) center/cover ${t.bg}` }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={a.floral} alt="" className="absolute -left-[8%] -bottom-[14%] w-[72%] " />
+                <img src={a.floral} alt="" className="absolute -left-[6%] -bottom-[6%] w-[66%] pointer-events-none select-none" />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={a.seal} alt="" className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 w-[34%] " />
+                <img src={a.seal} alt="" className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 w-[34%]" />
                 <span className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 text-[1.05rem]" style={{ fontFamily: t.type.display, fontWeight: t.type.sealWeight, textTransform: t.type.upper ? "uppercase" : "none", color: t.sealInk }}>
                   {d.initials || "A&J"}
                 </span>
               </span>
-              <span className="block px-3 py-2.5 bg-[var(--surface)]">
+              <span className="relative z-10 block px-3 py-2.5 bg-[var(--surface)]">
                 <span className="block text-sm font-semibold">{t.name}</span>
                 <span className="block text-xs text-[var(--muted)]">{t.mood}</span>
               </span>
