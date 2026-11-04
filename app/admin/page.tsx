@@ -33,7 +33,7 @@ export default function Admin() {
 
   return (
     <div className="studio">
-      <header className="px-5 h-16 flex items-center max-w-5xl mx-auto"><Logo /><span className="ml-3 text-sm text-[var(--s-muted)]">Admin</span></header>
+      <header className="s-top"><Logo height={26} /><span className="ml-2 text-[var(--muted)]">Admin</span></header>
       <main className="max-w-5xl mx-auto px-5 pb-20 space-y-5">
         {!authed ? (
           <form className="s-card p-6 max-w-sm space-y-3" onSubmit={(e) => { e.preventDefault(); load(); }}>
@@ -57,10 +57,10 @@ export default function Admin() {
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="text-left text-xs uppercase text-[var(--s-muted)]"><tr><th className="p-2">Order</th><th className="p-2">Email</th><th className="p-2">Status</th><th className="p-2">Activated</th><th className="p-2" /></tr></thead>
+                  <thead className="text-left text-xs uppercase text-[var(--muted)]"><tr><th className="p-2">Order</th><th className="p-2">Email</th><th className="p-2">Status</th><th className="p-2">Activated</th><th className="p-2" /></tr></thead>
                   <tbody>
                     {shown.map((r) => (
-                      <tr key={r.id} className="border-t border-[var(--s-line)]">
+                      <tr key={r.id} className="border-t border-[var(--border)]">
                         <td className="p-2 font-mono">{r.order_id}</td><td className="p-2">{r.email || "–"}</td><td className="p-2">{r.status}</td>
                         <td className="p-2">{r.claimed_at ? new Date(r.claimed_at).toLocaleDateString() : "–"}</td>
                         <td className="p-2 text-right">

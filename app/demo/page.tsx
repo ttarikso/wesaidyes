@@ -8,21 +8,30 @@ import { BRAND } from "@/lib/brand";
 export default function Demo() {
   const [theme, setTheme] = useState(THEMES[0].id);
   const [nonce, setNonce] = useState(0);
-  const [data] = useState(demoInvite);
+  const [skip, setSkip] = useState(false);
+  const [bare, setBare] = useState(false);
+  const [data, setData] = useState(demoInvite);
   useEffect(() => {
     const t = new URLSearchParams(window.location.search).get("theme");
     if (t && THEMES.some((x) => x.id === t)) setTheme(t);
+    const q = new URLSearchParams(window.location.search);
+    if (q.get("open") === "1") setSkip(true);
+    if (q.get("bare") === "1") setBare(true);
+    const a = (q.get("a") || "").trim().slice(0, 30), b = (q.get("b") || "").trim().slice(0, 30);
+    if (a || b) setData((d) => ({ ...d, partner1: a || d.partner1, partner2: b || d.partner2, initials: `${(a || d.partner1)[0]}&${(b || d.partner2)[0]}`.toUpperCase() }));
   }, []);
   return (
     <>
-      <Invitation key={nonce} data={data} theme={theme} music="first-light" slug="demo" mode="preview" />
-      <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-full bg-white/92 backdrop-blur px-2 py-1.5 shadow-lg text-[13px] font-[var(--f-sans)]" style={{ fontFamily: "var(--f-sans)" }}>
-        <span className="pl-2 font-semibold text-[#2a2421] hidden sm:inline">Live demo</span>
-        <select aria-label="Theme" value={theme} onChange={(e) => { setTheme(e.target.value); setNonce((n) => n + 1); }} className="rounded-full border border-[#e6dccf] bg-white px-3 py-1.5 text-[#2a2421]">
+      <Invitation key={nonce} data={data} theme={theme} music="first-light" slug="demo" mode="preview" startOpen={skip} />
+      {!bare && <div className="demo-bar fixed z-50 flex items-center gap-2 bg-[#f7f9f8] text-[#06525c] px-2 py-1.5 text-[14px] left-0 right-0 top-0 h-12 sm:justify-end" style={{ fontFamily: "var(--f-sans)" }}>
+        <span className="pl-2 font-semibold hidden sm:inline sm:mr-auto">Live demo: this is what your guests receive</span>
+        <select aria-label="Theme" value={theme} onChange={(e) => { setTheme(e.target.value); setNonce((n) => n + 1); }} className="flex-1 sm:flex-none bg-[#ebf0ee] px-3 py-2 text-[#06525c]">
           {THEMES.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
-        <a href={BRAND.etsy} className="rounded-full bg-[#8a5546] text-white px-3 py-1.5 font-semibold no-underline whitespace-nowrap">Get yours</a>
-      </div>
+        <a href={BRAND.etsy} className="bg-[#06525c] text-[#f7f9f8] px-4 py-2 font-semibold no-underline whitespace-nowrap">Get yours</a>
+      </div>}
+      {!bare && <style>{`@media (max-width: 639px) { .inv .iv-music { top: 60px; } }
+        .inv-main { padding-top: 48px; } .inv .iv-hero { min-height: calc(100svh - 48px); }`}</style>}
     </>
   );
 }

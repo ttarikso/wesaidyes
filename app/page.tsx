@@ -1,93 +1,183 @@
 import Link from "next/link";
-import { THEMES, themeAssets } from "@/lib/themes";
-import { TRACKS } from "@/lib/music";
 import { BRAND } from "@/lib/brand";
-import { Logo } from "@/components/Brand";
+import { THEMES } from "@/lib/themes";
+import { FaqIndex, HeroInk, LiveNames, Reveal, SongList } from "@/components/site/parts";
+
+/* Marketing page · direction "The pinned poster" (taste-skill seed 273858182).
+   Idea: the couple's own answer, "we said yes", holds still while their invitation changes through the designs beneath it. */
+
+const PAPER = "#f7f9f8";
+const RUN: { id: string; ground: string; ink: string; caption: string }[] = [
+  { id: "dusty-blue", ground: "#485e75", ink: PAPER, caption: "Dusty Blue & Silver, with eucalyptus and a silver laurel seal" },
+  { id: "blush-peony", ground: "#d1ada6", ink: "#3f1f22", caption: "Blush Peony, with peonies and a rose-gold seal" },
+  { id: "midnight-gold", ground: "#12213f", ink: PAPER, caption: "Midnight & Gold, with gold leaf, magnolia and stars" },
+  { id: "olive-grove", ground: "#4b572c", ink: PAPER, caption: "Olive Grove, with white garden roses and olive branches" },
+  { id: "black-tie", ground: "#191919", ink: PAPER, caption: "Black Tie, with calla lilies on black" },
+];
+
+const FEATURES = [
+  { name: "The envelope opens", text: "Your initials are pressed into the wax seal. One tap and the flap lifts, the card slides out and your song begins.", media: "video" },
+  { name: "The day, in order", text: "Ceremony, dinner, dancing: each with its time and place, the venue as a map link, and a calendar file in one tap.", media: "/site/frag-day.webp" },
+  { name: "A countdown on every phone", text: "Days, hours, minutes and seconds to the wedding, live on each guest’s screen, under the words you choose.", media: "/site/frag-countdown.webp" },
+  { name: "Every reply, in one list", text: "Guests answer with a plus-one, a meal and a song request. You see each reply as it arrives and can download the list as a spreadsheet.", media: "/site/frag-guests.webp" },
+];
 
 const STEPS = [
-  ["Buy on Etsy", "Get instant access with your Etsy order number. No app, no account to create."],
-  ["Design it in minutes", "Pick one of our themes, add your names, date, venue, story and photos. See every change live on a phone preview."],
-  ["Share one link", "Send your link by WhatsApp, text or email, or print the QR code. Guests open the envelope and RSVP from any phone or computer."],
+  { verb: "Buy", text: "Order it on Etsy. Your order number opens your own studio straight away, with no account to create.", img: "/site/couple-home.webp", alt: "A couple on a sofa setting up their invitation on a laptop" },
+  { verb: "Write", text: "Pick a design, then add your names, date, venue, story and photos. Every change shows on the phone beside it.", img: "/site/write-editor.webp", alt: "The studio: design choices on the left, the invitation on a phone on the right" },
+  { verb: "Send", text: "Publish, then send one link by WhatsApp, text or email, or print its QR code on your save-the-dates.", img: "/site/send-hero.webp", alt: "An opened invitation with the couple's names over their photograph" },
 ];
-const FEATURES = [
-  ["Animated envelope", "Guests tap the wax seal with your initials and the envelope opens to reveal your invitation."],
-  [`${TRACKS.length} music tracks`, "Original, royalty-free background music. Choose a song or turn it off."],
-  ["RSVP & guest list", "Replies arrive instantly in your guest list: who's coming, plus-ones, meals, song requests. Download as a spreadsheet."],
-  ["Live countdown", "Days, hours, minutes and seconds to your big day."],
-  ["Story, schedule & FAQ", "Your love story with polaroid photos, the order of the day, map, dress code and answers to common questions."],
-  ["Edit anytime", "Changed the time or the venue? Update it and everyone sees the new details on the same link."],
+
+const FAQ: [string, string][] = [
+  ["Do our guests need an app or an account?", "No. The invitation opens in any phone or computer browser from the link you send."],
+  ["Can we change details after sending the link?", "Yes. Change the time, the venue or anything else, and everyone sees the update on the same link."],
+  ["How many guests can reply?", "As many as you invite. There is no limit on guests or replies."],
+  ["Can we switch to another design later?", "At any time. Your names, words and photos move to the new design as they are."],
+  ["Can we use our own song?", "Not yet. Choose one of the twenty original tracks, or turn the music off."],
+  ["Which languages does it support?", "The section titles are in English. Every line you write yourself, your story and your details, can be in any language."],
+  ["How do we get in after buying?", "Go to wesaidyes.site/redeem and enter your Etsy order number and email. Use the same two to sign in again on any device."],
 ];
 
 export default function Home() {
   return (
-    <div className="studio">
-      <header className="flex items-center gap-3 px-5 h-16 max-w-6xl mx-auto">
-        <Logo />
-        <nav className="ml-auto flex items-center gap-2">
-          <Link href="/demo" className="s-btn s-btn-sm">Live demo</Link>
-          <Link href="/redeem" className="s-btn s-btn-sm s-btn-primary">Sign in</Link>
-        </nav>
-      </header>
+    <div className="site" id="top">
+      <Reveal />
+      <HeroInk />
 
-      <main>
-        <section className="max-w-6xl mx-auto px-5 pt-10 pb-16 grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <p className="text-xs font-semibold tracking-[.25em] uppercase text-[var(--s-muted)]">Digital wedding invitation website</p>
-            <h1 className="font-serif text-5xl md:text-6xl leading-[1.05] mt-4">An invitation they open like a real envelope.</h1>
-            <p className="text-lg text-[var(--s-muted)] mt-5 max-w-lg">{BRAND.tagline}</p>
-            <div className="flex flex-wrap gap-3 mt-8">
-              <Link href="/demo" className="s-btn s-btn-lg s-btn-primary">Open the live demo</Link>
-              <a href={BRAND.etsy} className="s-btn s-btn-lg">Buy on Etsy</a>
-            </div>
-            <p className="text-sm text-[var(--s-muted)] mt-4">Already purchased? <Link href="/redeem" className="underline">Activate your order</Link></p>
-          </div>
-          <div className="grid grid-cols-4 gap-3">
-            {THEMES.map((t, i) => {
-              const a = themeAssets(t);
-              return (
-                <Link key={t.id} href={`/demo?theme=${t.id}`} className={`relative aspect-[3/4] rounded-2xl overflow-hidden shadow-md hover:-translate-y-1 transition ${i % 2 ? "translate-y-6" : ""}`} style={{ background: `url(${a.paper}) center/cover ${t.bg}` }} aria-label={`${t.name} theme demo`}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={a.seal} alt="" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 drop-shadow-md" />
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={a.floral} alt="" className="absolute -left-4 -bottom-4 w-[90%] drop-shadow" />
-                </Link>
-              );
-            })}
-          </div>
-        </section>
+      {/* 1. The pinned title over the designs */}
+      <section className="h-run" style={{ ["--run-ink" as string]: RUN[0].ink, ["--run-ground" as string]: RUN[0].ground, ["--n" as string]: RUN.length }}>
+        <div className="h-pin">
+          <div className="h-band" aria-hidden />
+          <nav className="h-nav" aria-label="Main">
+            <Link href="/" className="h-mark">We said yes</Link>
+            <span className="h-links">
+              <a href="#designs">Designs</a>
+              <a href="#songs">Songs</a>
+              <a href="#questions">Questions</a>
+              <Link href="/redeem">Sign in</Link>
+            </span>
+          </nav>
+          <h1 className="h-title">We said yes</h1>
+          <p className="h-lead">A wedding invitation website your guests open like a sealed envelope, then answer from their phone.</p>
+          <Link href="/demo" className="h-btn">See it live</Link>
+        </div>
+        <div className="h-panels">
+          {RUN.map((r, i) => (
+            <figure key={r.id} className="h-panel" data-ink={r.ink} data-ground={r.ground} style={{ background: r.ground }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`/site/env-${r.id}.webp`} alt={`The ${THEMES.find((t) => t.id === r.id)?.name} envelope`} width={800} height={1200} loading={i === 0 ? "eager" : "lazy"} fetchPriority={i === 0 ? "high" : undefined} />
+              <figcaption style={{ color: r.ink }}>{r.caption}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
 
-        <section className="bg-[var(--s-surface)] border-y border-[var(--s-line)]">
-          <div className="max-w-6xl mx-auto px-5 py-16">
-            <h2 className="font-serif text-4xl text-center">How it works</h2>
-            <div className="grid md:grid-cols-3 gap-5 mt-10">
-              {STEPS.map(([t, d], i) => (
-                <div key={t} className="s-card p-6 bg-[var(--s-bg)]">
-                  <span className="font-script text-4xl text-[var(--s-accent)]">{i + 1}.</span>
-                  <h3 className="font-semibold text-lg mt-1">{t}</h3>
-                  <p className="text-[var(--s-muted)] mt-2 leading-relaxed">{d}</p>
-                </div>
-              ))}
-            </div>
+      {/* 2. The live thing: your names in the seal */}
+      <section className="live" id="try" aria-labelledby="live-h">
+        <div className="live-photo" aria-hidden>
+          <div className="live-box">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/site/seal-macro.webp" alt="" width={2000} height={1125} />
+            <svg className="live-initials" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden>
+              <text id="seal-initials" x="873.6" y="417.6" textAnchor="middle" dominantBaseline="central">A&amp;J</text>
+            </svg>
           </div>
-        </section>
+        </div>
+        <div className="live-card" data-reveal>
+          <h2 id="live-h" className="live-h">Try it with your names</h2>
+          <p className="live-fact">One payment on Etsy. No subscription, no app for your guests.</p>
+          <LiveNames />
+        </div>
+      </section>
 
-        <section className="max-w-6xl mx-auto px-5 py-16">
-          <h2 className="font-serif text-4xl text-center">Everything in one link</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
-            {FEATURES.map(([t, d]) => (
-              <div key={t} className="p-2">
-                <h3 className="font-semibold text-lg">{t}</h3>
-                <p className="text-[var(--s-muted)] mt-1.5 leading-relaxed">{d}</p>
-              </div>
+      {/* 3. What guests get: stacking sheets */}
+      <section className="feat" id="designs" aria-labelledby="feat-h">
+        <h2 id="feat-h" className="feat-h" data-reveal>What your guests get</h2>
+        <div className="sheets">
+          {FEATURES.map((f, i) => (
+            <article key={f.name} className={`sheet sheet-${i % 2 ? "b" : "a"}`} style={{ ["--i" as string]: i }}>
+              <h3 className="sheet-name">{f.name}</h3>
+              <p className="sheet-text">{f.text}</p>
+              <figure className="sheet-media">
+                {f.media === "video" ? (
+                  <video src="/site/envelope.mp4" poster="/site/envelope-poster.jpg" autoPlay muted loop playsInline aria-label="The envelope opening on a phone" />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={f.media} alt={f.name} loading="lazy" />
+                )}
+              </figure>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* 4. The designs, by name, running off the edges */}
+      <section aria-labelledby="band-h">
+        <h2 id="band-h" className="sr-only">The eight designs</h2>
+        <div className="band">
+          <div className="band-track" aria-hidden>
+            {[0, 1].map((k) => (
+              <span key={k}>
+                {THEMES.map((t) => <span key={t.id} className="band-item">{t.name}<i className="band-dot" /></span>)}
+              </span>
             ))}
           </div>
-          <div className="text-center mt-12">
-            <Link href="/demo" className="s-btn s-btn-lg s-btn-primary">See it on your phone</Link>
+        </div>
+        <p className="band-note" data-reveal>
+          Eight designs, each with its own paper, wax seal, flowers and typefaces: {THEMES.map((t) => t.name).join(", ")}. Switch any time; your words and photos stay.
+        </p>
+      </section>
+
+      {/* 5. The songs */}
+      <section className="list" id="songs" aria-labelledby="songs-h" data-reveal>
+        <h2 id="songs-h" className="list-h">Twenty songs, written for these invitations</h2>
+        <SongList />
+      </section>
+
+      {/* 6. How it works: one verb at a time */}
+      <section className="steps" aria-label="How it works">
+        {STEPS.map((s) => (
+          <div key={s.verb} className="step">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="step-img" src={s.img} alt={s.alt} loading="lazy" />
+            <div className="step-pin"><h2 className="step-verb">{s.verb}</h2></div>
+            <p className="step-text">{s.text}</p>
           </div>
-        </section>
-      </main>
-      <footer className="text-center text-sm text-[var(--s-muted)] pb-10">
-        © {new Date().getFullYear()} {BRAND.name} · by <a href={BRAND.etsyShop} className="underline">{BRAND.shop}</a>
+        ))}
+      </section>
+
+      {/* 7. Questions */}
+      <section className="qa" id="questions" aria-labelledby="qa-h" data-reveal>
+        <h2 id="qa-h" className="sr-only">Questions</h2>
+        <FaqIndex items={FAQ} />
+      </section>
+
+      {/* 8. One word is the button */}
+      <a className="cta" href={BRAND.etsy}>
+        <span className="cta-line">Buy it on Etsy and start your invitation today.</span>
+        <svg className="cta-arrow" viewBox="0 0 48 48" aria-hidden><path d="M12 36 36 12M16 12h20v20" fill="none" stroke="currentColor" strokeWidth="3" /></svg>
+        <span className="cta-word">Order</span>
+      </a>
+
+      {/* 9. Footer: the name first */}
+      <footer className="foot">
+        <p className="foot-name" aria-hidden>We said yes</p>
+        <div className="foot-row">
+          <ul className="foot-places">
+            <li><Link href="/demo">Live demo</Link></li>
+            <li><Link href="/redeem">Sign in to your studio</Link></li>
+            <li><a href={BRAND.etsyShop}>{BRAND.shop} on Etsy</a></li>
+          </ul>
+          <div className="foot-cols">
+            <ul><li><a href="#designs">Designs</a></li><li><a href="#songs">Songs</a></li><li><a href="#questions">Questions</a></li></ul>
+            <ul><li><Link href="/redeem">Activate an order</Link></li><li><Link href="/demo">See an invitation</Link></li></ul>
+            <ul><li><a href={BRAND.etsy}>Buy on Etsy</a></li></ul>
+          </div>
+        </div>
+        <div className="foot-legal">
+          <span>© {new Date().getFullYear()} {BRAND.name}, made by {BRAND.shop}</span>
+          <a href="#top" className="foot-top">Back to top</a>
+        </div>
       </footer>
     </div>
   );

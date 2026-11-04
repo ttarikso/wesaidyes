@@ -1,17 +1,19 @@
 import type { Metadata, Viewport } from "next";
-// Fonts are bundled with the app (Fontsource) so builds never depend on Google Fonts being reachable.
-import "@fontsource/great-vibes/400.css";
-import "@fontsource/pinyon-script/400.css";
-import "@fontsource/parisienne/400.css";
-import "@fontsource/allura/400.css";
-import "@fontsource-variable/cormorant-garamond/wght.css";
-import "@fontsource-variable/cormorant-garamond/wght-italic.css";
-import "@fontsource-variable/playfair-display/wght.css";
-import "@fontsource-variable/playfair-display/wght-italic.css";
-import "@fontsource-variable/cinzel/wght.css";
-import "@fontsource-variable/dm-sans/wght.css";
+// Fonts are bundled with the app so builds never depend on a font CDN being reachable.
+// Google families via Fontsource; Fontshare families (Boska, Zodiak, Sentient, Gambarino, General Sans) in styles/fonts.css.
+import "@fontsource-variable/newsreader/opsz.css";
+import "@fontsource-variable/newsreader/opsz-italic.css";
+import "@fontsource-variable/bricolage-grotesque/opsz.css";
+import "@fontsource-variable/bodoni-moda/opsz.css";
+import "@fontsource-variable/bodoni-moda/opsz-italic.css";
+import "@fontsource-variable/imbue/opsz.css";
+import "@fontsource-variable/jost/wght.css";
+import "@fontsource-variable/hanken-grotesk/wght.css";
+import "@fontsource-variable/albert-sans/wght.css";
+import "@/styles/fonts.css";
 import "@/styles/globals.css";
 import "@/styles/invite.css";
+import "@/styles/site.css";
 import { BRAND } from "@/lib/brand";
 
 export const metadata: Metadata = {

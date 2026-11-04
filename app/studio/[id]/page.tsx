@@ -17,6 +17,6 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
       .catch((e) => (e.status === 401 ? r.replace("/redeem") : setErr(e.message)));
   }, [id, r]);
   if (err) return <div className="studio grid place-items-center p-6"><p className="s-err">{err}</p></div>;
-  if (!inv) return <div className="studio grid place-items-center"><p className="text-[var(--s-muted)]">Loading your invitation…</p></div>;
+  if (!inv) return <div className="studio grid place-items-center"><p className="text-[var(--muted)]">Loading your invitation…</p></div>;
   return <Editor initial={inv} />;
 }

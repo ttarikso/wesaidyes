@@ -8,18 +8,38 @@ import { TRACKS, trackUrl } from "@/lib/music";
 import { api } from "@/lib/client";
 import { Area, Photos, Section, Text, Toggle, Field } from "./fields";
 import { SharePanel } from "./SharePanel";
-import { Logo } from "@/components/Brand";
+
+const I = {
+  theme: "M3 8a5 5 0 0 1 10 0M8 3v10M3 8h10",
+  couple: "M8 13.5S2.5 10 2.5 6.3A2.8 2.8 0 0 1 8 5a2.8 2.8 0 0 1 5.5 1.3C13.5 10 8 13.5 8 13.5Z",
+  venue: "M8 14s4.5-4.3 4.5-7.7a4.5 4.5 0 0 0-9 0C3.5 9.7 8 14 8 14Zm0-6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z",
+  story: "M2.5 3.5h11v9h-11zM2.5 10l3-3 3 3 2-2 3 3",
+  schedule: "M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12Zm0-9v3.2l2 1.3",
+  details: "M3 4h10M3 8h10M3 12h6",
+  music: "M6 12.5a1.8 1.8 0 1 1-3.6 0 1.8 1.8 0 0 1 3.6 0Zm0 0V3.5l7-1.5v9m0 0a1.8 1.8 0 1 1-3.6 0 1.8 1.8 0 0 1 3.6 0Z",
+  rsvp: "M2.5 4h11v8h-11zM2.5 4.5 8 8.5l5.5-4",
+  share: "M9.5 2.5h4v4M13.5 2.5 7 9M12 9.5V13H3V4h3.5",
+  back: "M10 3 5 8l5 5",
+  guests: "M6 7.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm-4 6c0-2.2 1.8-4 4-4s4 1.8 4 4M11 7a2 2 0 1 0 0-4M14 13.5c0-1.9-1.2-3.4-3-3.8",
+};
+export function Icon({ d, size = 16 }: { d: string; size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d={d} />
+    </svg>
+  );
+}
 
 const TABS = [
-  { id: "theme", label: "Theme", icon: "◐" },
-  { id: "couple", label: "Couple & date", icon: "♡" },
-  { id: "venue", label: "Venue", icon: "⌂" },
-  { id: "story", label: "Story & photos", icon: "❋" },
-  { id: "schedule", label: "Schedule", icon: "◷" },
-  { id: "details", label: "Details & FAQ", icon: "✎" },
-  { id: "music", label: "Music", icon: "♫" },
-  { id: "rsvp", label: "RSVP form", icon: "✉" },
-  { id: "share", label: "Publish & share", icon: "↗" },
+  { id: "theme", label: "Design", icon: I.theme },
+  { id: "couple", label: "Names and date", icon: I.couple },
+  { id: "venue", label: "Venue", icon: I.venue },
+  { id: "story", label: "Story and photos", icon: I.story },
+  { id: "schedule", label: "Order of the day", icon: I.schedule },
+  { id: "details", label: "Details and questions", icon: I.details },
+  { id: "music", label: "Music", icon: I.music },
+  { id: "rsvp", label: "Reply form", icon: I.rsvp },
+  { id: "share", label: "Publish and share", icon: I.share },
 ] as const;
 type Tab = (typeof TABS)[number]["id"];
 
@@ -69,50 +89,46 @@ export default function Editor({ initial }: { initial: Invitation }) {
     queue(patch);
   };
 
-  // warn before leaving with unsaved changes
   useEffect(() => {
-    const on = (e: BeforeUnloadEvent) => { if (save === "dirty" || save === "saving") { e.preventDefault(); } };
+    const on = (e: BeforeUnloadEvent) => { if (save === "dirty" || save === "saving") e.preventDefault(); };
     window.addEventListener("beforeunload", on);
     return () => window.removeEventListener("beforeunload", on);
   }, [save]);
 
   const d = inv.data;
+  const current = TABS.find((t) => t.id === tab)!;
 
   return (
     <div className="studio flex flex-col h-dvh">
-      {/* top bar */}
-      <header className="flex items-center gap-3 px-4 md:px-6 h-16 border-b border-[var(--s-line)] bg-[var(--s-surface)] shrink-0">
-        <Logo height={30} />
-        <span className="hidden md:inline text-[var(--s-line)]">/</span>
-        <Link href="/studio" className="hidden md:inline text-sm text-[var(--s-muted)] hover:text-[var(--s-ink)] no-underline truncate">
-          {d.partner1} &amp; {d.partner2}
-        </Link>
-        <span className="ml-auto text-xs text-[var(--s-muted)] min-w-[64px] text-right" aria-live="polite">
-          {save === "saving" ? "Saving…" : save === "dirty" ? "Editing…" : save === "error" ? <button className="text-[var(--s-err)] underline" onClick={flush}>Retry save</button> : "All changes saved"}
+      {/* top bar on the frame, no rule */}
+      <header className="flex items-center gap-2 h-12 px-2 lg:px-3 shrink-0">
+        <Link href="/studio" className="s-btn s-btn-sm !w-8 !px-0 !border-0 !bg-transparent" aria-label="Back to your invitation"><Icon d={I.back} /></Link>
+        <h1 className="text-[16px] leading-6 font-semibold truncate">{d.partner1} &amp; {d.partner2}</h1>
+        <span className={`s-pill ${inv.published ? "s-pill-live" : "s-pill-draft"}`}>{inv.published ? "Live" : "Draft"}</span>
+        <span className="ml-auto text-[12px] text-[var(--muted)] hidden sm:inline" aria-live="polite">
+          {save === "saving" ? "Saving…" : save === "dirty" ? "Unsaved changes" : save === "error" ? <button className="s-btn-text !text-[var(--negative)]" onClick={flush}>Not saved. Retry</button> : "Saved"}
         </span>
-        <Link href={`/studio/${inv.id}/guests`} className="s-btn s-btn-sm hidden sm:inline-flex">Guest list</Link>
+        <span className="hidden sm:block w-px h-5 bg-[var(--control)] mx-1" aria-hidden />
+        <Link href={`/studio/${inv.id}/guests`} className="s-btn s-btn-sm ml-auto sm:ml-0"><Icon d={I.guests} />Guest list</Link>
         <button className="s-btn s-btn-sm s-btn-primary" onClick={() => setTab("share")}>{inv.published ? "Share" : "Publish"}</button>
       </header>
 
-      <div className="flex-1 min-h-0 flex flex-col lg:flex-row">
-        {/* tabs */}
-        <nav className="lg:w-56 shrink-0 border-b lg:border-b-0 lg:border-r border-[var(--s-line)] bg-[var(--s-surface)]">
-          <div role="tablist" aria-label="Editor sections" className="flex lg:flex-col gap-1 p-2 lg:p-3 overflow-x-auto">
+      <div className="flex-1 min-h-0 flex flex-col lg:flex-row gap-3 px-2 pb-2 lg:pr-2">
+        {/* section list */}
+        <nav className="s-panel lg:w-[232px] shrink-0 p-2 lg:p-3" aria-label="Sections of your invitation">
+          <div role="tablist" aria-orientation="vertical" className="flex lg:flex-col gap-0.5 overflow-x-auto">
             {TABS.map((t) => (
-              <button key={t.id} role="tab" aria-selected={tab === t.id} className="s-tab shrink-0 w-auto lg:w-full" onClick={() => setTab(t.id)}>
-                <span aria-hidden className="w-4 text-center opacity-70">{t.icon}</span>
-                {t.label}
+              <button key={t.id} role="tab" aria-selected={tab === t.id} className="s-nav-item shrink-0 !w-auto lg:!w-full" onClick={() => setTab(t.id)}>
+                <Icon d={t.icon} />
+                <span className="whitespace-nowrap">{t.label}</span>
               </button>
             ))}
-            <Link href={`/studio/${inv.id}/guests`} className="s-tab shrink-0 w-auto lg:w-full no-underline sm:hidden">
-              <span aria-hidden className="w-4 text-center opacity-70">☰</span>Guest list
-            </Link>
           </div>
         </nav>
 
-        {/* form */}
-        <div className="flex-1 min-w-0 overflow-y-auto">
-          <div className="max-w-xl mx-auto p-4 md:p-6 space-y-4 pb-28">
+        {/* the form */}
+        <section className="s-panel flex-1 min-w-0 min-h-0 overflow-y-auto" aria-label={current.label}>
+          <div className="max-w-[560px] p-6 space-y-8 pb-24">
             {tab === "theme" && <ThemePanel value={inv.theme} d={d} onChange={(theme) => setTop({ theme })} />}
             {tab === "couple" && <CouplePanel d={d} set={setData} />}
             {tab === "venue" && <VenuePanel d={d} set={setData} />}
@@ -123,20 +139,34 @@ export default function Editor({ initial }: { initial: Invitation }) {
             {tab === "rsvp" && <RsvpPanel d={d} set={setData} />}
             {tab === "share" && <SharePanel inv={inv} onSaved={(p) => setInv((x) => ({ ...x, ...p }))} beforePublish={flush} />}
           </div>
-        </div>
+        </section>
 
-        {/* preview */}
-        <aside className="hidden lg:flex flex-col items-center gap-3 shrink-0 border-l border-[var(--s-line)] bg-[#ece4d8] p-5 xl:w-[560px] lg:w-[460px]">
-          <PreviewBar view={view} setView={setView} skip={skip} setSkip={setSkip} replay={() => { setSkip(false); setNonce((n) => n + 1); }} />
-          <PreviewFrame inv={inv} view={view} skip={skip} nonce={nonce} />
+        {/* the canvas: a well one step darker, the preview is the work */}
+        <aside className="s-panel hidden lg:flex flex-col shrink-0 xl:w-[600px] lg:w-[480px] p-3" aria-label="Preview">
+          <div className="s-well relative flex-1 min-h-0 flex items-center justify-center p-4">
+            <div className="absolute top-3 left-3 flex rounded-full bg-white border border-[var(--border)] p-0.5" role="group" aria-label="Preview size">
+              {(["phone", "desktop"] as const).map((v) => (
+                <button key={v} onClick={() => setView(v)} aria-pressed={view === v} className={`px-3 h-7 rounded-full text-[12px] font-medium ${view === v ? "bg-[var(--primary)] text-white" : "text-[var(--muted)]"}`}>
+                  {v === "phone" ? "Phone" : "Computer"}
+                </button>
+              ))}
+            </div>
+            <div className="absolute top-3 right-3 flex gap-2">
+              <button className="s-btn s-btn-sm" onClick={() => { setSkip(false); setNonce((n) => n + 1); }}>Replay envelope</button>
+              <button className="s-btn s-btn-sm" onClick={() => setSkip(!skip)}>{skip ? "Show envelope" : "Skip envelope"}</button>
+            </div>
+            <div className="pt-10 w-full flex justify-center">
+              <PreviewFrame inv={inv} view={view} skip={skip} nonce={nonce} />
+            </div>
+          </div>
         </aside>
       </div>
 
-      {/* mobile preview */}
-      <button className="lg:hidden fixed bottom-5 right-5 z-20 s-btn s-btn-lg s-btn-primary shadow-lg" onClick={() => setMobilePreview(true)}>Preview</button>
+      {/* phone: the preview is one tap away, as its own screen */}
+      <button className="lg:hidden fixed bottom-4 right-4 z-20 s-btn s-btn-lg s-btn-primary" onClick={() => setMobilePreview(true)}>Preview</button>
       {mobilePreview && (
-        <div className="lg:hidden fixed inset-0 z-30 bg-[#1a1715] flex flex-col">
-          <div className="flex items-center gap-2 p-3">
+        <div className="lg:hidden fixed inset-0 z-30 bg-[var(--ground)] flex flex-col" role="dialog" aria-label="Preview">
+          <div className="flex items-center gap-2 h-12 px-2">
             <button className="s-btn s-btn-sm" onClick={() => setMobilePreview(false)}>Close preview</button>
             <button className="s-btn s-btn-sm ml-auto" onClick={() => { setSkip(false); setNonce((n) => n + 1); }}>Replay envelope</button>
           </div>
@@ -145,20 +175,6 @@ export default function Editor({ initial }: { initial: Invitation }) {
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-function PreviewBar({ view, setView, skip, setSkip, replay }: { view: string; setView: (v: "phone" | "desktop") => void; skip: boolean; setSkip: (v: boolean) => void; replay: () => void }) {
-  return (
-    <div className="flex items-center gap-2 w-full">
-      <div className="flex rounded-full bg-[var(--s-surface)] border border-[var(--s-line)] p-0.5">
-        {(["phone", "desktop"] as const).map((v) => (
-          <button key={v} onClick={() => setView(v)} className={`px-3 h-8 rounded-full text-xs font-semibold capitalize ${view === v ? "bg-[var(--s-ink)] text-white" : "text-[var(--s-muted)]"}`}>{v}</button>
-        ))}
-      </div>
-      <button className="s-btn s-btn-sm ml-auto" onClick={replay}>Replay envelope</button>
-      <button className="s-btn s-btn-sm" onClick={() => setSkip(!skip)}>{skip ? "Show envelope" : "Skip envelope"}</button>
     </div>
   );
 }
@@ -202,20 +218,20 @@ function ThemePanel({ value, d, onChange }: { value: string; d: InviteData; onCh
               type="button"
               onClick={() => onChange(t.id)}
               aria-pressed={on}
-              className={`group text-left rounded-2xl overflow-hidden border transition ${on ? "border-[var(--s-ink)] ring-2 ring-[var(--s-ink)]" : "border-[var(--s-line)] hover:border-[#cbbcab]"}`}
+              className={`group text-left rounded-2xl overflow-hidden border transition ${on ? "border-[var(--text)] ring-2 ring-[var(--text)]" : "border-[var(--border)] hover:border-[var(--control)]"}`}
             >
               <span className="relative block aspect-[4/3]" style={{ background: `url(${a.paper}) center/cover ${t.bg}` }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={a.floral} alt="" className="absolute -left-[8%] -bottom-[14%] w-[72%] drop-shadow" />
+                <img src={a.floral} alt="" className="absolute -left-[8%] -bottom-[14%] w-[72%] " />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={a.seal} alt="" className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 w-[34%] drop-shadow-md" />
-                <span className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 text-[1.05rem]" style={{ fontFamily: `var(--f-${t.script})`, color: t.sealInk }}>
+                <img src={a.seal} alt="" className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 w-[34%] " />
+                <span className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 text-[1.05rem]" style={{ fontFamily: t.type.display, fontWeight: t.type.sealWeight, textTransform: t.type.upper ? "uppercase" : "none", color: t.sealInk }}>
                   {d.initials || "A&J"}
                 </span>
               </span>
-              <span className="block px-3 py-2.5 bg-[var(--s-surface)]">
+              <span className="block px-3 py-2.5 bg-[var(--surface)]">
                 <span className="block text-sm font-semibold">{t.name}</span>
-                <span className="block text-xs text-[var(--s-muted)]">{t.mood}</span>
+                <span className="block text-xs text-[var(--muted)]">{t.mood}</span>
               </span>
             </button>
           );
@@ -299,7 +315,7 @@ function SchedulePanel({ d, set }: P) {
                 <input className="s-input" value={r.title} maxLength={60} onChange={(e) => upd(i, "title", e.target.value)} placeholder="Ceremony" aria-label="Title" />
                 <input className="s-input !text-sm" value={r.note} maxLength={100} onChange={(e) => upd(i, "note", e.target.value)} placeholder="Location or note (optional)" aria-label="Note" />
               </div>
-              <button className="s-btn s-btn-sm !px-2.5" onClick={() => set({ schedule: rows.filter((_, j) => j !== i) })} aria-label="Remove">✕</button>
+              <button className="s-btn s-btn-sm !px-2.5" onClick={() => set({ schedule: rows.filter((_, j) => j !== i) })} aria-label="Remove"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden><path d="M4 4l8 8M12 4l-8 8" /></svg></button>
             </div>
           ))}
           {rows.length < 10 && <button className="s-btn s-btn-sm" onClick={() => set({ schedule: [...rows, { time: "", title: "", note: "" }] })}>+ Add moment</button>}
@@ -328,8 +344,8 @@ function DetailsPanel({ d, set }: P) {
               <div className="flex flex-wrap items-center gap-2">
                 {d.palette.map((c, i) => (
                   <span key={i} className="relative">
-                    <input type="color" value={c} onChange={(e) => set({ palette: d.palette.map((x, j) => (j === i ? e.target.value : x)) })} className="size-10 rounded-full border border-[var(--s-line)] cursor-pointer p-0.5 bg-white" aria-label={`Colour ${i + 1}`} />
-                    <button onClick={() => set({ palette: d.palette.filter((_, j) => j !== i) })} className="absolute -top-1.5 -right-1.5 size-5 rounded-full bg-white border border-[var(--s-line)] text-[10px]" aria-label="Remove colour">✕</button>
+                    <input type="color" value={c} onChange={(e) => set({ palette: d.palette.map((x, j) => (j === i ? e.target.value : x)) })} className="size-10 rounded-full border border-[var(--border)] cursor-pointer p-0.5 bg-white" aria-label={`Colour ${i + 1}`} />
+                    <button onClick={() => set({ palette: d.palette.filter((_, j) => j !== i) })} className="absolute -top-1.5 -right-1.5 size-5 rounded-full bg-white border border-[var(--border)] grid place-items-center" aria-label="Remove colour"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden><path d="M4 4l8 8M12 4l-8 8" /></svg></button>
                   </span>
                 ))}
                 {d.palette.length < 6 && <button className="s-btn s-btn-sm" onClick={() => set({ palette: [...d.palette, "#c9b8a3"] })}>+ Colour</button>}
@@ -344,10 +360,10 @@ function DetailsPanel({ d, set }: P) {
         {sec.faq && (
           <div className="space-y-3">
             {faqs.map((f, i) => (
-              <div key={i} className="rounded-xl border border-[var(--s-line)] p-3 space-y-2 bg-white/60">
+              <div key={i} className="rounded-xl border border-[var(--border)] p-3 space-y-2 bg-[var(--raised)]">
                 <div className="flex gap-2">
                   <input className="s-input" value={f.q} maxLength={160} placeholder="Question" onChange={(e) => set({ faqs: faqs.map((x, j) => (j === i ? { ...x, q: e.target.value } : x)) })} />
-                  <button className="s-btn s-btn-sm !px-2.5 shrink-0" onClick={() => set({ faqs: faqs.filter((_, j) => j !== i) })} aria-label="Remove">✕</button>
+                  <button className="s-btn s-btn-sm !px-2.5 shrink-0" onClick={() => set({ faqs: faqs.filter((_, j) => j !== i) })} aria-label="Remove"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden><path d="M4 4l8 8M12 4l-8 8" /></svg></button>
                 </div>
                 <textarea className="s-input" rows={2} value={f.a} maxLength={600} placeholder="Answer" onChange={(e) => set({ faqs: faqs.map((x, j) => (j === i ? { ...x, a: e.target.value } : x)) })} />
               </div>
@@ -376,17 +392,17 @@ function MusicPanel({ value, onChange }: { value: string; onChange: (v: string) 
   return (
     <Section title="Background music" desc="Plays softly once a guest opens the envelope. Guests can pause it anytime. All 20 tracks are original and royalty-free.">
       <div className="space-y-1.5">
-        <label className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 cursor-pointer ${value === "none" ? "border-[var(--s-ink)] bg-white" : "border-[var(--s-line)]"}`}>
-          <input type="radio" name="music" checked={value === "none"} onChange={() => onChange("none")} className="accent-[var(--s-accent)]" />
+        <label className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 cursor-pointer ${value === "none" ? "border-[var(--text)] bg-white" : "border-[var(--border)]"}`}>
+          <input type="radio" name="music" checked={value === "none"} onChange={() => onChange("none")} className="accent-[var(--accent)]" />
           <span className="text-sm font-medium">No music</span>
         </label>
         {TRACKS.map((t) => (
-          <div key={t.id} className={`flex items-center gap-3 rounded-xl border px-3 py-2 ${value === t.id ? "border-[var(--s-ink)] bg-white" : "border-[var(--s-line)]"}`}>
+          <div key={t.id} className={`flex items-center gap-3 rounded-xl border px-3 py-2 ${value === t.id ? "border-[var(--text)] bg-white" : "border-[var(--border)]"}`}>
             <label className="flex items-center gap-3 flex-1 cursor-pointer min-w-0">
-              <input type="radio" name="music" checked={value === t.id} onChange={() => onChange(t.id)} className="accent-[var(--s-accent)]" />
+              <input type="radio" name="music" checked={value === t.id} onChange={() => onChange(t.id)} className="accent-[var(--accent)]" />
               <span className="min-w-0">
                 <span className="block text-sm font-medium truncate">{t.title}</span>
-                <span className="block text-xs text-[var(--s-muted)]">{t.style}</span>
+                <span className="block text-xs text-[var(--muted)]">{t.style}</span>
               </span>
             </label>
             <button className="s-btn s-btn-sm !w-9 !px-0" onClick={() => play(t.id)} aria-label={playing === t.id ? `Stop ${t.title}` : `Listen to ${t.title}`}>
@@ -414,7 +430,7 @@ function RsvpPanel({ d, set }: P) {
             <Text label="'Yes' button" value={r.yesLabel} max={40} onChange={(yesLabel) => u({ yesLabel })} />
             <Text label="'No' button" value={r.noLabel} max={40} onChange={(noLabel) => u({ noLabel })} />
           </div>
-          <div className="border-t border-[var(--s-line)] pt-4 space-y-3">
+          <div className="border-t border-[var(--border)] pt-4 space-y-3">
             <Toggle label="Ask about additional guests" checked={r.askGuests} onChange={(askGuests) => u({ askGuests })} />
             {r.askGuests && (
               <Field label="Most additional guests per reply">

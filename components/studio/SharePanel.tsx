@@ -58,16 +58,16 @@ export function SharePanel({ inv, onSaved, beforePublish }: { inv: Invitation; o
       </Section>
 
       <Section title="Your link" desc="Choose a short, memorable address. Letters, numbers and dashes only.">
-        <div className="flex items-stretch rounded-xl border border-[var(--s-line)] bg-white overflow-hidden focus-within:border-[var(--s-accent)]">
-          <span className="hidden sm:flex items-center px-3 text-sm text-[var(--s-muted)] bg-[var(--s-soft)] border-r border-[var(--s-line)] whitespace-nowrap">{origin.replace(/^https?:\/\//, "")}/i/</span>
+        <div className="flex items-stretch rounded-xl border border-[var(--border)] bg-white overflow-hidden focus-within:border-[var(--accent)]">
+          <span className="hidden sm:flex items-center px-3 text-sm text-[var(--muted)] bg-[var(--raised)] border-r border-[var(--border)] whitespace-nowrap">{origin.replace(/^https?:\/\//, "")}/i/</span>
           <input className="flex-1 min-w-0 px-3 py-2.5 outline-none text-[.95rem]" value={slug} onChange={(e) => setSlug(e.target.value.toLowerCase())} aria-label="Link name" />
-          <button className="px-4 text-sm font-semibold text-[var(--s-accent)] disabled:opacity-40" disabled={busy || clean === inv.slug || clean.length < 3} onClick={() => patch({ slug }, "Link updated.")}>Save</button>
+          <button className="px-4 text-sm font-semibold text-[var(--accent)] disabled:opacity-40" disabled={busy || clean === inv.slug || clean.length < 3} onClick={() => patch({ slug }, "Link updated.")}>Save</button>
         </div>
         {slug && clean !== slug && <p className="s-hint">Will be saved as <b>{clean}</b></p>}
         {err && <p className="s-err">{err}</p>}
         {msg && <p className="s-ok">{msg}</p>}
 
-        <div className="rounded-2xl bg-[var(--s-soft)] p-4 space-y-3">
+        <div className="rounded-2xl bg-[var(--raised)] p-4 space-y-3">
           <p className="text-sm break-all font-medium">{url}</p>
           <div className="flex flex-wrap gap-2">
             <button className="s-btn s-btn-sm s-btn-primary" onClick={copy}>{copied ? "Copied!" : "Copy link"}</button>
@@ -83,7 +83,7 @@ export function SharePanel({ inv, onSaved, beforePublish }: { inv: Invitation; o
         {qr ? (
           <div className="flex items-center gap-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={qr} alt="QR code for your invitation" className="size-36 rounded-xl border border-[var(--s-line)] bg-white" />
+            <img src={qr} alt="QR code for your invitation" className="size-36 rounded-xl border border-[var(--border)] bg-white" />
             <a className="s-btn s-btn-sm" href={qr} download={`${inv.slug}-qr.png`}>Download QR (PNG)</a>
           </div>
         ) : <p className="s-hint">Generating…</p>}

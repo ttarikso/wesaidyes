@@ -38,19 +38,19 @@ export default function Redeem() {
 
   return (
     <div className="studio flex flex-col">
-      <header className="px-5 h-16 flex items-center max-w-5xl mx-auto w-full"><Logo /></header>
+      <header className="s-top"><Logo height={26} /></header>
       <main className="flex-1 grid place-items-center px-5 pb-16">
-        <form onSubmit={submit} className="s-card w-full max-w-md p-7 space-y-5">
-          <div className="flex rounded-full bg-[var(--s-soft)] p-1">
+        <form onSubmit={submit} className="s-sheet w-full max-w-md p-6 space-y-5">
+          <div className="flex rounded-full border border-[var(--control)] p-0.5">
             {(["order", "key"] as const).map((m) => (
-              <button key={m} type="button" onClick={() => { setMode(m); setErr(""); }} className={`flex-1 h-9 rounded-full text-sm font-semibold ${mode === m ? "bg-white shadow-sm" : "text-[var(--s-muted)]"}`}>
+              <button key={m} type="button" onClick={() => { setMode(m); setErr(""); }} className={`flex-1 h-8 rounded-full text-[13px] font-medium ${mode === m ? "bg-[var(--primary)] text-white" : "text-[var(--muted)]"}`}>
                 {m === "order" ? "Etsy order" : "Access key"}
               </button>
             ))}
           </div>
           <div>
-            <h1 className="font-serif text-3xl">{mode === "order" ? "Start your invitation" : "Welcome back"}</h1>
-            <p className="text-sm text-[var(--s-muted)] mt-1.5">
+            <h1 className="s-h1">{mode === "order" ? "Start your invitation" : "Welcome back"}</h1>
+            <p className="text-sm text-[var(--muted)] mt-1.5">
               {mode === "order"
                 ? "Enter the order number from your Etsy receipt (Purchases & reviews) and your email."
                 : "Enter the WSY-XXXX-XXXX-XXXX key from your welcome screen."}
@@ -59,7 +59,7 @@ export default function Redeem() {
           {mode === "order" ? (
             <>
               <label className="block"><span className="s-label">Etsy order number</span><input className="s-input" inputMode="numeric" value={orderId} onChange={(e) => setOrder(e.target.value)} placeholder="e.g. 3456789012" required /></label>
-              <label className="block"><span className="s-label">Email address</span><input className="s-input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required /></label>
+              <label className="block"><span className="s-label">Email address</span><input className="s-input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="The email on your Etsy order" required /></label>
               <p className="s-hint">Use the same order number and email to sign back in on any device.</p>
             </>
           ) : (
@@ -67,7 +67,7 @@ export default function Redeem() {
           )}
           {err && <p className="s-err" role="alert">{err}</p>}
           <button className="s-btn s-btn-primary s-btn-lg w-full" disabled={busy}>{busy ? "Checking…" : "Continue"}</button>
-          <p className="text-xs text-center text-[var(--s-muted)]">Don&apos;t have an order yet? <a href={BRAND.etsy} className="underline">Get it on Etsy</a> · <a href="/demo" className="underline">See the demo</a></p>
+          <p className="text-xs text-center text-[var(--muted)]">Don&apos;t have an order yet? <a href={BRAND.etsy} className="underline">Get it on Etsy</a> · <a href="/demo" className="underline">See the demo</a></p>
         </form>
       </main>
     </div>

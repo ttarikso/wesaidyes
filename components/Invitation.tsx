@@ -1,8 +1,8 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { InviteData } from "@/lib/types";
 import { getTheme, themeAssets, themeVars } from "@/lib/themes";
-import { trackUrl } from "@/lib/music";
+import { getTrack, trackUrl } from "@/lib/music";
 import { dateParts, fmtTime, icsFile, parseWhen } from "@/lib/format";
 import { RsvpForm } from "./RsvpForm";
 
@@ -18,22 +18,24 @@ interface Props {
   startOpen?: boolean;
 }
 
+const useIso = typeof window === "undefined" ? useEffect : useLayoutEffect;
+
 export default function Invitation({ data, theme, music, slug, mode = "live", startOpen = false }: Props) {
   const t = getTheme(theme);
   const a = themeAssets(t);
   const [stage, setStage] = useState<"closed" | "opening" | "open">(startOpen ? "open" : "closed");
   const [playing, setPlaying] = useState(false);
   const audio = useRef<HTMLAudioElement | null>(null);
-  const hasMusic = music && music !== "none";
+  const hasMusic = !!music && music !== "none";
 
   useEffect(() => { if (startOpen) setStage("open"); }, [startOpen]);
+  useEffect(() => { document.documentElement.classList.add("js"); }, []);
 
-  // keep the audio element in sync with the chosen track
   useEffect(() => {
     if (!audio.current) return;
-    const wasPlaying = !audio.current.paused;
+    const was = !audio.current.paused;
     audio.current.load();
-    if (wasPlaying && hasMusic) audio.current.play().catch(() => setPlaying(false));
+    if (was && hasMusic) audio.current.play().catch(() => setPlaying(false));
   }, [music, hasMusic]);
 
   function open() {
@@ -43,7 +45,7 @@ export default function Invitation({ data, theme, music, slug, mode = "live", st
       audio.current.volume = 0.7;
       audio.current.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
     }
-    window.setTimeout(() => setStage("open"), 3000);
+    window.setTimeout(() => setStage("open"), 2600);
   }
 
   function toggleMusic() {
@@ -53,35 +55,24 @@ export default function Invitation({ data, theme, music, slug, mode = "live", st
     else { el.pause(); setPlaying(false); }
   }
 
-  // lock page scroll while the envelope is showing
   useEffect(() => {
     document.documentElement.style.overflow = stage === "open" ? "" : "hidden";
     return () => { document.documentElement.style.overflow = ""; };
   }, [stage]);
 
   return (
-    <div className={`inv inv-${t.id} stage-${stage}`} style={themeVars(t)}>
-      <div className="inv-bg" aria-hidden />
+    <div className={`inv stage-${stage}`} data-theme={t.id} data-skip={startOpen ? "" : undefined} style={themeVars(t)}>
       {hasMusic && <audio ref={audio} src={trackUrl(music)} loop preload="none" />}
-
       {stage !== "open" && <Envelope data={data} seal={a.seal} floral={a.floral} onOpen={open} opening={stage === "opening"} />}
-
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="inv-deco inv-deco-a" src={a.floral} alt="" aria-hidden />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="inv-deco inv-deco-b" src={a.floral} alt="" aria-hidden />
       <main className="inv-main" aria-hidden={stage !== "open"}>
-        <Content data={data} floral={a.floral} slug={slug} mode={mode} visible={stage === "open"} />
+        <Page data={data} floral={a.floral} slug={slug} mode={mode} open={stage !== "closed"} music={hasMusic ? music : ""} />
       </main>
-
       {hasMusic && stage === "open" && (
-        <button className={`inv-music ${playing ? "is-playing" : ""}`} onClick={toggleMusic} aria-label={playing ? "Pause music" : "Play music"}>
-          <span className="disc" aria-hidden>
-            <span className="label" />
-          </span>
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden className="icon">
+        <button className={`iv-music ${playing ? "is-on" : ""}`} onClick={toggleMusic} aria-label={playing ? "Pause the music" : "Play the music"}>
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden>
             {playing ? <path fill="currentColor" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" /> : <path fill="currentColor" d="M8 5.5v13l11-6.5z" />}
           </svg>
+          <span>{playing ? "Music on" : "Music off"}</span>
         </button>
       )}
     </div>
@@ -91,319 +82,330 @@ export default function Invitation({ data, theme, music, slug, mode = "live", st
 /* ------------------------------------------------------------------ envelope */
 function Envelope({ data, seal, floral, onOpen, opening }: { data: InviteData; seal: string; floral: string; onOpen: () => void; opening: boolean }) {
   const dp = dateParts(data.date);
+  const initials = data.initials || `${data.partner1[0] || ""}&${data.partner2[0] || ""}`;
   return (
     <div className={`env-screen ${opening ? "is-opening" : ""}`}>
       <div className="env-wrap">
-        <p className="env-kicker">You are invited</p>
         <button type="button" className="env" onClick={onOpen} aria-label={data.openText || "Open the invitation"}>
           <span className="env-back" />
           <span className="env-letter">
-            <span className="env-letter-host">{data.hostLine || "Please join us"}</span>
-            <span className="env-letter-names">
-              {data.partner1}
-              <em>&amp;</em>
-              {data.partner2}
-            </span>
+            <span className="env-letter-names">{data.partner1} <i>&amp;</i> {data.partner2}</span>
             {dp && <span className="env-letter-date">{dp.short}</span>}
           </span>
-          <span className="env-front">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
-              <path d="M0 100 L50 52 L100 100" fill="none" stroke="rgba(0,0,0,.16)" strokeWidth=".5" vectorEffect="non-scaling-stroke" />
-              <path d="M0 100.8 L50 53 L100 100.8" fill="none" stroke="rgba(255,255,255,.18)" strokeWidth=".5" vectorEffect="non-scaling-stroke" />
-            </svg>
-          </span>
-          <span className="env-flap-wrap"><span className="env-flap" /></span>
+          <span className="env-front" />
+          <span className="env-flap" />
           <span className="env-seal">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={seal} alt="" draggable={false} />
-            <span className="env-seal-text">{data.initials || `${data.partner1[0] || ""}&${data.partner2[0] || ""}`}</span>
+            <span className="env-seal-text">{initials}</span>
           </span>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="env-floral env-floral-a" src={floral} alt="" draggable={false} />
+          <img className="env-floral" src={floral} alt="" draggable={false} />
         </button>
-        <h1 className="env-names">
-          {data.partner1} <span>&amp;</span> {data.partner2}
-        </h1>
-        {dp && <p className="env-date">{dp.dots}</p>}
-        <p className="env-cta">{data.openText || "Tap to open"}</p>
+        <p className="env-names">{data.partner1} <i>&amp;</i> {data.partner2}</p>
+        {dp && <p className="env-date">{dp.long}</p>}
+        <p className="env-cta">{data.openText || "Tap the seal to open"}</p>
       </div>
     </div>
   );
 }
 
-/* ------------------------------------------------------------------ page */
-function useReveal(visible: boolean) {
+/* ------------------------------------------------------------------ helpers */
+/** Fit the two lines of the names to the width, same size for both, capped by the theme. */
+function useMonument(deps: unknown[]) {
+  const box = useRef<HTMLHeadingElement>(null);
+  const fit = useCallback(() => {
+    const h = box.current;
+    if (!h) return;
+    const lines = Array.from(h.querySelectorAll<HTMLElement>("[data-fit]"));
+    if (!lines.length) return;
+    const host = getComputedStyle(h).display === "contents" ? (h.parentElement as HTMLElement) : h;
+    const cs = getComputedStyle(host);
+    const W = host.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const phone = window.innerWidth < 700;
+    const maxVw = parseFloat(getComputedStyle(h).getPropertyValue("--monument-max")) || 13;
+    const cap = (window.innerWidth * (phone ? Math.max(maxVw, 17) : maxVw)) / 100;
+    h.style.setProperty("--names-size", "100px");
+    let size = cap;
+    for (const l of lines) {
+      const room = W * (l.dataset.fit === "indent" && !phone ? 0.72 : 1);
+      const w = l.scrollWidth || 1;
+      size = Math.min(size, (100 * room) / w);
+    }
+    h.style.setProperty("--names-size", `${Math.max(28, Math.floor(size))}px`);
+  }, []);
+  useIso(() => {
+    fit();
+    const on = () => fit();
+    window.addEventListener("resize", on);
+    document.fonts?.ready.then(on).catch(() => {});
+    return () => window.removeEventListener("resize", on);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
+  return box;
+}
+
+function useReveal(active: boolean) {
   useEffect(() => {
-    if (!visible) return;
-    const els = Array.from(document.querySelectorAll<HTMLElement>(".rv:not(.in)"));
-    if (!("IntersectionObserver" in window)) { els.forEach((e) => e.classList.add("in")); return; }
+    if (!active) return;
+    const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]:not(.is-in)"));
+    if (!("IntersectionObserver" in window)) { els.forEach((e) => e.classList.add("is-in")); return; }
     const io = new IntersectionObserver(
-      (es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }),
-      { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+      (es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } }),
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.08 },
     );
     els.forEach((e) => io.observe(e));
     return () => io.disconnect();
   });
 }
 
-function Content({ data, floral, slug, mode, visible }: { data: InviteData; floral: string; slug: string; mode: InviteMode; visible: boolean }) {
-  useReveal(visible);
+function splitStory(text: string, parts: number): string[] {
+  const sentences = text.match(/[^.!?]+[.!?]+["”’)]*\s*|[^.!?]+$/g)?.map((s) => s.trim()).filter(Boolean) || [];
+  if (parts <= 1 || sentences.length <= 1) return [sentences.join(" ")];
+  const out: string[] = Array.from({ length: parts }, () => "");
+  sentences.forEach((s, i) => { const k = Math.min(parts - 1, Math.floor((i * parts) / sentences.length)); out[k] = (out[k] + " " + s).trim(); });
+  return out;
+}
+
+/* ------------------------------------------------------------------ the page */
+function Page({ data, floral, slug, mode, open, music }: { data: InviteData; floral: string; slug: string; mode: InviteMode; open: boolean; music: string }) {
+  useReveal(open);
   const dp = dateParts(data.date);
   const s = data.sections;
+  const names = useMonument([data.partner1, data.partner2, open]);
+  const foot = useMonument([data.partner1, data.partner2, open]);
   const location = [data.venueName, data.venueAddress].filter(Boolean).join(", ");
   const mapHref = data.mapUrl || (location ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}` : "");
-  const [showPill, setShowPill] = useState(false);
-
-  // floating RSVP button: visible after the hero, hidden while the RSVP form is on screen
-  useEffect(() => {
-    let rsvpInView = false;
-    const on = () => setShowPill(window.scrollY > window.innerHeight * 0.9 && !rsvpInView);
-    const el = document.getElementById("rsvp");
-    const io = el && "IntersectionObserver" in window
-      ? new IntersectionObserver(([e]) => { rsvpInView = e.isIntersecting; on(); }, { threshold: 0 })
-      : null;
-    if (el && io) io.observe(el);
-    on();
-    window.addEventListener("scroll", on, { passive: true });
-    return () => { window.removeEventListener("scroll", on); io?.disconnect(); };
-  }, []);
-
-  function addToCalendar() {
-    const ics = icsFile({
-      title: `${data.partner1} & ${data.partner2}'s Wedding`,
-      date: data.date,
-      time: data.time,
-      location,
-      description: data.inviteLine,
-      url: typeof window !== "undefined" ? window.location.href : "",
-    });
-    if (!ics) return;
-    const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
-    const el = document.createElement("a");
-    el.href = url;
-    el.download = `${slug || "wedding"}.ics`;
-    el.click();
-    setTimeout(() => URL.revokeObjectURL(url), 2000);
-  }
-
   const storyPhotos = data.storyPhotos.filter(Boolean);
   const gallery = data.gallery.filter(Boolean);
   const schedule = data.schedule.filter((x) => x.title || x.time);
   const faqs = data.faqs.filter((f) => f.q);
+  const storyParts = useMemo(() => splitStory(data.storyText, Math.max(1, storyPhotos.length)), [data.storyText, storyPhotos.length]);
+  const track = music ? getTrack(music) : null;
+
+  const nav = [
+    s.story && (data.storyText || storyPhotos.length) ? ["Our story", "#story"] : null,
+    s.schedule && schedule.length ? ["The day", "#day"] : null,
+    s.details && location ? ["Venue", "#venue"] : null,
+    data.rsvp.enabled ? ["RSVP", "#rsvp"] : null,
+  ].filter(Boolean) as [string, string][];
+
+  function addToCalendar() {
+    const ics = icsFile({
+      title: `${data.partner1} & ${data.partner2}'s wedding`, date: data.date, time: data.time, location,
+      description: data.inviteLine, url: typeof window !== "undefined" ? window.location.href : "",
+    });
+    if (!ics) return;
+    const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
+    const el = document.createElement("a");
+    el.href = url; el.download = `${slug || "wedding"}.ics`; el.click();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }
+
+  const when = [dp?.long, data.time ? `at ${fmtTime(data.time)}` : ""].filter(Boolean).join(" ");
 
   return (
     <>
-      {/* HERO */}
-      <section className="sec sec-hero">
-        <div className="card hero-card rv">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="hero-floral" src={floral} alt="" />
-          {data.heroPhoto && (
-            <div className="hero-photo">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={data.heroPhoto} alt={`${data.partner1} and ${data.partner2}`} />
-            </div>
-          )}
-          {data.hostLine && <p className="kicker">{data.hostLine}</p>}
-          <h1 className="hero-names">
-            <span>{data.partner1}</span>
-            <em>&amp;</em>
-            <span>{data.partner2}</span>
-          </h1>
-          {data.inviteLine && <p className="hero-line">{data.inviteLine}</p>}
-          {dp && (
-            <div className="hero-date">
-              <span className="hd-side">{dp.weekday}</span>
-              <span className="hd-mid">
-                <span className="hd-month">{dp.month}</span>
-                <span className="hd-day">{dp.day}</span>
-                <span className="hd-year">{dp.year}</span>
-              </span>
-              <span className="hd-side">{data.time ? `at ${fmtTime(data.time)}` : " "}</span>
-            </div>
-          )}
-          {data.venueName && <p className="hero-venue">{data.venueName}</p>}
-          {data.venueAddress && <p className="hero-addr">{data.venueAddress}</p>}
-          <div className="hero-actions">
-            {data.rsvp.enabled && <a className="btn btn-solid" href="#rsvp">RSVP</a>}
-            <button className="btn btn-line" onClick={addToCalendar} type="button">Add to calendar</button>
-            {mapHref && <a className="btn btn-line" href={mapHref} target="_blank" rel="noreferrer">Directions</a>}
-          </div>
+      {/* HERO: the names as a monument */}
+      <header className={`iv-hero ${data.heroPhoto ? "has-photo" : "g-paper"}`}>
+        {data.heroPhoto ? (
+          <figure className="iv-hero-pic" data-open>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={data.heroPhoto} alt={`${data.partner1} and ${data.partner2}`} fetchPriority="high" />
+          </figure>
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="iv-hero-floral" src={floral} alt="" aria-hidden />
+        )}
+        {nav.length > 0 && (
+          <nav className="iv-nav" aria-label="Sections">
+            {nav.map(([l, h]) => <a key={h} href={h}>{l}</a>)}
+          </nav>
+        )}
+        <h1 className="iv-names lines" ref={names}>
+          <span className="line l1"><span data-line data-fit="full" style={{ ["--i" as string]: 0 }}>{data.partner1}</span></span>
+          <span className="line l2"><span data-line data-fit="indent" style={{ ["--i" as string]: 1 }}><i className="amp">&amp;</i> {data.partner2}</span></span>
+        </h1>
+        <div className="iv-hero-mid" data-load>
+          <p>{when}{data.venueName ? <><br />{[data.venueName, data.venueAddress.split(",").slice(-2).join(",").trim()].filter(Boolean).join(", ")}</> : null}</p>
+          {data.rsvp.enabled ? <a className="iv-btn" href="#rsvp">Reply to the invitation</a> : <button className="iv-btn" onClick={addToCalendar}>Add to calendar</button>}
         </div>
-        <div className="scroll-hint" aria-hidden>
-          <span />
+      </header>
+
+      {/* INVITATION WORDING + COUNTDOWN */}
+      <section className="iv-intro g-sheet" data-reveal>
+        <p className="iv-statement" style={{ ["--i" as string]: 0 }}>
+          {[data.hostLine, `${data.partner1} and ${data.partner2}`].filter(Boolean).join(", ")} {data.inviteLine}
+        </p>
+        <div className="iv-count" style={{ ["--i" as string]: 1 }}>
+          {s.countdown && parseWhen(data.date, data.time) ? <Countdown date={data.date} time={data.time} line={data.closingLine} /> : <h2 className="iv-h">{dp?.long}</h2>}
+          <div className="iv-row-actions">
+            <button className="iv-link" onClick={addToCalendar} type="button">Add to calendar</button>
+            {mapHref && <a className="iv-link" href={mapHref} target="_blank" rel="noreferrer">Directions</a>}
+          </div>
         </div>
       </section>
 
-      {/* COUNTDOWN */}
-      {s.countdown && parseWhen(data.date, data.time) && (
-        <section className="sec sec-band rv">
-          <p className="band-script">{data.closingLine || "Counting down to forever"}</p>
-          <Countdown date={data.date} time={data.time} />
-        </section>
-      )}
-
-      {/* STORY */}
+      {/* STORY: pinned title, portraits pass */}
       {s.story && (data.storyText || storyPhotos.length > 0) && (
-        <section className="sec" id="story">
-          <div className="card rv">
-            <Heading kicker="How it began" title={data.storyTitle || "Our Story"} />
-            {storyPhotos.length > 0 && (
-              <div className={`polas polas-${storyPhotos.length}`}>
-                {storyPhotos.map((p, i) => (
-                  <figure className="pola" key={p + i}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={p} alt="" loading="lazy" />
-                  </figure>
-                ))}
-              </div>
-            )}
-            {data.storyText && <p className="prose">{data.storyText}</p>}
-          </div>
-        </section>
-      )}
-
-      {/* SCHEDULE */}
-      {s.schedule && schedule.length > 0 && (
-        <section className="sec" id="schedule">
-          <div className="card rv">
-            <Heading kicker={dp?.long || "The big day"} title="Order of the Day" />
-            <ol className="timeline">
-              {schedule.map((x, i) => (
-                <li key={i}>
-                  <span className="tl-time">{fmtTime(x.time)}</span>
-                  <span className="tl-dot" aria-hidden />
-                  <span className="tl-body">
-                    <strong>{x.title}</strong>
-                    {x.note && <span>{x.note}</span>}
-                  </span>
-                </li>
+        storyPhotos.length > 0 ? (
+          <section className="iv-story g-paper" id="story">
+            <div className="iv-story-pin">
+              <h2 className="iv-story-title">{data.storyTitle || "Our story"}</h2>
+            </div>
+            <div className="iv-story-run">
+              {storyPhotos.map((p, i) => (
+                <figure className={`iv-portrait ${i % 2 ? "r" : "l"}`} key={p + i} data-reveal>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={p} alt="" loading="lazy" width={800} height={1000} />
+                  {storyParts[i] && <figcaption>{storyParts[i]}</figcaption>}
+                </figure>
               ))}
-            </ol>
-          </div>
+            </div>
+          </section>
+        ) : (
+          <section className="iv-story-plain g-paper" id="story" data-reveal>
+            <h2 className="iv-h" style={{ ["--i" as string]: 0 }}>{data.storyTitle || "Our story"}</h2>
+            <p className="iv-body" style={{ ["--i" as string]: 1 }}>{data.storyText}</p>
+          </section>
+        )
+      )}
+
+      {/* THE DAY: one type size */}
+      {s.schedule && schedule.length > 0 && (
+        <section className="iv-day g-sheet" id="day" data-reveal>
+          <h2 className="iv-day-head" style={{ ["--i" as string]: 0 }}>{dp ? `${dp.weekday} ${dp.day} ${dp.month}` : "The day"}</h2>
+          <ol className={`iv-lineup ${schedule.length < 8 ? "few" : ""}`} style={{ ["--i" as string]: 1 }}>
+            {schedule.map((x, i) => (
+              <li key={i}>
+                <span className="lu-title">{x.title}</span>
+                <span className="lu-note">{x.note}</span>
+                <span className="lu-time">{fmtTime(x.time)}</span>
+              </li>
+            ))}
+          </ol>
         </section>
       )}
 
-      {/* DETAILS */}
+      {/* VENUE: address in display rows */}
       {s.details && (location || data.dressCode || data.accommodation) && (
-        <section className="sec" id="details">
-          <div className="card rv">
-            <Heading kicker="Good to know" title="Wedding Details" />
-            {location && (
-              <div className="detail">
-                <h3>The Venue</h3>
-                {data.venueName && <p className="detail-strong">{data.venueName}</p>}
-                {data.venueAddress && <p>{data.venueAddress}</p>}
-                {location && (
-                  <div className="map">
-                    <iframe
-                      title="Map"
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      src={`https://www.google.com/maps?q=${encodeURIComponent(location)}&output=embed`}
-                    />
-                  </div>
-                )}
-                {mapHref && <a className="btn btn-line btn-sm" href={mapHref} target="_blank" rel="noreferrer">Open in Maps</a>}
-              </div>
-            )}
-            {data.dressCode && (
-              <div className="detail">
-                <h3>Dress Code</h3>
-                <p>{data.dressCode}</p>
-                {data.palette.length > 0 && (
-                  <div className="swatches" aria-label="Suggested colours">
-                    {data.palette.map((c, i) => <span key={i} style={{ background: c }} />)}
-                  </div>
-                )}
-              </div>
-            )}
-            {data.accommodation && (
-              <div className="detail">
-                <h3>Accommodation</h3>
-                <p>{data.accommodation}</p>
-              </div>
-            )}
-          </div>
+        <section className="iv-venue g-paper" id="venue">
+          <h2 className="sr-only">Venue and details</h2>
+          {location && (
+            <div className="iv-rows" data-reveal>
+              {data.venueName && <p className="iv-dr" style={{ ["--i" as string]: 0 }}>{data.venueName}</p>}
+              {data.venueAddress && (
+                <p className="iv-dr" style={{ ["--i" as string]: 1 }}>
+                  <a href={mapHref} target="_blank" rel="noreferrer">{data.venueAddress}</a>
+                </p>
+              )}
+              {dp && <p className="iv-dr" style={{ ["--i" as string]: 2 }}>{dp.weekday} {dp.day} {dp.month}{data.time ? `, ${fmtTime(data.time)}` : ""}</p>}
+              {mapHref && (
+                <p className="iv-dr iv-dr-go" style={{ ["--i" as string]: 3 }}>
+                  <a href={mapHref} target="_blank" rel="noreferrer">
+                    Directions
+                    <span className="iv-round" aria-hidden>
+                      <svg viewBox="0 0 24 24" width="40%" height="40%"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" strokeWidth="2.2" /></svg>
+                    </span>
+                  </a>
+                </p>
+              )}
+            </div>
+          )}
+          {(data.dressCode || data.accommodation) && (
+            <div className="iv-notes" data-reveal>
+              {data.dressCode && (
+                <div style={{ ["--i" as string]: 0 }}>
+                  <h3 className="iv-h3">What to wear</h3>
+                  <p className="iv-body">{data.dressCode}</p>
+                  {data.palette.length > 0 && (
+                    <div className="iv-swatches" aria-label="Suggested colours">
+                      {data.palette.map((c, i) => <span key={i} style={{ background: c }} />)}
+                    </div>
+                  )}
+                </div>
+              )}
+              {data.accommodation && (
+                <div style={{ ["--i" as string]: 1 }}>
+                  <h3 className="iv-h3">Where to stay</h3>
+                  <p className="iv-body">{data.accommodation}</p>
+                </div>
+              )}
+            </div>
+          )}
         </section>
       )}
 
-      {/* GALLERY */}
+      {/* PHOTOGRAPHS: small frames, wide space */}
       {s.gallery && gallery.length > 0 && (
-        <section className="sec sec-gallery rv" id="gallery">
-          <p className="band-script">Moments</p>
-          <div className="gallery">
+        <section className="iv-strip g-sheet" id="photos" data-reveal>
+          <h2 className="iv-strip-title" style={{ ["--i" as string]: 0 }}>Photographs, {gallery.length}</h2>
+          <div className="iv-strip-row" tabIndex={0} aria-label="Photographs, scroll sideways" style={{ ["--i" as string]: 1 }}>
             {gallery.map((p, i) => (
-              <figure className="pola" key={p + i}>
+              <figure key={p + i}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p} alt="" loading="lazy" />
+                <img src={p} alt="" loading="lazy" width={400} height={600} />
               </figure>
             ))}
           </div>
         </section>
       )}
 
-      {/* FAQ */}
+      {/* QUESTIONS */}
       {s.faq && faqs.length > 0 && (
-        <section className="sec" id="faq">
-          <div className="card rv">
-            <Heading kicker="Questions & answers" title="FAQs" />
-            <div className="faqs">
-              {faqs.map((f, i) => (
-                <details key={i}>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
-                </details>
-              ))}
-            </div>
+        <section className="iv-faq g-paper" id="questions" data-reveal>
+          <h2 className="iv-faq-head" style={{ ["--i" as string]: 0 }}>Questions you may have</h2>
+          <div className="iv-faq-list" style={{ ["--i" as string]: 1 }}>
+            {faqs.map((f, i) => (
+              <details key={i}>
+                <summary>{f.q}<span className="chev" aria-hidden /></summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
           </div>
         </section>
       )}
 
-      {/* RSVP */}
+      {/* RSVP on the inverted field */}
       {data.rsvp.enabled && (
-        <section className="sec" id="rsvp">
-          <div className="card rv">
-            <Heading kicker={data.rsvp.deadline ? `Kindly reply by ${dateParts(data.rsvp.deadline)?.short}` : "Will you join us?"} title="RSVP" />
+        <section className="iv-rsvp g-inverse" id="rsvp" data-reveal>
+          <h2 className="iv-rsvp-head lines" style={{ ["--i" as string]: 0 }}>
+            <span className="line"><span>Will you</span></span>
+            <span className="line"><span>join us?</span></span>
+          </h2>
+          <div className="iv-rsvp-side" style={{ ["--i" as string]: 1 }}>
+            <p className="iv-lead">
+              {data.rsvp.deadline ? `Please reply by ${dateParts(data.rsvp.deadline)?.short}.` : "Please reply as soon as you know."}{" "}
+              It takes a minute, and you can reply for each guest separately.
+            </p>
+          </div>
+          <div className="iv-rsvp-form" style={{ ["--i" as string]: 2 }}>
             <RsvpForm settings={data.rsvp} slug={slug} preview={mode === "preview"} />
           </div>
         </section>
       )}
 
-      {/* CLOSING */}
-      <footer className="sec sec-close rv">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="close-floral" src={floral} alt="" />
-        <p className="close-kicker">Sincerely yours,</p>
-        <p className="close-names">
-          {data.partner1} &amp; {data.partner2}
+      {/* FOOTER: the names return at full width */}
+      <footer className="iv-foot g-inverse">
+        <div className="iv-foot-cols">
+          <div><p className="strong">When</p><p>{dp?.long}</p>{data.time && <p>{fmtTime(data.time)}</p>}</div>
+          {location && <div><p className="strong">Where</p>{data.venueName && <p>{data.venueName}</p>}{data.venueAddress && <p>{data.venueAddress}</p>}</div>}
+          <div><p className="strong">Reply</p>{data.rsvp.enabled ? <p><a href="#rsvp">Send your reply</a></p> : <p>No reply needed</p>}{data.rsvp.deadline && <p>by {dateParts(data.rsvp.deadline)?.short}</p>}</div>
+          {track && <div><p className="strong">The music</p><p>{track.title}</p><p>{track.style}</p></div>}
+        </div>
+        <p className="iv-foot-names" ref={foot} aria-label={`${data.partner1} and ${data.partner2}`}>
+          <span data-fit="full">{data.partner1} <i className="amp">&amp;</i> {data.partner2}</span>
         </p>
-        {dp && <p className="close-date">{dp.dots}</p>}
+        <p className="iv-legal">
+          <span>{data.closingLine || "With love"}</span>
+          <a href="https://wesaidyes.site" target="_blank" rel="noreferrer">Made with We Said Yes</a>
+        </p>
       </footer>
-
-      {data.rsvp.enabled && (
-        <a href="#rsvp" className={`rsvp-pill ${showPill ? "show" : ""}`}>
-          RSVP
-        </a>
-      )}
     </>
   );
 }
 
-function Heading({ kicker, title }: { kicker?: string; title: string }) {
-  return (
-    <header className="h">
-      {kicker && <p className="kicker">{kicker}</p>}
-      <h2>{title}</h2>
-      <svg className="orn" viewBox="0 0 120 12" aria-hidden>
-        <path d="M2 6h44M74 6h44" stroke="currentColor" strokeWidth=".8" />
-        <path d="M60 1.5c2.4 2.6 2.4 6.4 0 9-2.4-2.6-2.4-6.4 0-9z M52 6c2.6-2 5.2-2 8 0-2.8 2-5.4 2-8 0z M68 6c-2.6-2-5.2-2-8 0 2.8 2 5.4 2 8 0z" fill="currentColor" />
-      </svg>
-    </header>
-  );
-}
-
-function Countdown({ date, time }: { date: string; time: string }) {
+function Countdown({ date, time, line }: { date: string; time: string; line: string }) {
   const target = useMemo(() => parseWhen(date, time)?.getTime() || 0, [date, time]);
   const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
@@ -411,25 +413,17 @@ function Countdown({ date, time }: { date: string; time: string }) {
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
   }, []);
-  if (now === null) return <div className="cd" style={{ visibility: "hidden" }}><span className="cd-u"><b>00</b><i>days</i></span></div>;
-  const diff = Math.max(0, target - now);
-  if (diff === 0) return <p className="cd-done">Today is the day!</p>;
+  const diff = now === null ? 0 : Math.max(0, target - now);
   const d = Math.floor(diff / 86400000);
   const h = Math.floor((diff / 3600000) % 24);
   const m = Math.floor((diff / 60000) % 60);
   const sec = Math.floor((diff / 1000) % 60);
-  const u = (v: number, l: string) => (
-    <span className="cd-u">
-      <b>{String(v).padStart(2, "0")}</b>
-      <i>{l}</i>
-    </span>
-  );
+  const pl = (n: number, w: string) => `${n} ${w}${n === 1 ? "" : "s"}`;
   return (
-    <div className="cd" role="timer">
-      {u(d, d === 1 ? "day" : "days")}
-      {u(h, "hours")}
-      {u(m, "minutes")}
-      {u(sec, "seconds")}
+    <div className="iv-countdown" role="timer" aria-live="off">
+      <h2 className="iv-days">{now === null ? " " : diff === 0 ? "Today" : `In ${pl(d, "day")}`}</h2>
+      <p className="iv-ticks">{now === null || diff === 0 ? " " : `${pl(h, "hour")}, ${pl(m, "minute")} and ${pl(sec, "second")}`}</p>
+      {line && <p className="iv-soft">{line}</p>}
     </div>
   );
 }

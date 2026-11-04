@@ -1,77 +1,92 @@
-/* Theme catalogue. A theme = paper texture + wax seal + floral art + colours + fonts.
-   To add a theme: drop <id>-paper.webp, <id>-seal.webp, <id>-floral.webp into
-   public/themes and add an entry below. Font keys map to CSS variables in app/layout.tsx. */
+/* Theme catalogue. A theme = paper texture + wax seal + floral art + colours + a type system.
+   Type systems come from the taste-skill library (one tested setting per face), chosen per mood.
+   To add a theme: drop <art>-paper.webp, <art>-seal.webp, <art>-floral.webp into public/themes,
+   make sure its faces are loaded in app/layout.tsx (Fontsource) or styles/fonts.css (Fontshare),
+   and add an entry below. */
 
-export type ScriptFont = "greatvibes" | "pinyon" | "parisienne" | "allura";
-export type SerifFont = "cormorant" | "playfair" | "cinzel";
+export interface TypeSystem {
+  id: string; // taste-skill library id
+  display: string; // CSS font-family stack for the names and headings
+  displayWeight: number;
+  displayTrack: string; // letter-spacing at display size
+  displayLead: number;
+  upper: boolean; // names set in capitals
+  connectorItalic: boolean; // "&" and small joining words in italic of the display face
+  sealWeight: number; // weight for the initials pressed into the wax
+  text: string; // CSS font-family stack for everything else
+  textTrack: string;
+  bodyLead: number;
+  monumentMax: number; // largest the names may get, in vw
+}
 
 export interface Theme {
   id: string;
   name: string;
   mood: string;
   art: string; // asset prefix in /public/themes
-  bg: string; // fallback colour of the paper
-  onBg: string; // text on the coloured paper
-  onBgSoft: string;
-  card: string; // ivory card colour
-  ink: string; // body text on card
-  accent: string; // headings, buttons on card
-  accentInk: string; // text on accent buttons
-  line: string; // hairlines on card
+  bg: string; // the coloured paper (page ground), as rendered after paperTone
+  paperTone?: string; // multiplied over the paper texture to deepen it (keeps body text at 4.5:1)
+  onBg: string; // ink on the coloured paper
+  onBgSoft: string; // secondary ink on the coloured paper (still 4.5:1)
+  card: string; // the ivory sheet (one tone step for sections)
+  ink: string; // ink on the ivory sheet
+  accent: string; // one accent, used on the ivory sheet only
   sealInk: string; // initials on the wax seal
-  script: ScriptFont;
-  serif: SerifFont;
+  type: TypeSystem;
 }
 
+const T = {
+  newsreader: {
+    id: "newsreader-light", display: '"Newsreader Variable", Georgia, serif', displayWeight: 300, displayTrack: "-0.05em", displayLead: 0.9,
+    upper: false, connectorItalic: false, sealWeight: 400, text: '"Newsreader Variable", Georgia, serif', textTrack: "0", bodyLead: 1.6, monumentMax: 14,
+  },
+  sentient: {
+    id: "sentient-light", display: '"Sentient", Georgia, serif', displayWeight: 300, displayTrack: "-0.015em", displayLead: 1.0,
+    upper: false, connectorItalic: false, sealWeight: 400, text: '"Sentient", Georgia, serif', textTrack: "0", bodyLead: 1.55, monumentMax: 12,
+  },
+  boska: {
+    id: "boska-roman-italic", display: '"Boska", Georgia, serif', displayWeight: 400, displayTrack: "-0.02em", displayLead: 0.95,
+    upper: false, connectorItalic: true, sealWeight: 500, text: '"Boska", Georgia, serif', textTrack: "0.005em", bodyLead: 1.5, monumentMax: 14,
+  },
+  bricolage: {
+    id: "bricolage-contrast", display: '"Bricolage Grotesque Variable", "Helvetica Neue", Arial, sans-serif', displayWeight: 600, displayTrack: "-0.04em", displayLead: 0.92,
+    upper: false, connectorItalic: false, sealWeight: 600, text: '"Bricolage Grotesque Variable", "Helvetica Neue", Arial, sans-serif', textTrack: "0", bodyLead: 1.5, monumentMax: 13,
+  },
+  zodiak: {
+    id: "zodiak-hairline", display: '"Zodiak", Georgia, serif', displayWeight: 100, displayTrack: "-0.01em", displayLead: 1.0,
+    upper: true, connectorItalic: false, sealWeight: 300, text: '"Hanken Grotesk Variable", "Helvetica Neue", Arial, sans-serif', textTrack: "0", bodyLead: 1.5, monumentMax: 11,
+  },
+  gambarino: {
+    id: "gambarino-general", display: '"Gambarino", Georgia, serif', displayWeight: 400, displayTrack: "-0.02em", displayLead: 0.92,
+    upper: false, connectorItalic: false, sealWeight: 400, text: '"General Sans", "Helvetica Neue", Arial, sans-serif', textTrack: "0", bodyLead: 1.5, monumentMax: 15,
+  },
+  imbue: {
+    id: "imbue-albert", display: '"Imbue Variable", Georgia, serif', displayWeight: 400, displayTrack: "-0.01em", displayLead: 0.9,
+    upper: true, connectorItalic: false, sealWeight: 500, text: '"Albert Sans Variable", "Helvetica Neue", Arial, sans-serif', textTrack: "0", bodyLead: 1.55, monumentMax: 15,
+  },
+  bodoni: {
+    id: "bodoni-jost", display: '"Bodoni Moda Variable", Didot, Georgia, serif', displayWeight: 500, displayTrack: "-0.02em", displayLead: 0.95,
+    upper: true, connectorItalic: false, sealWeight: 500, text: '"Jost Variable", "Helvetica Neue", Arial, sans-serif', textTrack: "0.01em", bodyLead: 1.6, monumentMax: 12,
+  },
+} satisfies Record<string, TypeSystem>;
+
 export const THEMES: Theme[] = [
-  {
-    id: "dusty-blue", name: "Dusty Blue & Silver", mood: "Classic · Eucalyptus", art: "blue",
-    bg: "#5f7a99", onBg: "#f6f3ec", onBgSoft: "rgba(246,243,236,.78)", card: "#faf7f1", ink: "#33445a",
-    accent: "#4f6a8a", accentInk: "#ffffff", line: "rgba(79,106,138,.28)", sealInk: "rgba(42,60,84,.82)",
-    script: "pinyon", serif: "cormorant",
-  },
-  {
-    id: "olive-grove", name: "Olive Grove", mood: "Garden · White roses", art: "olive",
-    bg: "#5d6b3a", onBg: "#f7f3e6", onBgSoft: "rgba(247,243,230,.8)", card: "#fbf8ef", ink: "#3b4226",
-    accent: "#5d6b3a", accentInk: "#ffffff", line: "rgba(93,107,58,.3)", sealInk: "rgba(32,40,16,.8)",
-    script: "greatvibes", serif: "cormorant",
-  },
-  {
-    id: "blush-peony", name: "Blush Peony", mood: "Romantic · Rose gold", art: "blush",
-    bg: "#e8c4c0", onBg: "#6a3b3e", onBgSoft: "rgba(106,59,62,.75)", card: "#fdf9f6", ink: "#5a3a3b",
-    accent: "#b4686d", accentInk: "#ffffff", line: "rgba(180,104,109,.3)", sealInk: "rgba(120,60,64,.75)",
-    script: "parisienne", serif: "cormorant",
-  },
-  {
-    id: "desert-boho", name: "Desert Boho", mood: "Boho · Pampas grass", art: "terracotta",
-    bg: "#b86a4b", onBg: "#fbf1e6", onBgSoft: "rgba(251,241,230,.82)", card: "#fbf6ee", ink: "#55331f",
-    accent: "#a5573a", accentInk: "#ffffff", line: "rgba(165,87,58,.3)", sealInk: "rgba(90,36,16,.8)",
-    script: "allura", serif: "playfair",
-  },
-  {
-    id: "midnight-gold", name: "Midnight & Gold", mood: "Luxury · Celestial", art: "navy",
-    bg: "#1c2541", onBg: "#f0e3bf", onBgSoft: "rgba(240,227,191,.8)", card: "#fbf8f0", ink: "#1c2541",
-    accent: "#a8822f", accentInk: "#ffffff", line: "rgba(168,130,47,.35)", sealInk: "rgba(110,78,18,.85)",
-    script: "greatvibes", serif: "cinzel",
-  },
-  {
-    id: "burgundy-rose", name: "Burgundy Rose", mood: "Moody · Autumn & winter", art: "burgundy",
-    bg: "#6b1f2a", onBg: "#f6e7dc", onBgSoft: "rgba(246,231,220,.8)", card: "#fbf6f1", ink: "#4a1620",
-    accent: "#7a2333", accentInk: "#ffffff", line: "rgba(122,35,51,.28)", sealInk: "rgba(60,8,16,.82)",
-    script: "pinyon", serif: "playfair",
-  },
-  {
-    id: "provence-lavender", name: "Provence Lavender", mood: "Soft · Lavender fields", art: "lavender",
-    bg: "#b7a6cf", onBg: "#3c3156", onBgSoft: "rgba(60,49,86,.75)", card: "#fcfaf7", ink: "#3c3156",
-    accent: "#6d5a91", accentInk: "#ffffff", line: "rgba(109,90,145,.3)", sealInk: "rgba(72,54,104,.75)",
-    script: "parisienne", serif: "cormorant",
-  },
-  {
-    id: "black-tie", name: "Black Tie", mood: "Modern · Calla lilies", art: "noir",
-    bg: "#151515", onBg: "#f2efe8", onBgSoft: "rgba(242,239,232,.72)", card: "#fbfaf7", ink: "#1b1b1b",
-    accent: "#1b1b1b", accentInk: "#ffffff", line: "rgba(27,27,27,.22)", sealInk: "rgba(220,220,220,.78)",
-    script: "allura", serif: "cinzel",
-  },
+  { id: "dusty-blue", name: "Dusty Blue & Silver", mood: "Eucalyptus and a silver laurel seal", art: "blue",
+    bg: "#4c627a", paperTone: "#cccccc", onBg: "#f3f5f7", onBgSoft: "#e2e7ed", card: "#eef1f4", ink: "#26364a", accent: "#3f5a7a", sealInk: "rgba(42,60,84,.86)", type: T.newsreader },
+  { id: "olive-grove", name: "Olive Grove", mood: "White garden roses and olive branches", art: "olive",
+    bg: "#566235", paperTone: "#ebebeb", onBg: "#f2f3ee", onBgSoft: "#e1e3d8", card: "#eff0eb", ink: "#2f3520", accent: "#4f5c2e", sealInk: "rgba(28,36,12,.86)", type: T.sentient },
+  { id: "blush-peony", name: "Blush Peony", mood: "Peonies and a rose-gold seal", art: "blush",
+    bg: "#e8c4c0", onBg: "#4f2a2d", onBgSoft: "#6a3d40", card: "#f5f0f0", ink: "#4a2a2c", accent: "#9a4f55", sealInk: "rgba(110,52,56,.82)", type: T.boska },
+  { id: "desert-boho", name: "Desert Boho", mood: "Pampas grass and terracotta wax", art: "terracotta",
+    bg: "#8c5139", paperTone: "#c2c2c2", onBg: "#fbf5f2", onBgSoft: "#f6e4dc", card: "#f3efed", ink: "#4a2a19", accent: "#93472b", sealInk: "rgba(80,30,12,.86)", type: T.bricolage },
+  { id: "midnight-gold", name: "Midnight & Gold", mood: "Gold leaf, magnolia and stars", art: "navy",
+    bg: "#1c2541", onBg: "#e9dcb4", onBgSoft: "#d6cba9", card: "#eff0f4", ink: "#161d33", accent: "#7d5f1c", sealInk: "rgba(96,66,12,.9)", type: T.zodiak },
+  { id: "burgundy-rose", name: "Burgundy Rose", mood: "Wine-dark roses for autumn and winter", art: "burgundy",
+    bg: "#6b1f2a", onBg: "#f5ecec", onBgSoft: "#e8d5d5", card: "#f3eeef", ink: "#3d1219", accent: "#7a2333", sealInk: "rgba(54,6,14,.86)", type: T.gambarino },
+  { id: "provence-lavender", name: "Provence Lavender", mood: "Lavender, wisteria and sweet peas", art: "lavender",
+    bg: "#b7a6cf", onBg: "#2c2342", onBgSoft: "#3f3458", card: "#f2f0f5", ink: "#2c2342", accent: "#5a4780", sealInk: "rgba(66,48,98,.82)", type: T.imbue },
+  { id: "black-tie", name: "Black Tie", mood: "Calla lilies on black", art: "noir",
+    bg: "#151515", onBg: "#f1f1ef", onBgSoft: "#cfcfcb", card: "#f0f0ee", ink: "#151515", accent: "#151515", sealInk: "rgba(225,225,225,.82)", type: T.bodoni },
 ];
 
 export const DEFAULT_THEME = THEMES[0].id;
@@ -91,6 +106,7 @@ export function themeAssets(t: Theme) {
 
 export function themeVars(t: Theme): React.CSSProperties {
   const a = themeAssets(t);
+  const y = t.type;
   return {
     ["--bg" as string]: t.bg,
     ["--on-bg" as string]: t.onBg,
@@ -98,12 +114,19 @@ export function themeVars(t: Theme): React.CSSProperties {
     ["--card" as string]: t.card,
     ["--ink" as string]: t.ink,
     ["--accent" as string]: t.accent,
-    ["--accent-ink" as string]: t.accentInk,
-    ["--line" as string]: t.line,
     ["--seal-ink" as string]: t.sealInk,
     ["--paper-img" as string]: `url(${a.paper})`,
-    ["--card-img" as string]: `url(${a.card})`,
-    ["--script" as string]: `var(--f-${t.script})`,
-    ["--serif" as string]: `var(--f-${t.serif})`,
+    ["--paper-tone" as string]: t.paperTone || "#ffffff",
+    ["--f-display" as string]: y.display,
+    ["--f-text" as string]: y.text,
+    ["--display-weight" as string]: String(y.displayWeight),
+    ["--display-track" as string]: y.displayTrack,
+    ["--display-lead" as string]: String(y.displayLead),
+    ["--display-case" as string]: y.upper ? "uppercase" : "none",
+    ["--amp-style" as string]: y.connectorItalic ? "italic" : "normal",
+    ["--seal-weight" as string]: String(y.sealWeight),
+    ["--text-track" as string]: y.textTrack,
+    ["--body-lead" as string]: String(y.bodyLead),
+    ["--monument-max" as string]: `${y.monumentMax}vw`,
   };
 }

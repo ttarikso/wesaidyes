@@ -36,7 +36,7 @@ export function Toggle({ label, hint, checked, onChange }: { label: string; hint
   return (
     <div className="flex items-start justify-between gap-4 py-1">
       <div>
-        <p className="text-[.92rem] font-medium">{label}</p>
+        <p className="text-[14px] font-medium">{label}</p>
         {hint && <p className="s-hint mt-0.5">{hint}</p>}
       </div>
       <button type="button" role="switch" aria-checked={checked} aria-label={label} className="s-switch mt-0.5" onClick={() => onChange(!checked)} />
@@ -46,10 +46,10 @@ export function Toggle({ label, hint, checked, onChange }: { label: string; hint
 
 export function Section({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
-    <section className="s-card p-5 space-y-4">
+    <section className="s-section space-y-4">
       <header>
-        <h2 className="text-[1.05rem] font-semibold">{title}</h2>
-        {desc && <p className="s-hint mt-1">{desc}</p>}
+        <h2 className="s-h2">{title}</h2>
+        {desc && <p className="text-[14px] leading-5 text-[var(--muted)] mt-1">{desc}</p>}
       </header>
       {children}
     </section>
@@ -88,30 +88,30 @@ export function Photos({ value, onChange, max, label, hint }: { value: string[];
       <span className="s-label">{label}</span>
       <div className="grid grid-cols-3 gap-2">
         {value.map((src, i) => (
-          <div key={src + i} className="relative group aspect-[4/5] rounded-lg overflow-hidden border border-[var(--s-line)] bg-[var(--s-soft)]">
+          <div key={src + i} className="relative group aspect-[4/5] rounded-lg overflow-hidden border border-[var(--border)] bg-[var(--raised)]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={src} alt="" className="w-full h-full object-cover" />
-            <div className="absolute inset-x-0 bottom-0 flex justify-between p-1 bg-gradient-to-t from-black/55 to-transparent">
+            <div className="absolute inset-x-0 bottom-0 flex justify-between p-1">
               <span className="flex gap-1">
-                {max > 1 && i > 0 && <button type="button" onClick={() => move(i, -1)} className="size-7 rounded-full bg-white/90 text-xs" aria-label="Move left">←</button>}
-                {max > 1 && i < value.length - 1 && <button type="button" onClick={() => move(i, 1)} className="size-7 rounded-full bg-white/90 text-xs" aria-label="Move right">→</button>}
+                {max > 1 && i > 0 && <button type="button" onClick={() => move(i, -1)} className="size-7 rounded-full bg-white text-xs border border-[var(--border)]" aria-label="Move left">←</button>}
+                {max > 1 && i < value.length - 1 && <button type="button" onClick={() => move(i, 1)} className="size-7 rounded-full bg-white text-xs border border-[var(--border)]" aria-label="Move right">→</button>}
               </span>
-              <button type="button" onClick={() => onChange(value.filter((_, k) => k !== i))} className="size-7 rounded-full bg-white/90 text-xs" aria-label="Remove photo">✕</button>
+              <button type="button" onClick={() => onChange(value.filter((_, k) => k !== i))} className="size-7 rounded-full bg-white border border-[var(--border)] grid place-items-center" aria-label="Remove photo"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden><path d="M4 4l8 8M12 4l-8 8" /></svg></button>
             </div>
           </div>
         ))}
         {Array.from({ length: busy }).map((_, i) => (
-          <div key={"b" + i} className="aspect-[4/5] rounded-lg border border-dashed border-[var(--s-line)] grid place-items-center text-xs text-[var(--s-muted)] animate-pulse">Uploading…</div>
+          <div key={"b" + i} className="aspect-[4/5] rounded-lg border border-dashed border-[var(--control)] grid place-items-center text-xs text-[var(--muted)]">Uploading…</div>
         ))}
         {value.length + busy < max && (
-          <button type="button" onClick={() => input.current?.click()} className="aspect-[4/5] rounded-lg border border-dashed border-[#cdbfae] grid place-items-center text-[var(--s-muted)] hover:bg-[var(--s-soft)] transition">
+          <button type="button" onClick={() => input.current?.click()} className="aspect-[4/5] rounded-lg border border-dashed border-[var(--control)] grid place-items-center text-[var(--muted)] hover:bg-[var(--raised)] transition">
             <span className="text-center text-xs leading-tight"><span className="block text-2xl leading-none mb-1">+</span>Add photo</span>
           </button>
         )}
       </div>
       <input ref={input} type="file" accept="image/jpeg,image/png,image/webp,image/heic" multiple={max > 1} hidden onChange={(e) => pick(e.target.files)} />
       {hint && <p className="s-hint">{hint}</p>}
-      {err && <p className="s-hint !text-[var(--s-err)]">{err}</p>}
+      {err && <p className="s-hint !text-[var(--negative)]">{err}</p>}
     </div>
   );
 }
