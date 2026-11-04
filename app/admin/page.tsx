@@ -8,6 +8,7 @@ export default function Admin() {
   const [secret, setSecret] = useState("");
   const [authed, setAuthed] = useState(false);
   const [rows, setRows] = useState<License[]>([]);
+  const [etsyInfo, setEtsyInfo] = useState<{ connected: boolean; lastRefreshed: string | null } | null>(null);
   const [text, setText] = useState("");
   const [msg, setMsg] = useState("");
   const [q, setQ] = useState("");
@@ -18,6 +19,11 @@ export default function Admin() {
     if (!res.ok) { setMsg("Wrong admin password."); return; }
     setAuthed(true); setMsg("");
     setRows((await res.json()).licenses);
+
+    const etsyRes = await fetch("/api/admin/etsy/status", { headers: h() });
+    if (etsyRes.ok) {
+      setEtsyInfo(await etsyRes.json());
+    }
   }
   async function add() {
     const res = await fetch("/api/admin/orders", { method: "POST", headers: h(), body: JSON.stringify({ text }) });
@@ -43,6 +49,23 @@ export default function Admin() {
           </form>
         ) : (
           <>
+            <section className="s-card p-4 flex flex-wrap items-center justify-between gap-3 text-sm">
+              <div className="flex items-center gap-2">
+                <span className={`inline-block w-2.5 h-2.5 rounded-full ${etsyInfo?.connected ? "bg-emerald-500" : "bg-amber-500"}`} />
+                <span>
+                  {etsyInfo?.connected
+                    ? `Etsy connected · Token refreshed ${etsyInfo.lastRefreshed ? new Date(etsyInfo.lastRefreshed).toLocaleString() : "recently"}`
+                    : "Etsy not connected"}
+                </span>
+              </div>
+              <a
+                href={`/api/admin/etsy/connect?secret=${encodeURIComponent(secret)}`}
+                className="s-btn s-btn-sm"
+              >
+                {etsyInfo?.connected ? "Reconnect Etsy" : "Connect Etsy"}
+              </a>
+            </section>
+
             <section className="s-card p-5 space-y-3">
               <h2 className="font-semibold">Add Etsy orders (optional)</h2>
               <p className="s-hint">New orders activate automatically. Pasting orders here is only needed if you want to pre-register them. Paste order numbers or the Etsy Orders CSV.</p>
@@ -57,11 +80,28 @@ export default function Admin() {
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="text-left text-xs uppercase text-[var(--muted)]"><tr><th className="p-2">Order</th><th className="p-2">Email</th><th className="p-2">Status</th><th className="p-2">Activated</th><th className="p-2" /></tr></thead>
+                  <thead className="text-left text-xs uppercase text-[var(--muted)]">
+                    <tr>
+                      <th className="p-2">Order</th>
+                      <th className="p-2">Email</th>
+                      <th className="p-2">Source</th>
+                      <th className="p-2">Status</th>
+                      <th className="p-2">Activated</th>
+                      <th className="p-2" />
+                    </tr>
+                  </thead>
                   <tbody>
                     {shown.map((r) => (
                       <tr key={r.id} className="border-t border-[var(--border)]">
-                        <td className="p-2 font-mono">{r.order_id}</td><td className="p-2">{r.email || "–"}</td><td className="p-2">{r.status}</td>
+                        <td className="p-2 font-mono">
+                          {r.order_id}
+                          {(r.etsy_quantity || 1) > 1 && (
+                            <span className="ml-1.5 text-xs text-[var(--muted)]">({r.etsy_quantity}x)</span>
+                          )}
+                        </td>
+                        <td className="p-2">{r.email || "–"}</td>
+                        <td className="p-2 text-xs uppercase text-[var(--muted)]">{r.source || "manual"}</td>
+                        <td className="p-2">{r.status}</td>
                         <td className="p-2">{r.claimed_at ? new Date(r.claimed_at).toLocaleDateString() : "–"}</td>
                         <td className="p-2 text-right">
                           {r.status !== "revoked" ? <button className="s-btn s-btn-sm" onClick={() => status(r.id, "revoked")}>Revoke</button>

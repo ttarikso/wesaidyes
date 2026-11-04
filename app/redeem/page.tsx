@@ -58,7 +58,11 @@ export default function Redeem() {
           </div>
           {mode === "order" ? (
             <>
-              <label className="block"><span className="s-label">Etsy order number</span><input className="s-input" inputMode="numeric" value={orderId} onChange={(e) => setOrder(e.target.value)} placeholder="e.g. 3456789012" required /></label>
+              <label className="block">
+                <span className="s-label">Etsy order number</span>
+                <input className="s-input" inputMode="numeric" value={orderId} onChange={(e) => setOrder(e.target.value)} placeholder="e.g. 3456789012" required />
+                <p className="s-hint text-xs mt-1">The number after Order # in Etsy, under Purchases and reviews.</p>
+              </label>
               <label className="block"><span className="s-label">Email address</span><input className="s-input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="The email on your Etsy order" required /></label>
               <p className="s-hint">Use the same order number and email to sign back in on any device.</p>
             </>
