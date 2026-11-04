@@ -45,7 +45,7 @@ export default function Home() {
       <HeroInk />
 
       {/* 1. The pinned title over the designs */}
-      <section className="h-run" style={{ ["--run-ink" as string]: RUN[0].ink, ["--run-ground" as string]: RUN[0].ground, ["--n" as string]: RUN.length }}>
+      <section className="h-run" style={{ ["--run-ink" as string]: RUN[0].ink, ["--run-ground" as string]: RUN[0].ground, ["--run-img" as string]: `url(/site/run-d-${RUN[0].id}.webp)`, ["--run-img-m" as string]: `url(/site/run-m-${RUN[0].id}.webp)`, ["--n" as string]: RUN.length }}>
         <div className="h-pin">
           <div className="h-band" aria-hidden />
           <nav className="h-nav" aria-label="Main">
@@ -63,25 +63,24 @@ export default function Home() {
         </div>
         <div className="h-panels">
           {RUN.map((r, i) => (
-            <figure key={r.id} className="h-panel" data-ink={r.ink} data-ground={r.ground} style={{ background: r.ground }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/site/env-${r.id}.webp`} alt={`The ${THEMES.find((t) => t.id === r.id)?.name} envelope`} width={800} height={1200} loading={i === 0 ? "eager" : "lazy"} fetchPriority={i === 0 ? "high" : undefined} />
+            <figure key={r.id} className="h-panel" data-ink={r.ink} data-ground={r.ground} data-img={`url(/site/run-d-${r.id}.webp)`} data-img-m={`url(/site/run-m-${r.id}.webp)`} style={{ background: r.ground }}>
+              {/* the design's own paper fills the whole screen; the envelope sits on it as it does for a guest */}
+              <picture>
+                <source media="(max-width: 699px)" srcSet={`/site/run-m-${r.id}.webp`} width={780} height={1328} />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`/site/run-d-${r.id}.webp`} alt={`The ${THEMES.find((t) => t.id === r.id)?.name} envelope`} width={2880} height={1800} loading={i === 0 ? "eager" : "lazy"} fetchPriority={i === 0 ? "high" : undefined} />
+              </picture>
               <figcaption style={{ color: r.ink }}>{r.caption}</figcaption>
             </figure>
           ))}
         </div>
       </section>
 
-      {/* 2. The live thing: your names in the seal */}
+      {/* 2. The live thing: type your names, open your own demo */}
       <section className="live" id="try" aria-labelledby="live-h">
         <div className="live-photo" aria-hidden>
-          <div className="live-box">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/site/seal-macro.webp" alt="" width={2000} height={1125} />
-            <svg className="live-initials" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden>
-              <text id="seal-initials" x="873.6" y="417.6" textAnchor="middle" dominantBaseline="central">A&amp;J</text>
-            </svg>
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/site/live-envelope.webp" alt="" width={2400} height={1602} loading="lazy" />
         </div>
         <div className="live-card" data-reveal>
           <h2 id="live-h" className="live-h">Try it with your names</h2>

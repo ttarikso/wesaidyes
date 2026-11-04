@@ -15,6 +15,8 @@ export function HeroInk() {
         const p = e.target as HTMLElement;
         hero.style.setProperty("--run-ink", p.dataset.ink || "");
         hero.style.setProperty("--run-ground", p.dataset.ground || "");
+        hero.style.setProperty("--run-img", p.dataset.img || "none");
+        hero.style.setProperty("--run-img-m", p.dataset.imgM || "none");
       }),
       { rootMargin: "-45% 0px -45% 0px" },
     );
@@ -40,21 +42,16 @@ export function Reveal() {
   return null;
 }
 
-/* The live thing: type your names, see them pressed into the seal, get your link, open your demo. */
+/* The live thing: type your names, see them set as on the envelope, get your link, open your own demo. */
 export function LiveNames() {
   const [a, setA] = useState("");
   const [b, setB] = useState("");
   const n1 = a.trim() || "Amelia";
   const n2 = b.trim() || "Julian";
-  const initials = `${n1[0] || ""}&${n2[0] || ""}`.toUpperCase();
   const slug = slugify(`${n1}-and-${n2}`) || "your-names";
-  useEffect(() => {
-    document.documentElement.style.setProperty("--seal-initials", JSON.stringify(initials));
-    const el = document.getElementById("seal-initials");
-    if (el) el.textContent = initials;
-  }, [initials]);
   return (
     <form className="live-form" action="/demo" method="get">
+      <p className="live-names" aria-live="polite">{n1} <i>&amp;</i> {n2}</p>
       <label className="live-field">
         <span>Your first name</span>
         <input name="a" value={a} onChange={(e) => setA(e.target.value)} placeholder="Amelia" autoComplete="given-name" maxLength={30} />
