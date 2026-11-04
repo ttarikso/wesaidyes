@@ -7,8 +7,21 @@ create table if not exists licenses (
   email text,
   key text unique,
   status text not null default 'available' check (status in ('available','claimed','revoked')),
+  source text not null default 'manual' check (source in ('manual','etsy','legacy')),
+  etsy_quantity int not null default 1,
+  etsy_status text,
+  verified_at timestamptz,
   created_at timestamptz not null default now(),
   claimed_at timestamptz
+);
+
+-- the shop's Etsy tokens; one row; only the server (service role) reads it
+create table if not exists public.etsy_auth (
+  id int primary key default 1 check (id = 1),
+  access_token text not null,
+  refresh_token text not null,
+  expires_at timestamptz not null,
+  updated_at timestamptz not null default now()
 );
 
 create table if not exists invitations (
@@ -45,6 +58,7 @@ create index if not exists rsvps_invitation_idx on rsvps(invitation_id);
 alter table licenses enable row level security;
 alter table invitations enable row level security;
 alter table rsvps enable row level security;
+alter table public.etsy_auth enable row level security;
 
 -- Public bucket for couple photos (uploads go through the server with the service role).
 insert into storage.buckets (id, name, public) values ('photos', 'photos', true)

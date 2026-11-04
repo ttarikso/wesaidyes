@@ -4,9 +4,25 @@ export interface License {
   email: string | null;
   key: string | null;
   status: "available" | "claimed" | "revoked";
+  source?: "manual" | "etsy" | "legacy";
+  etsy_quantity?: number;
+  etsy_status?: string | null;
+  verified_at?: string | null;
   created_at: string;
   claimed_at: string | null;
 }
+
+export interface EtsyAuth {
+  id: number;
+  access_token: string;
+  refresh_token: string;
+  expires_at: string;
+  updated_at: string;
+}
+
+export type EtsyVerdict =
+  | { ok: true; quantity: number; status: string }
+  | { ok: false; reason: "not_found" | "other_listing" | "refunded" | "unpaid" | "unavailable" };
 
 export interface ScheduleItem { time: string; title: string; note: string }
 export interface Faq { q: string; a: string }
