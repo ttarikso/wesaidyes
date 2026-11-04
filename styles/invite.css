@@ -76,7 +76,7 @@
 .env-screen {
   position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 24px var(--m);
   /* the table the envelope lies on: the same paper, one tone darker, so the envelope reads as an object */
-  background: var(--paper-img) center / cover color-mix(in srgb, var(--paper-tone) 80%, #6f6f6f); background-blend-mode: multiply; color: var(--on-bg);
+  background: radial-gradient(ellipse 70% 60% at 50% 42%, transparent 30%, rgba(0,0,0,.22)), var(--paper-img) center / cover color-mix(in srgb, var(--paper-tone) 62%, color-mix(in srgb, var(--bg) 55%, #3a3a3a)); background-blend-mode: normal, multiply; color: var(--on-bg);
   transition: opacity 0.7s ease 1.9s, visibility 0s linear 2.6s;
 }
 .env-screen.is-opening { opacity: 0; visibility: hidden; }
@@ -86,14 +86,16 @@
   position: relative; display: block; width: var(--w); aspect-ratio: 1.42 / 1; perspective: 1400px;
   border: 0; padding: 0; background: none; font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent;
   animation: envIn 1s var(--ease-expo) both;
+  /* lifted off the table: a soft cast shadow and a tight contact shadow */
+  filter: drop-shadow(0 22px 34px rgba(0,0,0,.38)) drop-shadow(0 3px 6px rgba(0,0,0,.28));
 }
 .env:focus-visible { outline: 2px solid var(--on-bg); outline-offset: 12px; }
 .env-back, .env-front, .env-flap { position: absolute; inset: 0; background: var(--paper-img) center / cover var(--paper-tone); background-blend-mode: multiply; }
-.env-back { filter: brightness(0.78); }
-.env-front { z-index: 3; clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%); filter: brightness(1.08); }
+.env-back { filter: brightness(0.74); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+.env-front { z-index: 3; clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%); filter: brightness(1.2); }
 .env-flap {
   bottom: auto; height: 60%; z-index: 5; transform-origin: 50% 0; filter: brightness(0.92);
-  clip-path: polygon(0 0, 100% 0, 52% 97%, 50% 100%, 48% 97%); filter: brightness(0.96);
+  clip-path: polygon(0 0, 100% 0, 52% 97%, 50% 100%, 48% 97%); filter: brightness(1.06);
 }
 .env-letter {
   position: absolute; z-index: 2; left: 6%; right: 6%; top: 7%; bottom: 5%;
