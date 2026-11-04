@@ -80,9 +80,8 @@
   transition: opacity 0.7s ease 1.9s, visibility 0s linear 2.6s;
 }
 .env-screen.is-opening { opacity: 0; visibility: hidden; }
-.env-wrap { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+.env-wrap { --w: min(90vw, 500px, 50vh * 1.42); display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
 .env {
-  --w: min(90vw, 500px, 58vh * 1.42);
   position: relative; display: block; width: var(--w); aspect-ratio: 1.42 / 1; perspective: 1400px;
   border: 0; padding: 0; background: none; font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent;
   animation: envIn 1s var(--ease-expo) both;
@@ -113,7 +112,7 @@
   font-size: calc(var(--w) * 0.052); letter-spacing: 0;
 }
 .env-floral { position: absolute; z-index: 7; width: 62%; left: -15%; bottom: -24%; transform: rotate(-6deg); pointer-events: none; user-select: none; }
-.env-names { margin-top: clamp(28px, 6vh, 48px) !important; font-size: var(--step-head); line-height: var(--display-lead); animation: rise 0.9s var(--ease-expo) both 0.25s; }
+.env-names { margin-top: calc(var(--w) * 0.17 + clamp(16px, 3vh, 28px)) !important; position: relative; z-index: 8; font-size: var(--step-head); line-height: var(--display-lead); animation: rise 0.9s var(--ease-expo) both 0.25s; }
 .env-date { margin-top: 10px !important; font-size: var(--step-body); color: var(--on-bg-soft); animation: rise 0.9s var(--ease-expo) both 0.35s; }
 .env-cta { margin-top: clamp(18px, 3vh, 28px) !important; font-size: var(--step-body); font-weight: 500; animation: rise 0.9s var(--ease-expo) both 0.45s; }
 .is-opening .env-names, .is-opening .env-date, .is-opening .env-cta { opacity: 0; transition: opacity 0.4s; }
