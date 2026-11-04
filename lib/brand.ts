@@ -4,7 +4,7 @@ export const BRAND = {
   short: "We Said Yes",
   tagline: "A digital wedding invitation website with music, countdown and RSVP. Pick a theme, fill in your details, share one link.",
   shop: "DigitarMercato",
-  etsy: "https://digitarmercato.etsy.com",
+  etsy: "https://www.etsy.com/listing/4610003418/wedding-invitation-website-with-rsvp",
   etsyShop: "https://digitarmercato.etsy.com",
   // how many invitation websites one Etsy order can create
   invitesPerOrder: Number(process.env.NEXT_PUBLIC_INVITES_PER_ORDER || 1),

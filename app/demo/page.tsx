@@ -23,12 +23,12 @@ export default function Demo() {
   return (
     <>
       <Invitation key={nonce} data={data} theme={theme} music="first-light" slug="demo" mode="preview" startOpen={skip} />
-      {!bare && <div className="demo-bar fixed z-50 flex items-center gap-2 bg-[#f7f9f8] text-[#06525c] px-2 py-1.5 text-[14px] left-0 right-0 top-0 h-12 sm:justify-end" style={{ fontFamily: "var(--f-sans)" }}>
-        <span className="pl-2 font-semibold hidden sm:inline sm:mr-auto">Live demo: this is what your guests receive</span>
+      {!bare && <div className="demo-bar fixed z-50 flex items-center gap-3 bg-[#f7f9f8] text-[#06525c] px-3 sm:px-6 py-1.5 text-[14px] left-0 right-0 top-0 h-12 sm:justify-end" style={{ fontFamily: "var(--f-sans)" }}>
+        <span className="pl-1 font-semibold hidden sm:inline sm:mr-auto">Live demo: this is what your guests receive</span>
         <select aria-label="Theme" value={theme} onChange={(e) => { setTheme(e.target.value); setNonce((n) => n + 1); }} className="flex-1 sm:flex-none bg-[#ebf0ee] px-3 py-2 text-[#06525c]">
           {THEMES.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
-        <a href={BRAND.etsy} className="bg-[#06525c] text-[#f7f9f8] px-4 py-2 font-semibold no-underline whitespace-nowrap">Get yours</a>
+        <a href={BRAND.etsy} target="_blank" rel="noopener noreferrer" className="bg-[#06525c] text-[#f7f9f8] px-4 py-2 font-semibold no-underline whitespace-nowrap hover:opacity-90 transition-opacity">Buy on Etsy</a>
       </div>}
       {!bare && <style>{`@media (max-width: 639px) { .inv .iv-music { top: 60px; } }
         .inv-main { padding-top: 48px; } .inv .iv-hero { min-height: calc(100svh - 48px); }`}</style>}

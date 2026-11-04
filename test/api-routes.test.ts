@@ -15,7 +15,7 @@ test("API Routes Integration Tests", async (t) => {
   process.env.ETSY_KEYSTRING = "test_keystring_123";
   process.env.ETSY_SHARED_SECRET = "test_secret_456";
   process.env.ETSY_SHOP_ID = "58103810";
-  process.env.ETSY_LISTING_IDS = "4609341824";
+  process.env.ETSY_LISTING_IDS = "4609341824,4610003418";
   process.env.ETSY_REDIRECT_URI = "https://wesaidyes.site/api/admin/etsy/callback";
 
   await saveEtsyAuth({
