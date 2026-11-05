@@ -40,8 +40,6 @@ export const product = () => ({
   offers: {
     "@type": "Offer",
     url: BRAND.etsy,
-    price: FACTS.price.toFixed(2),
-    priceCurrency: FACTS.currency,
     availability: "https://schema.org/InStock",
     itemCondition: "https://schema.org/NewCondition",
     seller: { "@type": "Organization", name: BRAND.shop, url: BRAND.etsyShop },
@@ -64,7 +62,6 @@ export const howTo = (steps: { name: string; text: string; image?: string }[]) =
   "@type": "HowTo",
   name: "How to make a wedding invitation website with We Said Yes",
   totalTime: "PT1H",
-  estimatedCost: { "@type": "MonetaryAmount", currency: FACTS.currency, value: FACTS.price.toFixed(2) },
   step: steps.map((s, i) => ({ "@type": "HowToStep", position: i + 1, name: s.name, text: s.text, ...(s.image ? { image: abs(s.image) } : {}) })),
 });
 

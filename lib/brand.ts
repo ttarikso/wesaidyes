@@ -17,8 +17,7 @@ export const CANONICAL_URL = "https://www.wesaidyes.site";
 
 // The facts search engines and AI answers quote. Keep in step with the Etsy listing.
 export const FACTS = {
-  price: 29, // list price in USD on Etsy, before any shop sale
-  currency: "USD",
+  // no price here on purpose: it changes on Etsy, so the site always sends buyers to the listing for it
   designs: 20,
   headingFonts: 6,
   songs: 20,

@@ -57,7 +57,7 @@ export default async function Design({ params }: Props) {
     ["Wax seal", c.seal],
     ["Typeface", `${face(getTheme(id).type.display)} for names and titles, or one of ${FACTS.headingFonts} other heading fonts`],
     ["Best for", c.bestFor],
-    ["Price", `US$${FACTS.price} list price, one payment on Etsy, any number of guests`],
+    ["Buying", "One payment on Etsy, any number of guests, no subscription"],
   ];
   return (
     <div className="site" id="top">
@@ -70,7 +70,7 @@ export default async function Design({ params }: Props) {
         color: c.colours,
         brand: { "@type": "Brand", name: BRAND.name },
         isVariantOf: { "@id": PRODUCT_ID },
-        offers: { "@type": "Offer", url: BRAND.etsy, price: FACTS.price.toFixed(2), priceCurrency: FACTS.currency, availability: "https://schema.org/InStock" },
+        offers: { "@type": "Offer", url: BRAND.etsy, availability: "https://schema.org/InStock", seller: { "@type": "Organization", name: BRAND.shop, url: BRAND.etsyShop } },
       })} />
       <PageNav />
       <Crumbs items={crumbs} />
