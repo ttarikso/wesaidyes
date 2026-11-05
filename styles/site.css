@@ -28,16 +28,19 @@
 .site .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ---------------------------------------------------------------- 1. pinned title over the designs */
-.h-run { position: relative; color: var(--run-ink); }
-.h-pin { position: sticky; top: 0; height: 100svh; z-index: 3; pointer-events: none; }
+/* the run fills the tallest the screen gets (iOS hides its toolbar as you scroll), so no strip of the page
+   shows under it; --tb is the toolbar's height while it is showing, so the words at the bottom clear it */
+.h-run { position: relative; color: var(--run-ink); --vh: 100svh; --tb: 0px; }
+@supports (height: 100lvh) { .h-run { --vh: 100lvh; --tb: calc(100lvh - 100svh); } }
+.h-pin { position: sticky; top: 0; height: var(--vh); z-index: 3; pointer-events: none; }
 .h-pin > * { pointer-events: auto; }
 /* the title band: the same paper as the panel under it, cut from the same picture at the same place,
    so it is invisible at rest and the envelopes slide under it, never through the words */
-.h-run { --ar: 0.625; --cw: max(100vw, 100svh / var(--ar)); --ch: calc(var(--cw) * var(--ar)); }
+.h-run { --ar: 0.625; --cw: max(100vw, var(--vh) / var(--ar)); --ch: calc(var(--cw) * var(--ar)); }
 .h-band {
   position: absolute; top: 0; left: 0; right: 0; height: calc(var(--title-top) + var(--title-h) + 24px); pointer-events: none;
   background-color: var(--run-ground); background-image: var(--run-img); background-repeat: no-repeat;
-  background-size: var(--cw) var(--ch); background-position: 50% calc((100svh - var(--ch)) / 2);
+  background-size: var(--cw) var(--ch); background-position: 50% calc((var(--vh) - var(--ch)) / 2);
 }
 .h-nav { position: absolute; top: 20px; left: var(--m); right: var(--m); display: flex; align-items: baseline; justify-content: space-between; font-size: var(--t-body); font-weight: 600; }
 .h-mark { text-decoration: none; }
@@ -50,31 +53,31 @@
   font-size: var(--t-display); font-weight: 700; letter-spacing: -0.02em; line-height: 0.9; text-transform: uppercase; white-space: nowrap;
   transition: color 300ms ease;
 }
-.h-lead { position: absolute; left: var(--m); bottom: 32px; max-width: 22ch; font-size: var(--t-lead); font-weight: 500; line-height: 1.3; }
+.h-lead { position: absolute; left: var(--m); bottom: calc(32px + var(--tb)); max-width: 22ch; font-size: var(--t-lead); font-weight: 500; line-height: 1.3; }
 .site .h-btn {
-  position: absolute; right: var(--m); bottom: 32px; display: inline-flex; align-items: center; height: 56px; padding: 0 28px;
+  position: absolute; right: var(--m); bottom: calc(32px + var(--tb)); display: inline-flex; align-items: center; height: 56px; padding: 0 28px;
   background: var(--run-ink); color: var(--run-ground); font-size: var(--t-body); font-weight: 600; text-decoration: none;
   transition: transform 140ms var(--ease-out), background-color 300ms ease, color 300ms ease;
 }
 .site .h-btn:active { transform: scale(0.97); }
-.h-panels { margin-top: -100svh; }
-.h-panel { position: relative; height: 100svh; overflow: clip; }
+.h-panels { margin-top: calc(-1 * var(--vh)); }
+.h-panel { position: relative; height: var(--vh); overflow: clip; }
 .h-panel img { position: absolute; left: 50%; top: 50%; width: var(--cw); height: var(--ch); max-width: none; transform: translate(-50%, -50%); display: block; }
-.h-panel figcaption { position: absolute; right: var(--m); bottom: 112px; max-width: 18ch; text-align: right; font-size: var(--t-small); font-weight: 500; line-height: 1.4; }
+.h-panel figcaption { position: absolute; right: var(--m); bottom: calc(112px + var(--tb)); max-width: 18ch; text-align: right; font-size: var(--t-small); font-weight: 500; line-height: 1.4; }
 @media (max-width: 699px) {
   .site { --title-top: 60px; --t-display: 15vw; --title-h: calc(15vw * 0.88 * 2); --m: 16px; }
   .h-links a:not(.keep) { display: none; }
   .h-links { gap: 18px; }
   .h-title { font-size: 15vw; white-space: normal; line-height: 0.88; padding: 0 var(--m); text-align: left; }
-  .h-lead { bottom: 88px; right: var(--m); max-width: none; }
-  .site .h-btn { bottom: 20px; right: var(--m); height: 48px; padding: 0 20px; z-index: 1; }
+  .h-lead { bottom: calc(88px + var(--tb)); right: var(--m); max-width: none; }
+  .site .h-btn { bottom: calc(20px + var(--tb)); right: var(--m); height: 48px; padding: 0 20px; z-index: 1; }
   .h-lead { z-index: 1; }
   .h-run { --ar: 1.7026; }
   .h-band { background-image: var(--run-img-m); }
   .h-pin::after {
-    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 176px; pointer-events: none;
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: calc(176px + var(--tb)); pointer-events: none;
     background-color: var(--run-ground); background-image: var(--run-img-m); background-repeat: no-repeat;
-    background-size: var(--cw) var(--ch); background-position: 50% calc((100svh - var(--ch)) / 2 - (100svh - 176px));
+    background-size: var(--cw) var(--ch); background-position: 50% calc((var(--vh) - var(--ch)) / 2 - (var(--vh) - 176px - var(--tb)));
   }
   .h-panel figcaption { display: none; }
 }
