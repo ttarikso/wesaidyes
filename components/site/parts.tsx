@@ -133,3 +133,35 @@ export function FaqIndex({ items }: { items: [string, string][] }) {
     </div>
   );
 }
+
+/* Phone menu: a two-line button that opens a full-screen sheet over the hero. */
+export function SiteMenu({ etsy }: { etsy: string }) {
+  const [open, setOpen] = useState(false);
+  const btn = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => { document.body.style.overflow = prev; window.removeEventListener("keydown", onKey); btn.current?.focus(); };
+  }, [open]);
+  const close = () => setOpen(false);
+  return (
+    <>
+      <button ref={btn} type="button" className="h-burger" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="site-menu" onClick={() => setOpen((o) => !o)}>
+        <i aria-hidden /><i aria-hidden />
+      </button>
+      <div id="site-menu" className="h-sheet" data-open={open || undefined} hidden={!open}>
+        <ul>
+          <li><a href="#designs" onClick={close}>Designs</a></li>
+          <li><a href="#songs" onClick={close}>Songs</a></li>
+          <li><a href="#questions" onClick={close}>Questions</a></li>
+          <li><a href="/redeem" onClick={close}>Sign in</a></li>
+          <li><a href={etsy} target="_blank" rel="noopener noreferrer" onClick={close}>Buy on Etsy</a></li>
+        </ul>
+        <a className="h-sheet-cta" href="/demo">Try a Demo</a>
+      </div>
+    </>
+  );
+}

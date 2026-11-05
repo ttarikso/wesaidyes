@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BRAND } from "@/lib/brand";
 import { THEMES } from "@/lib/themes";
-import { FaqIndex, HeroInk, LiveNames, Reveal, SongList } from "@/components/site/parts";
+import { FaqIndex, HeroInk, LiveNames, Reveal, SiteMenu, SongList } from "@/components/site/parts";
 
 /* Marketing page · direction "The pinned poster" (taste-skill seed 273858182).
    Idea: the couple's own answer, "we said yes", holds still while their invitation changes through the designs beneath it. */
@@ -55,8 +55,12 @@ export default function Home() {
               <a href="#designs">Designs</a>
               <a href="#songs">Songs</a>
               <a href="#questions">Questions</a>
-              <Link href="/redeem" className="keep">Sign in</Link>
-              <a href={BRAND.etsy} target="_blank" rel="noopener noreferrer" className="keep h-buy">Buy on Etsy</a>
+              <a href={BRAND.etsy} target="_blank" rel="noopener noreferrer">Buy on Etsy</a>
+            </span>
+            <span className="h-acts">
+              <Link href="/redeem" className="h-pill h-pill-ghost">Sign in</Link>
+              <Link href="/demo" className="h-pill">Try a Demo</Link>
+              <SiteMenu etsy={BRAND.etsy} />
             </span>
           </nav>
           <h1 className="h-title">We said yes</h1>
