@@ -12,13 +12,13 @@ type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const inv = await inviteBySlug((await params).slug);
-  if (!inv || !inv.published) return { title: "Invitation" };
+  if (!inv || !inv.published) return { title: { absolute: "Invitation" }, robots: { index: false, follow: false } };
   const d = inv.data;
   const dp = dateParts(d.date);
   const title = `${d.partner1} & ${d.partner2} · You're invited`;
   const description = [dp?.long, d.venueName].filter(Boolean).join(" · ");
   const image = d.heroPhoto || themeAssets(getTheme(inv.theme)).floral;
-  return { title, description, openGraph: { title, description, images: [image] }, robots: { index: false, follow: false } };
+  return { title: { absolute: title }, description, openGraph: { title, description, images: [image] }, robots: { index: false, follow: false } };
 }
 
 export default async function Page({ params }: Props) {

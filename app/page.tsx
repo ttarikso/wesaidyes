@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { BRAND } from "@/lib/brand";
+import { FACT_ROWS, FAQ } from "@/lib/content";
 import { THEMES } from "@/lib/themes";
 import { FaqIndex, HeroInk, LiveNames, Reveal, SiteMenu, SongList } from "@/components/site/parts";
+import { SiteFooter } from "@/components/site/Chrome";
+import JsonLd from "@/components/site/JsonLd";
+import { faqPage, graph, howTo, organization, product, website } from "@/lib/seo";
 
 /* Marketing page · direction "The pinned poster" (taste-skill seed 273858182).
    Idea: the couple's own answer, "we said yes", holds still while their invitation changes through the designs beneath it. */
@@ -28,20 +32,12 @@ const STEPS = [
   { verb: "Send", text: "Publish, then send one link by WhatsApp, text or email, or print its QR code on your save-the-dates.", img: "/site/send-hero.webp", alt: "An opened invitation with the couple's names over their photograph" },
 ];
 
-const FAQ: [string, string][] = [
-  ["Do our guests need an app or an account?", "No. The invitation opens in any phone or computer browser from the link you send."],
-  ["How long does the invitation stay online?", "Until 7 days after your wedding, for up to 45 days from the day you first publish it. Publish within about six weeks of the wedding and it stays online through the day."],
-  ["Can we change details after sending the link?", "Yes. Change the time, the venue or anything else, and everyone sees the update on the same link."],
-  ["How many guests can reply?", "As many as you invite. There is no limit on guests or replies."],
-  ["Can we switch to another design later?", "At any time. Your names, words and photos move to the new design as they are."],
-  ["Can we use our own song?", "Not yet. Choose one of the twenty original tracks, or turn the music off."],
-  ["Which languages does it support?", "The section titles are in English. Every line you write yourself, your story and your details, can be in any language."],
-  ["How do we get in after buying?", "Go to wesaidyes.site/redeem and enter your Etsy order number and email. Use the same two to sign in again on any device."],
-];
+
 
 export default function Home() {
   return (
     <div className="site" id="top">
+      <JsonLd data={graph(organization(), website(), product(), faqPage(FAQ), howTo(STEPS.map((x) => ({ name: x.verb, text: x.text, image: x.img }))))} />
       <Reveal />
       <HeroInk />
 
@@ -52,8 +48,8 @@ export default function Home() {
           <nav className="h-nav" aria-label="Main">
             <Link href="/" className="h-mark">We said yes</Link>
             <span className="h-links">
-              <a href="#designs">Designs</a>
-              <a href="#songs">Songs</a>
+              <Link href="/designs">Designs</Link>
+              <Link href="/guides">Guides</Link>
               <a href="#questions">Questions</a>
               <a href={BRAND.etsy} target="_blank" rel="noopener noreferrer">Buy on Etsy</a>
             </span>
@@ -63,8 +59,11 @@ export default function Home() {
               <SiteMenu etsy={BRAND.etsy} />
             </span>
           </nav>
-          <h1 className="h-title">We said yes</h1>
-          <p className="h-lead">A wedding invitation website your guests open like a sealed envelope, then answer from their phone.</p>
+          {/* one heading for search: the name, then what it is */}
+          <h1 className="h-h1">
+            <span className="h-title">We said yes</span>
+            <span className="h-lead">A wedding invitation website your guests open like a sealed envelope, then answer from their phone.</span>
+          </h1>
           <Link href="/demo" className="h-btn">Try a Demo</Link>
         </div>
         <div className="h-panels">
@@ -136,7 +135,8 @@ export default function Home() {
           </div>
         </div>
         <p className="band-note" data-reveal>
-          Twenty designs, each with its own paper, wax seal, flowers and typefaces: {THEMES.map((t) => t.name).join(", ")}. Switch any time; your words and photos stay.
+          Twenty designs, each with its own paper, wax seal, flowers and typefaces: {THEMES.map((t, i) => <span key={t.id}>{i ? ", " : ""}<Link href={`/designs/${t.id}`}>{t.name}</Link></span>)}. Switch any time; your words and photos stay.{" "}
+          <Link href="/designs" className="band-all">See all twenty designs</Link>
         </p>
       </section>
 
@@ -158,39 +158,28 @@ export default function Home() {
         ))}
       </section>
 
-      {/* 7. Questions */}
+      {/* 7. The facts, in one place: what search engines and AI answers quote */}
+      <section className="facts" id="facts" aria-labelledby="facts-h" data-reveal>
+        <h2 id="facts-h" className="facts-h">At a glance</h2>
+        <dl className="facts-list">
+          {FACT_ROWS.map(([k, v]) => <div key={k} className="facts-row"><dt>{k}</dt><dd>{v}</dd></div>)}
+        </dl>
+      </section>
+
+      {/* 8. Questions */}
       <section className="qa" id="questions" aria-labelledby="qa-h" data-reveal>
         <h2 id="qa-h" className="sr-only">Questions</h2>
         <FaqIndex items={FAQ} />
       </section>
 
-      {/* 8. One word is the button */}
+      {/* 9. One word is the button */}
       <a className="cta" href={BRAND.etsy} target="_blank" rel="noopener noreferrer">
         <span className="cta-line">Buy it on Etsy and start your invitation today.</span>
         <svg className="cta-arrow" viewBox="0 0 48 48" aria-hidden><path d="M12 36 36 12M16 12h20v20" fill="none" stroke="currentColor" strokeWidth="3" /></svg>
         <span className="cta-word">Order</span>
       </a>
 
-      {/* 9. Footer: the name first */}
-      <footer className="foot">
-        <p className="foot-name" aria-hidden>We said yes</p>
-        <div className="foot-row">
-          <ul className="foot-places">
-            <li><Link href="/demo">Live demo</Link></li>
-            <li><Link href="/redeem">Sign in to your studio</Link></li>
-            <li><a href={BRAND.etsy} target="_blank" rel="noopener noreferrer">Buy on Etsy</a></li>
-          </ul>
-          <div className="foot-cols">
-            <ul><li><a href="#designs">Designs</a></li><li><a href="#songs">Songs</a></li><li><a href="#questions">Questions</a></li></ul>
-            <ul><li><Link href="/redeem">Activate an order</Link></li><li><Link href="/demo">See an invitation</Link></li></ul>
-            <ul><li><a href={BRAND.etsy} target="_blank" rel="noopener noreferrer">Buy on Etsy</a></li></ul>
-          </div>
-        </div>
-        <div className="foot-legal">
-          <span>© {new Date().getFullYear()} {BRAND.name}, made by {BRAND.shop}</span>
-          <a href="#top" className="foot-top">Back to top</a>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

@@ -15,12 +15,21 @@ import "@/styles/fonts.css";
 import "@/styles/globals.css";
 import "@/styles/invite.css";
 import "@/styles/site.css";
-import { BRAND } from "@/lib/brand";
+import { BRAND, CANONICAL_URL } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://wesaidyes.site"),
-  title: `${BRAND.name} · Digital Wedding Invitation Website`,
+  metadataBase: new URL(CANONICAL_URL),
+  title: { default: `${BRAND.name} · Wedding Invitation Website with RSVP`, template: `%s · ${BRAND.name}` },
   description: BRAND.tagline,
+  applicationName: BRAND.name,
+  alternates: { canonical: "/" },
+  openGraph: { type: "website", siteName: BRAND.name, locale: "en_US", url: "/" },
+  twitter: { card: "summary_large_image" },
+  // Search Console and Bing Webmaster codes, set in the host's environment once the owner verifies the site
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined,
+  },
 };
 export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover" };
 

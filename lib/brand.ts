@@ -11,3 +11,18 @@ export const BRAND = {
 };
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://wesaidyes.site").replace(/\/$/, "");
+
+// The one address search engines should index: the bare domain redirects here.
+export const CANONICAL_URL = "https://www.wesaidyes.site";
+
+// The facts search engines and AI answers quote. Keep in step with the Etsy listing.
+export const FACTS = {
+  price: 29, // list price in USD on Etsy, before any shop sale
+  currency: "USD",
+  designs: 20,
+  headingFonts: 6,
+  songs: 20,
+  daysAfterWedding: 7,
+  maxDaysOnline: 45,
+};
+export const INDEXNOW_KEY = "5327c07f56466dcfc36b4b486813610c";

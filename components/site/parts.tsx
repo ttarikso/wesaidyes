@@ -154,9 +154,9 @@ export function SiteMenu({ etsy }: { etsy: string }) {
       </button>
       <div id="site-menu" className="h-sheet" data-open={open || undefined} hidden={!open}>
         <ul>
-          <li><a href="#designs" onClick={close}>Designs</a></li>
-          <li><a href="#songs" onClick={close}>Songs</a></li>
-          <li><a href="#questions" onClick={close}>Questions</a></li>
+          <li><a href="/designs" onClick={close}>Designs</a></li>
+          <li><a href="/guides" onClick={close}>Guides</a></li>
+          <li><a href="/#questions" onClick={close}>Questions</a></li>
           <li><a href="/redeem" onClick={close}>Sign in</a></li>
           <li><a href={etsy} target="_blank" rel="noopener noreferrer" onClick={close}>Buy on Etsy</a></li>
         </ul>
