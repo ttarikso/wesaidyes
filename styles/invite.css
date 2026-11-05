@@ -243,7 +243,7 @@ section, .iv-foot { position: relative; }
 /* venue: address in display rows */
 .iv-venue { padding: 0 0 clamp(80px, 10vw, 160px); }
 .iv-rows { font-size: var(--step-head); }
-.iv-dr { display: flex; align-items: flex-end; min-height: 1.75em; padding: 0 var(--m) 0.28em; line-height: 1; text-transform: none; overflow-wrap: anywhere; min-width: 0; }
+.iv-dr { display: flex; align-items: center; min-height: 1.75em; padding: 0.3em var(--m) 0.36em; line-height: 1.08; text-transform: none; overflow-wrap: anywhere; min-width: 0; }
 .iv-dr > * { min-width: 0; }
 .iv-dr:nth-child(even) { background: var(--tone); }
 .iv-dr a { text-decoration: none; }
@@ -257,7 +257,7 @@ section, .iv-foot { position: relative; }
 @media (max-width: 699px) {
   .iv-rows { font-size: var(--step-head); }
   .inv[data-theme="midnight-gold"] .iv-rows, .inv[data-theme="black-tie"] .iv-rows, .inv[data-theme="provence-lavender"] .iv-rows { font-size: 7.4vw; }
-  .iv-dr { min-height: 84px; padding-bottom: 14px; }
+  .iv-dr { min-height: 84px; padding-block: 18px 21px; }
   .iv-dr-go { background: var(--fill) !important; color: var(--fill-ink); }
   .iv-dr-go a { width: 100%; justify-content: space-between; }
   .iv-dr-go .iv-round { width: 56px; height: 56px; background: var(--fill-ink); color: var(--fill); }

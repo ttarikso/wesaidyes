@@ -149,7 +149,7 @@
 .sheet-media.is-phone { display: flex; align-items: center; justify-content: center; padding-block: clamp(8px, 2vh, 24px); }
 .sheet-phone { position: relative; display: block; height: 100%; max-height: 760px; aspect-ratio: 1080 / 2336; padding: 1.6%; border-radius: 13% / 6%; background: #0e1312;
   box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.25); }
-.sheet-media .sheet-phone video { width: 100%; height: 100%; object-fit: cover; border-radius: 11.5% / 5.3%; }
+.sheet-media .sheet-phone video, .sheet-media .sheet-phone img { width: 100%; height: 100%; object-fit: cover; border-radius: 11.5% / 5.3%; }
 @media (max-width: 699px) {
   .feat { padding-top: 96px; }
   .sheet { --tab: 52px; position: relative; top: auto; height: auto; min-height: 70svh; display: flex; flex-direction: column; padding: 0 0 24px; }

@@ -17,8 +17,8 @@ const RUN: { id: string; ground: string; ink: string; caption: string }[] = [
 
 const FEATURES = [
   { name: "The envelope opens", text: "Your initials are pressed into the wax seal. One tap and the flap lifts, the card slides out and your song begins.", media: "video" },
-  { name: "The day, in order", text: "Ceremony, dinner, dancing: each with its time and place, the venue as a map link, and a calendar file in one tap.", media: "/site/frag-day.webp" },
-  { name: "A countdown on every phone", text: "Days, hours, minutes and seconds to the wedding, live on each guest’s screen, under the words you choose.", media: "/site/frag-countdown.webp" },
+  { name: "The day, in order", text: "Ceremony, dinner, dancing: each with its time and place, the venue as a map link, and a calendar file in one tap.", media: "/site/frag-day-hd.webp", phone: true },
+  { name: "A countdown on every phone", text: "Days, hours, minutes and seconds to the wedding, live on each guest’s screen, under the words you choose.", media: "/site/frag-countdown-hd.webp", phone: true },
   { name: "Every reply, in one list", text: "Guests answer with a plus-one, a meal and a song request. You see each reply as it arrives and can download the list as a spreadsheet.", media: "/site/frag-guests.webp" },
 ];
 
@@ -103,10 +103,15 @@ export default function Home() {
             <article key={f.name} className={`sheet sheet-${i % 2 ? "b" : "a"}`} style={{ ["--i" as string]: i }}>
               <h3 className="sheet-name">{f.name}</h3>
               <p className="sheet-text">{f.text}</p>
-              <figure className={`sheet-media${f.media === "video" ? " is-phone" : ""}`}>
+              <figure className={`sheet-media${f.media === "video" || ("phone" in f && f.phone) ? " is-phone" : ""}`}>
                 {f.media === "video" ? (
                   <span className="sheet-phone">
                     <video src="/site/envelope-hd.mp4" poster="/site/envelope-hd-poster.jpg" width={1080} height={2336} autoPlay muted loop playsInline preload="metadata" aria-label="The envelope opening on a phone" />
+                  </span>
+                ) : "phone" in f && f.phone ? (
+                  <span className="sheet-phone">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={f.media} alt={f.name} width={1080} height={2336} loading="lazy" />
                   </span>
                 ) : (
                   // eslint-disable-next-line @next/next/no-img-element
