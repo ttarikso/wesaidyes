@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Invitation from "@/components/Invitation";
 import { demoInvite } from "@/lib/demo";
-import { THEMES } from "@/lib/themes";
+import { HEADING_FONTS, THEMES } from "@/lib/themes";
 import { BRAND } from "@/lib/brand";
 
 export default function Demo() {
@@ -18,6 +18,7 @@ export default function Demo() {
     const q = new URLSearchParams(window.location.search);
     if (q.get("open") === "1") setSkip(true);
     if (q.get("bare") === "1") setBare(true);
+    const font = q.get("font"); if (font) setData((d) => ({ ...d, headingFont: font }));
     const a = (q.get("a") || "").trim().slice(0, 30), b = (q.get("b") || "").trim().slice(0, 30);
     if (a || b) setData((d) => ({ ...d, partner1: a || d.partner1, partner2: b || d.partner2, initials: `${(a || d.partner1)[0]}&${(b || d.partner2)[0]}`.toUpperCase() }));
   }, []);
@@ -31,6 +32,10 @@ export default function Demo() {
         <span className="text-[#2f737d] hidden md:inline md:mr-auto">Live demo: this is what your guests receive</span>
         <select aria-label="Theme" value={theme} onChange={(e) => { setTheme(e.target.value); setNonce((n) => n + 1); }} className="min-w-0 flex-1 md:flex-none bg-[#ebf0ee] px-3 py-2 text-[#06525c]">
           {THEMES.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
+        </select>
+        <select aria-label="Heading font" value={data.headingFont || ""} onChange={(e) => { const headingFont = e.target.value; setData((d) => ({ ...d, headingFont })); }} className="min-w-0 hidden sm:block md:flex-none bg-[#ebf0ee] px-3 py-2 text-[#06525c]">
+          <option value="">Theme font</option>
+          {HEADING_FONTS.map((f) => <option key={f.id} value={f.id}>{f.name} font</option>)}
         </select>
         <a href={BRAND.etsy} target="_blank" rel="noopener noreferrer" className="bg-[#06525c] text-[#f7f9f8] px-4 py-2 font-semibold no-underline whitespace-nowrap hover:opacity-90 transition-opacity">Buy on Etsy</a>
       </nav>}

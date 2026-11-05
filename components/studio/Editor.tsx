@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Invitation, InviteData } from "@/lib/types";
-import { THEMES, themeAssets } from "@/lib/themes";
+import { HEADING_FONTS, THEMES, getTheme, themeAssets } from "@/lib/themes";
 import { TRACKS, trackUrl } from "@/lib/music";
 import { api } from "@/lib/client";
 import { Area, Photos, Section, Text, Toggle, Field } from "./fields";
@@ -130,7 +130,7 @@ export default function Editor({ initial }: { initial: Invitation }) {
         {/* the form */}
         <section className="s-panel flex-1 min-w-0 min-h-0 overflow-y-auto" aria-label={current.label}>
           <div className="max-w-[560px] p-6 space-y-8 pb-24">
-            {tab === "theme" && <ThemePanel value={inv.theme} d={d} onChange={(theme) => setTop({ theme })} />}
+            {tab === "theme" && <ThemePanel value={inv.theme} d={d} onChange={(theme) => setTop({ theme })} set={setData} />}
             {tab === "couple" && <CouplePanel d={d} set={setData} />}
             {tab === "venue" && <VenuePanel d={d} set={setData} />}
             {tab === "story" && <StoryPanel d={d} set={setData} />}
@@ -206,8 +206,12 @@ function PreviewFrame({ inv, view, skip, nonce }: { inv: Invitation; view: "phon
 /* ------------------------------------------------------------------ panels */
 type P = { d: InviteData; set: (p: Partial<InviteData>) => void };
 
-function ThemePanel({ value, d, onChange }: { value: string; d: InviteData; onChange: (v: string) => void }) {
+function ThemePanel({ value, d, onChange, set }: { value: string; d: InviteData; onChange: (v: string) => void; set: P["set"] }) {
+  const theme = getTheme(value);
+  const names = `${d.partner1 || "Amelia"} & ${d.partner2 || "Julian"}`;
+  const faces = [{ id: "", name: "Theme's own", note: "Chosen for this design", face: theme.type }, ...HEADING_FONTS];
   return (
+    <>
     <Section title="Choose your theme" desc="Every theme includes its own envelope, wax seal, florals, colours and fonts. You can switch anytime; your text and photos stay.">
       <div className="grid grid-cols-2 gap-3">
         {THEMES.map((t) => {
@@ -239,6 +243,27 @@ function ThemePanel({ value, d, onChange }: { value: string; d: InviteData; onCh
         })}
       </div>
     </Section>
+    <Section title="Heading font" desc="Used for your names, the section titles and the initials on the wax seal. The rest of the text stays as the theme sets it.">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" role="radiogroup" aria-label="Heading font">
+        {faces.map((f) => {
+          const on = (d.headingFont || "") === f.id;
+          return (
+            <button key={f.id || "theme"} type="button" role="radio" aria-checked={on} onClick={() => set({ headingFont: f.id })}
+              className={`text-left rounded-2xl border px-4 pt-3.5 pb-3 transition ${on ? "border-[var(--text)] ring-2 ring-[var(--text)]" : "border-[var(--border)] hover:border-[var(--control)]"}`}
+              style={{ background: theme.bg, color: theme.onBg }}>
+              <span className="block truncate leading-[1.25]" style={{ fontFamily: f.face.display, fontWeight: f.face.displayWeight, letterSpacing: f.face.displayTrack, textTransform: f.face.upper ? "uppercase" : "none", fontSize: f.face.upper ? "1.3rem" : "1.6rem" }}>
+                {names}
+              </span>
+              <span className="mt-2 flex items-baseline justify-between gap-2 text-xs" style={{ fontFamily: "var(--f-sans, system-ui)" }}>
+                <span className="font-semibold">{f.name}</span>
+                <span className="opacity-80 truncate">{f.note}</span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </Section>
+    </>
   );
 }
 

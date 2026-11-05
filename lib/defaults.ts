@@ -1,3 +1,4 @@
+import { HEADING_FONTS } from "./themes";
 import type { InviteData, RsvpSettings, Sections } from "./types";
 
 export const DEFAULT_RSVP: RsvpSettings = {
@@ -106,6 +107,7 @@ export function normalizeInvite(raw: unknown): InviteData {
       ? r.faqs.slice(0, 12).map((x: Record<string, unknown>) => ({ q: str(x?.q, 160), a: str(x?.a, 600) }))
       : b.faqs,
     closingLine: s("closingLine", 120),
+    headingFont: HEADING_FONTS.some((f) => f.id === r.headingFont) ? String(r.headingFont) : "", // only a known face; "" = the theme's
     rsvp: {
       enabled: bool(rr.enabled, b.rsvp.enabled),
       deadline: /^\d{4}-\d{2}-\d{2}$/.test(str(rr.deadline)) ? str(rr.deadline) : "",

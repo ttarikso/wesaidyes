@@ -76,6 +76,7 @@ export interface InviteData {
   closingLine: string;
   rsvp: RsvpSettings;
   sections: Sections;
+  headingFont?: string; // a HEADING_FONTS id; empty = the theme's own face
 }
 
 export interface Invitation {

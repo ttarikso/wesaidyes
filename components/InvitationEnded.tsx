@@ -9,7 +9,7 @@ export default function InvitationEnded({ inv }: { inv: Invitation }) {
   const d = inv.data;
   const dp = dateParts(d.date);
   return (
-    <div className="inv stage-open" data-theme={t.id} style={themeVars(t)}>
+    <div className="inv stage-open" data-theme={t.id} style={themeVars(t, inv.data.headingFont)}>
       <main className="iv-ended g-paper">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="iv-ended-floral" src={a.floral} alt="" />

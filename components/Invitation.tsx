@@ -86,7 +86,7 @@ export default function Invitation({ data, theme, music, slug, mode = "live", st
   }, [stage]);
 
   return (
-    <div className={`inv stage-${stage}`} data-theme={t.id} data-skip={startOpen ? "" : undefined} style={themeVars(t)}>
+    <div className={`inv stage-${stage}`} data-theme={t.id} data-skip={startOpen ? "" : undefined} style={themeVars(t, data.headingFont)}>
       {hasMusic && <audio ref={audio} src={trackUrl(music)} loop preload="none" />}
       {stage !== "open" && <Envelope data={data} seal={a.seal} floral={a.floral} onOpen={open} opening={stage === "opening"} />}
       <main className="inv-main" aria-hidden={stage !== "open"}>

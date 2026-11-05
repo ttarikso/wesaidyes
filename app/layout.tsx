@@ -10,6 +10,8 @@ import "@fontsource-variable/imbue/opsz.css";
 import "@fontsource-variable/jost/wght.css";
 import "@fontsource-variable/hanken-grotesk/wght.css";
 import "@fontsource-variable/albert-sans/wght.css";
+import "@fontsource-variable/cormorant-garamond/wght.css";
+import "@fontsource/pinyon-script/400.css";
 import "@/styles/fonts.css";
 import "@/styles/globals.css";
 import "@/styles/invite.css";

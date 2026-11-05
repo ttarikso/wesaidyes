@@ -76,6 +76,19 @@ const T = {
 
 const GOLD_INK = "rgba(92,64,10,.88)";
 
+/* Heading faces the couple may pick instead of their theme's own. They change the names, the
+   section titles and the seal initials; body text stays the theme's. */
+type HeadingFace = Pick<TypeSystem, "display" | "displayWeight" | "displayTrack" | "displayLead" | "upper" | "connectorItalic" | "sealWeight" | "monumentMax">;
+export const HEADING_FONTS: { id: string; name: string; note: string; face: HeadingFace }[] = [
+  { id: "classic", name: "Classic", note: "Bodoni, in capitals", face: { display: T.bodoni.display, displayWeight: 600, displayTrack: "-0.01em", displayLead: 0.95, upper: true, connectorItalic: false, sealWeight: 500, monumentMax: 12 } },
+  { id: "garamond", name: "Romantic", note: "Cormorant Garamond", face: { display: '"Cormorant Garamond Variable", Garamond, Georgia, serif', displayWeight: 500, displayTrack: "-0.015em", displayLead: 0.95, upper: false, connectorItalic: true, sealWeight: 600, monumentMax: 15 } },
+  { id: "script", name: "Calligraphy", note: "Pinyon Script", face: { display: '"Pinyon Script", "Snell Roundhand", cursive', displayWeight: 400, displayTrack: "0", displayLead: 1.2, upper: false, connectorItalic: false, sealWeight: 400, monumentMax: 13 } },
+  { id: "deco", name: "Art Deco", note: "Imbue, tall capitals", face: { display: T.imbue.display, displayWeight: 500, displayTrack: "-0.01em", displayLead: 0.92, upper: true, connectorItalic: false, sealWeight: 500, monumentMax: 15 } },
+  { id: "editorial", name: "Editorial", note: "Zodiak, fine capitals", face: { display: T.zodiak.display, displayWeight: 300, displayTrack: "0", displayLead: 1.0, upper: true, connectorItalic: false, sealWeight: 400, monumentMax: 11 } },
+  { id: "modern", name: "Modern serif", note: "Gambarino", face: { display: T.gambarino.display, displayWeight: 400, displayTrack: "-0.02em", displayLead: 0.92, upper: false, connectorItalic: false, sealWeight: 400, monumentMax: 15 } },
+];
+export const headingFace = (id?: string) => HEADING_FONTS.find((f) => f.id === id)?.face;
+
 export const THEMES: Theme[] = [
   { id: "dusty-blue", name: "Dusty Blue & Silver", mood: "Eucalyptus and a silver laurel seal", art: "blue",
     bg: "#4c627a", paperTone: "#cccccc", onBg: "#f3f5f7", onBgSoft: "#e2e7ed", card: "#eef1f4", ink: "#26364a", accent: "#3f5a7a", sealInk: "rgba(42,60,84,.86)", type: T.newsreader },
@@ -137,9 +150,9 @@ export function themeAssets(t: Theme) {
   };
 }
 
-export function themeVars(t: Theme): React.CSSProperties {
+export function themeVars(t: Theme, heading?: string): React.CSSProperties {
   const a = themeAssets(t);
-  const y = t.type;
+  const y: TypeSystem = { ...t.type, ...headingFace(heading) };
   return {
     ["--bg" as string]: t.bg,
     ["--on-bg" as string]: t.onBg,
