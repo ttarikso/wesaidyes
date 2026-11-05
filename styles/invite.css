@@ -170,7 +170,7 @@ section, .iv-foot { position: relative; }
 .iv-names .l2 { grid-row: 3; padding-left: 28%; padding-bottom: 18px; }
 .iv-names [data-line] { display: inline-block; }
 .iv-names .amp { font-size: 0.8em; }
-.lines .line { display: block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.lines .line { display: block; overflow: hidden; padding: 0.12em 0.3em 0.16em; margin: -0.12em -0.3em -0.16em; } /* room for script capitals and descenders inside the reveal mask */
 .iv-hero-mid { position: relative; z-index: 3; grid-row: 2; grid-column: 1; align-self: center; margin-left: 30%; max-width: 44ch; display: flex; flex-direction: column; align-items: flex-start; gap: 22px; padding: 24px 0; }
 .iv-hero-mid p { font-size: var(--step-lead); line-height: 1.35; font-weight: 500; }
 @media (max-width: 699px) {
@@ -194,7 +194,7 @@ section, .iv-foot { position: relative; }
 /* story: the title holds the left column while the portraits pass on the right (nothing crosses the title) */
 .iv-story { display: grid; grid-template-columns: 5fr 7fr; column-gap: clamp(32px, 5vw, 96px); padding: clamp(80px, 10vw, 160px) var(--m); }
 .iv-story-pin { position: sticky; top: 14vh; align-self: start; }
-.iv-story-title { font-size: var(--step-big); line-height: 0.88; text-wrap: balance; max-width: 8ch; }
+.iv-story-title { font-size: var(--step-big); line-height: calc(var(--display-lead) * 0.93); text-wrap: balance; max-width: 8ch; }
 .iv-story-run { display: flex; flex-direction: column; gap: 18vh; }
 /* each photo is a print mounted on the album page with four paper corners */
 .iv-portrait { width: 62%; --tilt: var(--rot, 0deg); --corner: color-mix(in srgb, var(--bg) 45%, #17130f); }
@@ -209,7 +209,7 @@ section, .iv-foot { position: relative; }
 .iv-corner.tr { right: -5px; top: -5px; clip-path: polygon(0 0, 100% 0, 100% 100%); }
 .iv-corner.bl { left: -5px; bottom: -5px; clip-path: polygon(0 0, 100% 100%, 0 100%); }
 .iv-corner.br { right: -5px; bottom: -5px; clip-path: polygon(100% 0, 100% 100%, 0 100%); }
-.iv-portrait figcaption { margin-top: 26px; max-width: 30ch; font-family: var(--f-display); font-style: italic; font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem); line-height: 1.35; letter-spacing: 0; text-transform: none; text-wrap: pretty; }
+.iv-portrait figcaption { margin-top: 26px; max-width: 30ch; font-family: var(--f-caption, var(--f-display)); font-style: italic; font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem); line-height: 1.35; letter-spacing: 0; text-transform: none; text-wrap: pretty; }
 .iv-portrait.r figcaption { margin-left: auto; text-align: right; }
 @media (hover: hover) and (pointer: fine) {
   .iv-print { transition: transform 0.6s var(--ease-out), box-shadow 0.6s var(--ease-out); }
@@ -300,7 +300,7 @@ details[open] .chev { transform: rotate(-135deg) translateY(-3px); }
 
 /* rsvp: the idea again, inverted */
 .iv-rsvp { min-height: 90svh; padding: clamp(80px, 10vw, 160px) var(--m); display: grid; grid-template-columns: 5fr 7fr; column-gap: clamp(32px, 6vw, 120px); row-gap: 48px; align-content: start; }
-.iv-rsvp-head { grid-column: 1 / -1; font-size: var(--step-big); line-height: 0.9; }
+.iv-rsvp-head { grid-column: 1 / -1; font-size: var(--step-big); line-height: calc(var(--display-lead) * 0.95); padding-block: 0.06em; }
 .iv-rsvp-side { align-self: start; }
 @media (max-width: 699px) { .iv-rsvp { grid-template-columns: 1fr; } .iv-rsvp-head { font-size: 15vw; } }
 
@@ -342,7 +342,7 @@ details[open] .chev { transform: rotate(-135deg) translateY(-3px); }
 .iv-foot-cols p { color: var(--soft); }
 .iv-foot-cols p.strong { color: inherit; font-weight: 600; }
 .iv-foot-cols a { color: inherit; }
-.iv-foot-names { grid-row: 3; white-space: nowrap; line-height: 0.95; overflow: clip; }
+.iv-foot-names { grid-row: 3; white-space: nowrap; line-height: var(--display-lead); overflow: clip; padding-block: 0.08em; }
 .iv-foot-names span { display: inline-block; font-size: var(--names-size, 12vw); }
 .iv-legal { grid-row: 4; margin-top: 20px !important; font-size: var(--step-small); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; }
 @media (max-width: 699px) { .iv-foot-cols { grid-template-columns: 1fr 1fr; } }

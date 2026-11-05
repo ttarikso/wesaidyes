@@ -165,6 +165,8 @@ export function themeVars(t: Theme, heading?: string): React.CSSProperties {
     ["--paper-d" as string]: `url(${a.paperD})`,
     ["--paper-tone" as string]: t.paperTone || "#ffffff",
     ["--f-display" as string]: y.display,
+    // small italic captions stay readable: a script face is for names and titles only
+    ["--f-caption" as string]: heading === "script" ? t.type.text : y.display,
     ["--f-text" as string]: y.text,
     ["--display-weight" as string]: String(y.displayWeight),
     ["--display-track" as string]: y.displayTrack,

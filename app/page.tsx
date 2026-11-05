@@ -61,7 +61,7 @@ export default function Home() {
           </nav>
           <h1 className="h-title">We said yes</h1>
           <p className="h-lead">A wedding invitation website your guests open like a sealed envelope, then answer from their phone.</p>
-          <Link href="/demo" className="h-btn">See it live</Link>
+          <Link href="/demo" className="h-btn">Try a Demo</Link>
         </div>
         <div className="h-panels">
           {RUN.map((r, i) => (
