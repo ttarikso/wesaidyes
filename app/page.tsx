@@ -103,9 +103,11 @@ export default function Home() {
             <article key={f.name} className={`sheet sheet-${i % 2 ? "b" : "a"}`} style={{ ["--i" as string]: i }}>
               <h3 className="sheet-name">{f.name}</h3>
               <p className="sheet-text">{f.text}</p>
-              <figure className="sheet-media">
+              <figure className={`sheet-media${f.media === "video" ? " is-phone" : ""}`}>
                 {f.media === "video" ? (
-                  <video src="/site/envelope.mp4" poster="/site/envelope-poster.jpg" autoPlay muted loop playsInline aria-label="The envelope opening on a phone" />
+                  <span className="sheet-phone">
+                    <video src="/site/envelope-hd.mp4" poster="/site/envelope-hd-poster.jpg" width={1080} height={2336} autoPlay muted loop playsInline preload="metadata" aria-label="The envelope opening on a phone" />
+                  </span>
                 ) : (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={f.media} alt={f.name} loading="lazy" />
