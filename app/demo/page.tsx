@@ -21,6 +21,7 @@ export default function Demo() {
     const font = q.get("font"); if (font) setData((d) => ({ ...d, headingFont: font }));
     const a = (q.get("a") || "").trim().slice(0, 30), b = (q.get("b") || "").trim().slice(0, 30);
     if (a || b) setData((d) => ({ ...d, partner1: a || d.partner1, partner2: b || d.partner2, initials: `${(a || d.partner1)[0]}&${(b || d.partner2)[0]}`.toUpperCase() }));
+    const i = (q.get("i") || "").trim().slice(0, 8); if (i) setData((d) => ({ ...d, initials: i }));
   }, []);
   return (
     <>

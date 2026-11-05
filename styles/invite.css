@@ -56,6 +56,11 @@
   text-transform: var(--display-case);
   font-optical-sizing: auto;
 }
+/* set only when the heading font is a script: long lines keep the theme's own face */
+.inv :is(.iv-statement, .iv-days, .iv-dr, .iv-day-head) {
+  font-family: var(--f-plain, var(--f-display)); font-weight: var(--plain-weight, var(--display-weight));
+  letter-spacing: var(--plain-track, var(--display-track)); text-transform: var(--plain-case, var(--display-case));
+}
 .iv-h { font-size: var(--step-head); line-height: 1; text-wrap: balance; }
 .iv-h3 { font-size: var(--step-body); font-weight: 600; margin-bottom: 0.4em !important; }
 .iv-body { max-width: 60ch; text-wrap: pretty; }
@@ -120,11 +125,6 @@
 .env-seal { position: absolute; z-index: 6; left: 50%; top: 57%; width: 27%; aspect-ratio: 1; transform: translate(-50%, -50%); display: grid; place-items: center; transition: transform 0.3s var(--ease-out); }
 .env:hover .env-seal { transform: translate(-50%, -50%) scale(1.04); }
 .env-seal img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; user-select: none; }
-.env-seal-text {
-  position: relative; z-index: 1; color: var(--seal-ink); white-space: nowrap; line-height: 1;
-  font-family: var(--f-display); font-weight: var(--seal-weight); text-transform: var(--display-case);
-  font-size: calc(var(--w) * 0.052); letter-spacing: 0;
-}
 .env-floral { position: absolute; z-index: 7; width: 62%; left: -15%; bottom: -24%; transform: rotate(-6deg); pointer-events: none; user-select: none; }
 .env-names { margin-top: calc(var(--w) * 0.17 + clamp(16px, 3vh, 28px)) !important; position: relative; z-index: 8; font-size: var(--step-head); line-height: var(--display-lead); animation: rise 0.9s var(--ease-expo) both 0.25s; }
 .env-date { margin-top: 10px !important; font-size: var(--step-body); color: var(--on-bg-soft); animation: rise 0.9s var(--ease-expo) both 0.35s; }

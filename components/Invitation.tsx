@@ -1,7 +1,8 @@
 "use client";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { InviteData } from "@/lib/types";
-import { getTheme, themeAssets, themeVars } from "@/lib/themes";
+import { getTheme, scriptCase, themeAssets, themeVars, type Theme } from "@/lib/themes";
+import SealText from "@/components/SealText";
 import { getTrack, trackUrl } from "@/lib/music";
 import { dateParts, fmtTime, icsFile, parseWhen } from "@/lib/format";
 import { RsvpForm } from "./RsvpForm";
@@ -27,6 +28,8 @@ const useIso = typeof window === "undefined" ? useEffect : useLayoutEffect;
 export default function Invitation({ data, theme, music, slug, mode = "live", startOpen = false }: Props) {
   const t = getTheme(theme);
   const a = themeAssets(t);
+  const h = data.headingFont;
+  data = h === "script" ? { ...data, partner1: scriptCase(data.partner1, h), partner2: scriptCase(data.partner2, h), initials: scriptCase(data.initials || "", h) } : data;
   const [stage, setStage] = useState<"closed" | "opening" | "open">(startOpen ? "open" : "closed");
   const [playing, setPlaying] = useState(false);
   const audio = useRef<HTMLAudioElement | null>(null);
@@ -88,7 +91,7 @@ export default function Invitation({ data, theme, music, slug, mode = "live", st
   return (
     <div className={`inv stage-${stage}`} data-theme={t.id} data-skip={startOpen ? "" : undefined} style={themeVars(t, data.headingFont)}>
       {hasMusic && <audio ref={audio} src={trackUrl(music)} loop preload="none" />}
-      {stage !== "open" && <Envelope data={data} seal={a.seal} floral={a.floral} onOpen={open} opening={stage === "opening"} />}
+      {stage !== "open" && <Envelope data={data} theme={t} seal={a.seal} floral={a.floral} onOpen={open} opening={stage === "opening"} />}
       <main className="inv-main" aria-hidden={stage !== "open"}>
         <Page data={data} floral={a.floral} slug={slug} mode={mode} open={stage !== "closed"} music={hasMusic ? music : ""} />
       </main>
@@ -105,7 +108,7 @@ export default function Invitation({ data, theme, music, slug, mode = "live", st
 }
 
 /* ------------------------------------------------------------------ envelope */
-function Envelope({ data, seal, floral, onOpen, opening }: { data: InviteData; seal: string; floral: string; onOpen: () => void; opening: boolean }) {
+function Envelope({ data, theme, seal, floral, onOpen, opening }: { data: InviteData; theme: Theme; seal: string; floral: string; onOpen: () => void; opening: boolean }) {
   const dp = dateParts(data.date);
   const initials = data.initials || `${data.partner1[0] || ""}&${data.partner2[0] || ""}`;
   return (
@@ -123,7 +126,7 @@ function Envelope({ data, seal, floral, onOpen, opening }: { data: InviteData; s
           <span className="env-seal">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={seal} alt="" draggable={false} />
-            <span className="env-seal-text">{initials}</span>
+            <SealText theme={theme} heading={data.headingFont} text={initials} />
           </span>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className="env-floral" src={floral} alt="" draggable={false} />

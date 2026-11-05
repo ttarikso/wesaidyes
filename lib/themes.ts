@@ -82,7 +82,7 @@ type HeadingFace = Pick<TypeSystem, "display" | "displayWeight" | "displayTrack"
 export const HEADING_FONTS: { id: string; name: string; note: string; face: HeadingFace }[] = [
   { id: "classic", name: "Classic", note: "Bodoni, in capitals", face: { display: T.bodoni.display, displayWeight: 600, displayTrack: "-0.01em", displayLead: 0.95, upper: true, connectorItalic: false, sealWeight: 500, monumentMax: 12 } },
   { id: "garamond", name: "Romantic", note: "Cormorant Garamond", face: { display: '"Cormorant Garamond Variable", Garamond, Georgia, serif', displayWeight: 500, displayTrack: "-0.015em", displayLead: 0.95, upper: false, connectorItalic: true, sealWeight: 600, monumentMax: 15 } },
-  { id: "script", name: "Calligraphy", note: "Pinyon Script", face: { display: '"Pinyon Script", "Snell Roundhand", cursive', displayWeight: 400, displayTrack: "0", displayLead: 1.2, upper: false, connectorItalic: false, sealWeight: 400, monumentMax: 13 } },
+  { id: "script", name: "Calligraphy", note: "Allura", face: { display: '"Allura WSY", "Snell Roundhand", cursive', displayWeight: 400, displayTrack: "0", displayLead: 1.15, upper: false, connectorItalic: false, sealWeight: 400, monumentMax: 13 } },
   { id: "deco", name: "Art Deco", note: "Imbue, tall capitals", face: { display: T.imbue.display, displayWeight: 500, displayTrack: "-0.01em", displayLead: 0.92, upper: true, connectorItalic: false, sealWeight: 500, monumentMax: 15 } },
   { id: "editorial", name: "Editorial", note: "Zodiak, fine capitals", face: { display: T.zodiak.display, displayWeight: 300, displayTrack: "0", displayLead: 1.0, upper: true, connectorItalic: false, sealWeight: 400, monumentMax: 11 } },
   { id: "modern", name: "Modern serif", note: "Gambarino", face: { display: T.gambarino.display, displayWeight: 400, displayTrack: "-0.02em", displayLead: 0.92, upper: false, connectorItalic: false, sealWeight: 400, monumentMax: 15 } },
@@ -133,10 +133,44 @@ export const THEMES: Theme[] = [
     bg: "#7d5e6b", onBg: "#fbf6f8", onBgSoft: "#f6edf1", card: "#f5f1f3", ink: "#3e2a32", accent: "#7d4f62", sealInk: "rgba(110,52,46,.8)", type: T.imbue },
 ];
 
+/** Initials pressed into each wax seal: a dark ink on light wax with a pale lower edge (pressed in),
+ *  a pale ink on dark wax with a dark lower edge (raised). x and y are the seal's centre in the image, in %. */
+export const SEAL_INK: Record<string, { ink: string; edge: string; x: number; y: number; dark: boolean }> = {
+  blue: { ink: "rgb(29,35,41)", edge: "rgb(184,193,201)", x: 50.2, y: 50.4, dark: false },
+  blush: { ink: "rgb(62,47,43)", edge: "rgb(233,210,205)", x: 53.1, y: 51.5, dark: false },
+  burgundy: { ink: "rgb(187,164,165)", edge: "rgb(27,5,6)", x: 50.1, y: 50.0, dark: true },
+  champagne: { ink: "rgb(57,46,32)", edge: "rgb(226,210,188)", x: 50.2, y: 49.6, dark: false },
+  emerald: { ink: "rgb(50,37,15)", edge: "rgb(214,196,162)", x: 50.2, y: 48.9, dark: false },
+  ice: { ink: "rgb(49,52,56)", edge: "rgb(214,219,224)", x: 50.9, y: 48.9, dark: false },
+  ivorynoir: { ink: "rgb(165,165,165)", edge: "rgb(6,6,6)", x: 50.0, y: 49.1, dark: true },
+  lavender: { ink: "rgb(47,44,52)", edge: "rgb(211,206,218)", x: 52.7, y: 47.3, dark: false },
+  marble: { ink: "rgb(60,47,16)", edge: "rgb(230,210,164)", x: 49.8, y: 49.0, dark: false },
+  mauve: { ink: "rgb(57,40,37)", edge: "rgb(226,201,196)", x: 50.4, y: 48.5, dark: false },
+  mocha: { ink: "rgb(203,181,166)", edge: "rgb(42,21,8)", x: 51.0, y: 48.4, dark: true },
+  navy: { ink: "rgb(50,38,15)", edge: "rgb(215,198,162)", x: 52.7, y: 52.8, dark: false },
+  noir: { ink: "rgb(165,165,164)", edge: "rgb(6,6,6)", x: 49.8, y: 49.1, dark: true },
+  olive: { ink: "rgb(176,179,166)", edge: "rgb(17,20,8)", x: 52.4, y: 51.1, dark: true },
+  peacock: { ink: "rgb(47,35,14)", edge: "rgb(211,193,161)", x: 50.8, y: 49.5, dark: false },
+  pearl: { ink: "rgb(65,62,59)", edge: "rgb(237,234,228)", x: 49.5, y: 49.6, dark: false },
+  plum: { ink: "rgb(49,36,17)", edge: "rgb(214,195,165)", x: 49.4, y: 49.3, dark: false },
+  sage: { ink: "rgb(52,41,22)", edge: "rgb(218,201,173)", x: 50.3, y: 48.6, dark: false },
+  slate: { ink: "rgb(43,43,43)", edge: "rgb(205,205,205)", x: 50.1, y: 49.5, dark: false },
+  terracotta: { ink: "rgb(214,180,164)", edge: "rgb(51,20,6)", x: 52.3, y: 53.3, dark: true },
+};
+
+/** The theme's type with the couple's chosen heading font applied. */
+export const headingType = (t: Theme, heading?: string): TypeSystem => ({ ...t.type, ...headingFace(heading) });
+
 export const DEFAULT_THEME = THEMES[0].id;
 
 export function getTheme(id: string | undefined): Theme {
   return THEMES.find((t) => t.id === id) || THEMES[0];
+}
+
+/** A script face cannot be read in capitals: for it, long words typed in capitals are set in title case. */
+export function scriptCase(s: string, heading?: string): string {
+  if (heading !== "script" || !s) return s;
+  return s.replace(/\p{L}{4,}/gu, (w) => (w === w.toUpperCase() && w !== w.toLowerCase() ? w[0] + w.slice(1).toLowerCase().normalize("NFC").replace(/\u0307/g, "") : w));
 }
 
 export function themeAssets(t: Theme) {
@@ -167,6 +201,13 @@ export function themeVars(t: Theme, heading?: string): React.CSSProperties {
     ["--f-display" as string]: y.display,
     // small italic captions stay readable: a script face is for names and titles only
     ["--f-caption" as string]: heading === "script" ? t.type.text : y.display,
+    // a script face is for names and titles: long lines (the invitation sentence, the countdown, the address) keep the theme's own face
+    ...(heading === "script" ? {
+      ["--f-plain" as string]: t.type.display,
+      ["--plain-weight" as string]: String(t.type.displayWeight),
+      ["--plain-track" as string]: t.type.displayTrack,
+      ["--plain-case" as string]: t.type.upper ? "uppercase" : "none",
+    } : {}),
     ["--f-text" as string]: y.text,
     ["--display-weight" as string]: String(y.displayWeight),
     ["--display-track" as string]: y.displayTrack,

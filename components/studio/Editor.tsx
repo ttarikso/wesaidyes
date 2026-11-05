@@ -3,7 +3,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Invitation, InviteData } from "@/lib/types";
-import { HEADING_FONTS, THEMES, getTheme, themeAssets } from "@/lib/themes";
+import { HEADING_FONTS, THEMES, getTheme, headingType, scriptCase, themeAssets } from "@/lib/themes";
+import SealText from "@/components/SealText";
 import { TRACKS, trackUrl } from "@/lib/music";
 import { api } from "@/lib/client";
 import { Area, Photos, Section, Text, Toggle, Field } from "./fields";
@@ -230,8 +231,8 @@ function ThemePanel({ value, d, onChange, set }: { value: string; d: InviteData;
                 <img src={a.floral} alt="" className="absolute -left-[6%] -bottom-[6%] w-[66%] pointer-events-none select-none" />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={a.seal} alt="" className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 w-[34%]" />
-                <span className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 text-[1.05rem]" style={{ fontFamily: t.type.display, fontWeight: t.type.sealWeight, textTransform: t.type.upper ? "uppercase" : "none", color: t.sealInk }}>
-                  {d.initials || "A&J"}
+                <span className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 w-[34%] aspect-square">
+                  <SealText theme={t} heading={d.headingFont} text={scriptCase(d.initials || "A&J", d.headingFont)} />
                 </span>
               </span>
               <span className="relative z-10 block px-3 py-2.5 bg-[var(--surface)]">
@@ -252,7 +253,7 @@ function ThemePanel({ value, d, onChange, set }: { value: string; d: InviteData;
               className={`text-left rounded-2xl border px-4 pt-3.5 pb-3 transition ${on ? "border-[var(--text)] ring-2 ring-[var(--text)]" : "border-[var(--border)] hover:border-[var(--control)]"}`}
               style={{ background: theme.bg, color: theme.onBg }}>
               <span className="block truncate leading-[1.25]" style={{ fontFamily: f.face.display, fontWeight: f.face.displayWeight, letterSpacing: f.face.displayTrack, textTransform: f.face.upper ? "uppercase" : "none", fontSize: f.face.upper ? "1.3rem" : "1.6rem" }}>
-                {names}
+                {scriptCase(names, f.id)}
               </span>
               <span className="mt-2 flex items-baseline justify-between gap-2 text-xs" style={{ fontFamily: "var(--f-sans, system-ui)" }}>
                 <span className="font-semibold">{f.name}</span>
@@ -431,8 +432,10 @@ function MusicPanel({ value, onChange }: { value: string; onChange: (v: string) 
                 <span className="block text-xs text-[var(--muted)]">{t.style}</span>
               </span>
             </label>
-            <button className="s-btn s-btn-sm !w-9 !px-0" onClick={() => play(t.id)} aria-label={playing === t.id ? `Stop ${t.title}` : `Listen to ${t.title}`}>
-              {playing === t.id ? "■" : "▶"}
+            <button type="button" className="s-btn s-btn-round" onClick={() => play(t.id)} aria-label={playing === t.id ? `Stop ${t.title}` : `Listen to ${t.title}`}>
+              {playing === t.id
+                ? <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden><rect x="5" y="5" width="14" height="14" rx="2" fill="currentColor" /></svg>
+                : <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden style={{ marginLeft: 2 }}><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.6-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5Z" fill="currentColor" /></svg>}
             </button>
           </div>
         ))}
