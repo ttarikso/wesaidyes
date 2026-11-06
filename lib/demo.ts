@@ -1,6 +1,15 @@
 import { blankInvite } from "./defaults";
 import type { InviteData } from "./types";
 import type { Language } from "./i18n/types";
+import { getInviteI18n } from "./i18n/invitation";
+
+const LOCALIZED_MEALS: Record<Language, string[]> = {
+  en: ["Beef tenderloin", "Pan-seared halibut", "Wild mushroom risotto (v)"],
+  tr: ["Dana bonfile", "Fırında levrek", "Yaban mantarlı risotto (vejetaryen)"],
+  es: ["Solomillo de ternera", "Merluza al horno", "Risotto de setas silvestres (v)"],
+  fr: ["Filet de bœuf", "Pavé de flétan poêlé", "Risotto aux champignons sauvages (v)"],
+  de: ["Rinderfilet", "Gebratenes Heilbuttfilet", "Waldpilz-Risotto (vegetarisch)"],
+};
 
 const LOCALIZED_DEMO: Record<Language, Partial<InviteData>> = {
   en: {
@@ -139,6 +148,8 @@ const LOCALIZED_DEMO: Record<Language, Partial<InviteData>> = {
 export function demoInvite(lang: Language = "en"): InviteData {
   const b = blankInvite();
   const loc = LOCALIZED_DEMO[lang] || LOCALIZED_DEMO.en;
+  const i18n = getInviteI18n(lang);
+  const meals = LOCALIZED_MEALS[lang] || LOCALIZED_MEALS.en;
   return {
     ...b,
     ...loc,
@@ -146,6 +157,13 @@ export function demoInvite(lang: Language = "en"): InviteData {
     heroPhoto: "/demo/hero.webp",
     storyPhotos: ["/demo/story-1.webp", "/demo/story-2.webp", "/demo/story-3.webp"],
     gallery: ["/demo/gallery-1.webp", "/demo/story-1.webp", "/demo/story-2.webp", "/demo/hero.webp"],
-    rsvp: { ...b.rsvp, askMeal: true, maxGuests: 2 },
+    rsvp: {
+      ...b.rsvp,
+      askMeal: true,
+      maxGuests: 2,
+      yesLabel: i18n.rsvp.yes,
+      noLabel: i18n.rsvp.no,
+      mealOptions: meals,
+    },
   };
 }

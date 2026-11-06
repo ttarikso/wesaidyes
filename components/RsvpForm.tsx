@@ -4,8 +4,33 @@ import type { RsvpSettings } from "@/lib/types";
 import { getInviteI18n } from "@/lib/i18n/invitation";
 import type { Language } from "@/lib/i18n/types";
 
+const DEFAULT_YES_LABELS = new Set([
+  "joyfully accepts",
+  "yes, joyfully accept",
+  "evet, mutlulukla katılıyorum",
+  "sí, asistiré encantado/a",
+  "si, asistiré encantado/a",
+  "oui, avec grand plaisir",
+  "ja, ich nehme gerne teil",
+]);
+
+const DEFAULT_NO_LABELS = new Set([
+  "regretfully declines",
+  "regretfully decline",
+  "no, regretfully decline",
+  "maalesef katılamıyorum",
+  "no podré asistir",
+  "non, je ne pourrai pas venir",
+  "nein, leider kann ich nicht teilnehmen",
+]);
+
 export function RsvpForm({ settings: r, slug, preview, lang = "en" }: { settings: RsvpSettings; slug: string; preview: boolean; lang?: Language }) {
   const t = getInviteI18n(lang).rsvp;
+  const isDefaultYes = !r.yesLabel || DEFAULT_YES_LABELS.has(r.yesLabel.trim().toLowerCase());
+  const isDefaultNo = !r.noLabel || DEFAULT_NO_LABELS.has(r.noLabel.trim().toLowerCase());
+  const yesText = isDefaultYes ? t.yes : r.yesLabel;
+  const noText = isDefaultNo ? t.no : r.noLabel;
+
   const [attending, setAttending] = useState<boolean | null>(null);
   const [f, setF] = useState({ name: "", email: "", guests: 0, guest_names: "", meal: "", diet: "", song: "", message: "", custom: "", website: "" });
   const [busy, setBusy] = useState(false);
@@ -71,11 +96,11 @@ export function RsvpForm({ settings: r, slug, preview, lang = "en" }: { settings
       <div className="choice" role="radiogroup" aria-label={t.attending}>
         <button type="button" role="radio" aria-checked={attending === true} className={attending === true ? "on" : ""} onClick={() => setAttending(true)}>
           <span className="tick" aria-hidden />
-          {r.yesLabel || t.yes}
+          {yesText}
         </button>
         <button type="button" role="radio" aria-checked={attending === false} className={attending === false ? "on" : ""} onClick={() => setAttending(false)}>
           <span className="tick" aria-hidden />
-          {r.noLabel || t.no}
+          {noText}
         </button>
       </div>
 
