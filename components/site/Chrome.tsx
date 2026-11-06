@@ -1,24 +1,43 @@
+"use client";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { BRAND } from "@/lib/brand";
 import { GUIDES } from "@/lib/guides";
 import { SiteMenu } from "@/components/site/parts";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { DEFAULT_LANGUAGE, isValidLanguage, type Language } from "@/lib/i18n/types";
+import { getSiteI18n } from "@/lib/i18n/site";
 
 /** The top bar of every page but the homepage (which pins its own over the designs). */
 export function PageNav() {
+  const [lang, setLang] = useState<Language>(DEFAULT_LANGUAGE);
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("site-lang");
+      if (isValidLanguage(saved)) setLang(saved);
+    } catch {}
+  }, []);
+  const handleLang = (l: Language) => {
+    setLang(l);
+    try { localStorage.setItem("site-lang", l); } catch {}
+  };
+  const t = getSiteI18n(lang);
+
   return (
     <header className="p-top">
       <nav className="h-nav p-nav" aria-label="Main">
         <Link href="/" className="h-mark">We said yes</Link>
         <span className="h-links">
-          <Link href="/designs">Designs</Link>
+          <Link href="/designs">{t.nav.designs}</Link>
           <Link href="/guides">Guides</Link>
-          <Link href="/#questions">Questions</Link>
-          <a href={BRAND.etsy} target="_blank" rel="noopener noreferrer">Buy on Etsy</a>
+          <Link href="/#questions">{t.nav.questions}</Link>
+          <a href={BRAND.etsy} target="_blank" rel="noopener noreferrer">{t.nav.buyOnEtsy}</a>
+          <LanguageSwitcher current={lang} onChange={handleLang} variant="site" />
         </span>
         <span className="h-acts">
-          <Link href="/redeem" className="h-pill h-pill-ghost">Sign in</Link>
-          <Link href="/demo" className="h-pill">Try a Demo</Link>
-          <SiteMenu etsy={BRAND.etsy} />
+          <Link href="/redeem" className="h-pill h-pill-ghost">{t.nav.signIn}</Link>
+          <Link href={`/demo?lang=${lang}`} className="h-pill">{t.hero.openSample}</Link>
+          <SiteMenu etsy={BRAND.etsy} lang={lang} onLangChange={handleLang} />
         </span>
       </nav>
     </header>

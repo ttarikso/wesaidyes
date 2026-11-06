@@ -21,6 +21,8 @@ interface Props {
   mode?: InviteMode;
   /** start already opened (used by the studio preview "skip envelope" toggle) */
   startOpen?: boolean;
+  lang?: Language;
+  onLangChange?: (l: Language) => void;
 }
 
 // how much each print in the story album is turned, in order; never the same twice in a row
@@ -28,7 +30,7 @@ const ALBUM_TILT = [-2.4, 1.8, -1.2, 2.6, -1.8, 1.2];
 
 const useIso = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
-export default function Invitation({ data, theme, music, slug, mode = "live", startOpen = false }: Props) {
+export default function Invitation({ data, theme, music, slug, mode = "live", startOpen = false, lang: controlledLang, onLangChange: onControlledLangChange }: Props) {
   const t = getTheme(theme);
   const a = themeAssets(t);
   const h = data.headingFont;
@@ -38,7 +40,7 @@ export default function Invitation({ data, theme, music, slug, mode = "live", st
   const audio = useRef<HTMLAudioElement | null>(null);
   const hasMusic = !!music && music !== "none";
 
-  const [lang, setLang] = useState<Language>(() => {
+  const [internalLang, setInternalLang] = useState<Language>(() => {
     if (isValidLanguage(data.language)) return data.language;
     if (typeof window !== "undefined") {
       try {
@@ -51,8 +53,11 @@ export default function Invitation({ data, theme, music, slug, mode = "live", st
     return DEFAULT_LANGUAGE;
   });
 
+  const lang = controlledLang || internalLang;
+
   const handleLangChange = (l: Language) => {
-    setLang(l);
+    setInternalLang(l);
+    onControlledLangChange?.(l);
     if (typeof window !== "undefined") {
       try { localStorage.setItem(`invite-lang:${slug}`, l); } catch {}
     }

@@ -43,7 +43,7 @@ export function Reveal() {
 }
 
 /* The live thing: type your names, see them set as on the envelope, get your link, open your own demo. */
-export function LiveNames({ labels }: { labels?: { partner1Label: string; partner2Label: string; openBtn: string } }) {
+export function LiveNames({ labels, lang = "en" }: { labels?: { partner1Label: string; partner2Label: string; openBtn: string }; lang?: Language }) {
   const [a, setA] = useState("");
   const [b, setB] = useState("");
   const n1 = a.trim() || "Amelia";
@@ -51,6 +51,7 @@ export function LiveNames({ labels }: { labels?: { partner1Label: string; partne
   const slug = slugify(`${n1}-and-${n2}`) || "your-names";
   return (
     <form className="live-form" action="/demo" method="get">
+      <input type="hidden" name="lang" value={lang} />
       <p className="live-names" aria-live="polite">{n1} <i>&amp;</i> {n2}</p>
       <label className="live-field">
         <span>{labels?.partner1Label || "Your first name"}</span>
@@ -135,9 +136,13 @@ export function FaqIndex({ items }: { items: [string, string][] }) {
 }
 
 /* Phone menu: a two-line button that opens a full-screen sheet over the hero. */
-export function SiteMenu({ etsy }: { etsy: string }) {
+import { LANGUAGES, type Language } from "@/lib/i18n/types";
+import { getSiteI18n } from "@/lib/i18n/site";
+
+export function SiteMenu({ etsy, lang = "en", onLangChange }: { etsy: string; lang?: Language; onLangChange?: (l: Language) => void }) {
   const [open, setOpen] = useState(false);
   const btn = useRef<HTMLButtonElement>(null);
+  const t = getSiteI18n(lang);
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
@@ -154,13 +159,41 @@ export function SiteMenu({ etsy }: { etsy: string }) {
       </button>
       <div id="site-menu" className="h-sheet" data-open={open || undefined} hidden={!open}>
         <ul>
-          <li><a href="/designs" onClick={close}>Designs</a></li>
+          <li><a href="/designs" onClick={close}>{t.nav.designs}</a></li>
           <li><a href="/guides" onClick={close}>Guides</a></li>
-          <li><a href="/#questions" onClick={close}>Questions</a></li>
-          <li><a href="/redeem" onClick={close}>Sign in</a></li>
-          <li><a href={etsy} target="_blank" rel="noopener noreferrer" onClick={close}>Buy on Etsy</a></li>
+          <li><a href="/#questions" onClick={close}>{t.nav.questions}</a></li>
+          <li><a href="/redeem" onClick={close}>{t.nav.signIn}</a></li>
+          <li><a href={etsy} target="_blank" rel="noopener noreferrer" onClick={close}>{t.nav.buyOnEtsy}</a></li>
         </ul>
-        <a className="h-sheet-cta" href="/demo">Try a Demo</a>
+        <a className="h-sheet-cta" href={`/demo?lang=${lang}`}>{t.hero.openSample}</a>
+        <div className="h-sheet-lang" style={{ marginTop: 24, paddingTop: 18, borderTop: "1px solid rgba(0,0,0,0.1)" }}>
+          <p style={{ fontSize: 13, fontWeight: 600, opacity: 0.65, marginBottom: 10 }}>Language / Dil</p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {LANGUAGES.map((l) => (
+              <button
+                key={l.code}
+                type="button"
+                onClick={() => { onLangChange?.(l.code); close(); }}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "6px 12px",
+                  fontSize: 13,
+                  fontWeight: l.code === lang ? 700 : 500,
+                  borderRadius: 999,
+                  border: l.code === lang ? "2px solid currentColor" : "1px solid rgba(0,0,0,0.2)",
+                  background: l.code === lang ? "rgba(0,0,0,0.06)" : "transparent",
+                  color: "inherit",
+                  cursor: "pointer",
+                }}
+              >
+                <span>{l.flag}</span>
+                <span>{l.nativeName}</span>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     </>
   );

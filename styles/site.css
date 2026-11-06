@@ -66,8 +66,11 @@
 .site .h-sheet-cta { flex: none; display: flex; align-items: center; justify-content: center; height: 56px; border-radius: 999px; background: var(--run-ink); color: var(--run-ground); font-weight: 600; text-decoration: none; }
 @media (prefers-reduced-motion: no-preference) { .h-sheet[data-open] { animation: site-fadein 220ms ease both; } }
 .h-title {
-  position: absolute; left: 0; right: 0; top: var(--title-top); text-align: center;
-  font-size: var(--t-display); font-weight: 700; letter-spacing: -0.02em; line-height: 0.9; text-transform: uppercase; white-space: nowrap;
+  position: absolute; left: var(--m); right: var(--m); top: var(--title-top); text-align: center;
+  font-size: clamp(28px, min(var(--t-display), calc(88vw / (var(--char-len, 11) * 0.58))), 160px);
+  font-weight: 700; letter-spacing: -0.02em; line-height: 0.92; text-transform: uppercase;
+  max-width: calc(100vw - 2 * var(--m)); margin: 0 auto;
+  white-space: nowrap;
   transition: color 300ms ease;
 }
 .h-lead { position: absolute; left: var(--m); bottom: calc(32px + var(--tb)); max-width: 22ch; font-size: var(--t-lead); font-weight: 500; line-height: 1.3; }
@@ -88,7 +91,11 @@
   .site .h-pill { height: 40px; padding: 0 16px; }
   .h-burger { display: flex; }
   .h-acts { gap: 6px; }
-  .h-title { font-size: 15vw; white-space: normal; line-height: 0.88; padding: 0 var(--m); text-align: left; }
+  .h-title {
+    font-size: clamp(26px, min(12vw, calc(90vw / (var(--char-len, 11) * 0.32))), 48px);
+    white-space: normal; line-height: 0.95; padding: 0 var(--m); text-align: left;
+    text-wrap: balance;
+  }
   .h-lead { bottom: calc(88px + var(--tb)); right: var(--m); max-width: none; }
   .site .h-btn { bottom: calc(20px + var(--tb)); right: var(--m); height: 48px; padding: 0 20px; z-index: 1; }
   .h-lead { z-index: 1; }

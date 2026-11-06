@@ -64,16 +64,16 @@ export default function Home() {
             </span>
             <span className="h-acts">
               <Link href="/redeem" className="h-pill h-pill-ghost">{t.nav.signIn}</Link>
-              <Link href="/demo" className="h-pill">{t.hero.openSample}</Link>
-              <SiteMenu etsy={BRAND.etsy} />
+              <Link href={`/demo?lang=${lang}`} className="h-pill">{t.hero.openSample}</Link>
+              <SiteMenu etsy={BRAND.etsy} lang={lang} onLangChange={handleLangChange} />
             </span>
           </nav>
           {/* one heading for search: the name, then what it is */}
           <h1 className="h-h1">
-            <span className="h-title">{t.hero.title}</span>
+            <span className="h-title" style={{ ["--char-len" as string]: t.hero.title.length }}>{t.hero.title}</span>
             <span className="h-lead">{t.hero.subtitle}</span>
           </h1>
-          <Link href="/demo" className="h-btn">{t.hero.openSample}</Link>
+          <Link href={`/demo?lang=${lang}`} className="h-btn">{t.hero.openSample}</Link>
         </div>
         <div className="h-panels">
           {RUN.map((r, i) => (
@@ -98,7 +98,7 @@ export default function Home() {
         <div className="live-card" data-reveal>
           <h2 id="live-h" className="live-h">{lang === "tr" ? "Kendi isimlerinizle deneyin" : lang === "es" ? "Pruébalo con vuestros nombres" : lang === "fr" ? "Essayez avec vos prénoms" : lang === "de" ? "Mit Ihren Namen ausprobieren" : "Try it with your names"}</h2>
           <p className="live-fact">{t.hero.badges}</p>
-          <LiveNames labels={t.liveDemo} />
+          <LiveNames labels={t.liveDemo} lang={lang} />
         </div>
       </section>
 
