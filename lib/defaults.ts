@@ -1,5 +1,6 @@
 import { HEADING_FONTS } from "./themes";
 import type { InviteData, RsvpSettings, Sections } from "./types";
+import { isValidLanguage, type Language } from "./i18n/types";
 
 export const DEFAULT_RSVP: RsvpSettings = {
   enabled: true,
@@ -61,6 +62,7 @@ export function blankInvite(): InviteData {
       { q: "Is there parking?", a: "Yes, free parking is available at the venue." },
     ],
     closingLine: "We can't wait to celebrate with you",
+    language: "en",
     rsvp: { ...DEFAULT_RSVP },
     sections: { ...DEFAULT_SECTIONS },
   };
@@ -108,6 +110,7 @@ export function normalizeInvite(raw: unknown): InviteData {
       : b.faqs,
     closingLine: s("closingLine", 120),
     headingFont: HEADING_FONTS.some((f) => f.id === r.headingFont) ? String(r.headingFont) : "", // only a known face; "" = the theme's
+    language: isValidLanguage(r.language) ? (r.language as Language) : b.language,
     rsvp: {
       enabled: bool(rr.enabled, b.rsvp.enabled),
       deadline: /^\d{4}-\d{2}-\d{2}$/.test(str(rr.deadline)) ? str(rr.deadline) : "",

@@ -399,3 +399,37 @@ details[open] .chev { transform: rotate(-135deg) translateY(-3px); }
 .iv-ended-names .amp { font-size: 0.8em; }
 .iv-ended-date { position: relative; margin-top: 18px !important; font-size: var(--step-lead); color: var(--on-bg-soft); }
 .iv-ended-note { position: relative; margin-top: 40px !important; max-width: 30ch; font-size: var(--step-body); line-height: var(--body-lead); }
+
+/* ---------------------------------------------------------------- language selectors */
+.env-lang-row {
+  position: absolute; top: max(16px, env(safe-area-inset-top)); right: max(var(--m), env(safe-area-inset-right));
+  display: flex; gap: 6px; z-index: 50;
+}
+.env-lang-btn {
+  background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.85);
+  font-family: var(--f-text); font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+  padding: 4px 8px; border-radius: 4px; cursor: pointer; transition: all 0.2s; backdrop-filter: blur(4px);
+}
+.env-lang-btn:hover { background: rgba(0,0,0,0.42); color: #fff; }
+.env-lang-btn.is-active { background: rgba(255,255,255,0.92); color: #111; border-color: transparent; }
+
+.iv-lang-dropdown { position: relative; display: inline-flex; align-items: center; }
+.iv-lang-trigger {
+  background: none; border: 0; padding: 0; font: inherit; font-size: inherit; color: inherit; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 5px; opacity: 0.9;
+}
+.iv-lang-trigger:hover { opacity: 1; text-decoration: underline; text-underline-offset: 0.2em; }
+.iv-lang-trigger .caret { font-size: 0.75em; opacity: 0.7; }
+.iv-lang-menu {
+  position: absolute; top: calc(100% + 8px); right: 0; min-width: 140px;
+  background: var(--card); color: var(--ink); border: 1px solid rgba(0,0,0,0.12);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.2); padding: 4px 0; z-index: 100;
+}
+.iv-lang-item {
+  width: 100%; display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+  background: none; border: 0; font: inherit; font-size: var(--step-small); text-align: left;
+  cursor: pointer; color: inherit;
+}
+.iv-lang-item:hover, .iv-lang-item.is-active { background: rgba(0,0,0,0.06); font-weight: 600; }
+.iv-lang-item .lang-check { margin-left: auto; font-size: 12px; }
+

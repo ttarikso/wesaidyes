@@ -43,7 +43,7 @@ export function Reveal() {
 }
 
 /* The live thing: type your names, see them set as on the envelope, get your link, open your own demo. */
-export function LiveNames() {
+export function LiveNames({ labels }: { labels?: { partner1Label: string; partner2Label: string; openBtn: string } }) {
   const [a, setA] = useState("");
   const [b, setB] = useState("");
   const n1 = a.trim() || "Amelia";
@@ -53,21 +53,21 @@ export function LiveNames() {
     <form className="live-form" action="/demo" method="get">
       <p className="live-names" aria-live="polite">{n1} <i>&amp;</i> {n2}</p>
       <label className="live-field">
-        <span>Your first name</span>
+        <span>{labels?.partner1Label || "Your first name"}</span>
         <input name="a" value={a} onChange={(e) => setA(e.target.value)} placeholder="Amelia" autoComplete="given-name" maxLength={30} />
       </label>
       <label className="live-field">
-        <span>Your partner’s first name</span>
+        <span>{labels?.partner2Label || "Your partner’s first name"}</span>
         <input name="b" value={b} onChange={(e) => setB(e.target.value)} placeholder="Julian" maxLength={30} />
       </label>
       <p className="live-link" aria-live="polite">wesaidyes.site/i/<b>{slug}</b></p>
-      <button className="live-go" type="submit">Open your invitation</button>
+      <button className="live-go" type="submit">{labels?.openBtn || "Open your invitation"}</button>
     </form>
   );
 }
 
 /* The songs, at one type size, each playable. */
-export function SongList() {
+export function SongList({ labels }: { labels?: { stop: string; listen: string } } = {}) {
   const [playing, setPlaying] = useState<string | null>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
   useEffect(() => {
@@ -97,7 +97,7 @@ export function SongList() {
                 <span className="s-style">{t.style}</span>
                 <span className="s-len">{fmtLength(t.seconds)}</span>
                 <button className="s-play" onClick={() => play(t.id)} aria-label={playing === t.id ? `Stop ${t.title}` : `Listen to ${t.title}`}>
-                  {playing === t.id ? "Stop" : "Listen"}
+                  {playing === t.id ? (labels?.stop || "Stop") : (labels?.listen || "Listen")}
                 </button>
               </li>
             ))}

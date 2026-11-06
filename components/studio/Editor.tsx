@@ -10,6 +10,7 @@ import { api } from "@/lib/client";
 import { Area, Photos, Section, Text, Toggle, Field } from "./fields";
 import { SharePanel } from "./SharePanel";
 import { hasEnded } from "@/lib/expiry";
+import { LANGUAGES } from "@/lib/i18n/types";
 
 const I = {
   theme: "M3 8a5 5 0 0 1 10 0M8 3v10M3 8h10",
@@ -357,6 +358,25 @@ function DetailsPanel({ d, set }: P) {
   const faqs = d.faqs;
   return (
     <>
+      <Section title="Invitation language" desc="Choose the default language for your invitation. Guests can also switch languages anytime.">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {LANGUAGES.map((l) => (
+            <button
+              key={l.code}
+              type="button"
+              onClick={() => set({ language: l.code })}
+              className={`p-3 text-left rounded-xl border text-sm font-medium transition flex items-center gap-2 ${
+                (d.language || "en") === l.code
+                  ? "border-[var(--text)] bg-[var(--surface)] ring-2 ring-[var(--text)]"
+                  : "border-[var(--border)] hover:border-[var(--control)] bg-white"
+              }`}
+            >
+              <span className="text-base">{l.flag}</span>
+              <span>{l.nativeName}</span>
+            </button>
+          ))}
+        </div>
+      </Section>
       <Section title="Countdown">
         <Toggle label="Show the live countdown" checked={sec.countdown} onChange={(v) => set({ sections: { ...sec, countdown: v } })} />
         <Text label="Line above the countdown" value={d.closingLine} max={120} onChange={(closingLine) => set({ closingLine })} />

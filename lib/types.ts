@@ -74,6 +74,7 @@ export interface InviteData {
   gallery: string[];
   faqs: Faq[];
   closingLine: string;
+  language?: "en" | "tr" | "es" | "fr" | "de";
   rsvp: RsvpSettings;
   sections: Sections;
   headingFont?: string; // a HEADING_FONTS id; empty = the theme's own face
