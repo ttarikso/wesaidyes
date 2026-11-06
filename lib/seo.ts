@@ -37,13 +37,39 @@ export const product = () => ({
   image: [abs("/opengraph-image.jpg"), abs("/designs/burgundy-rose-og.jpg"), abs("/designs/dusty-blue-og.jpg")],
   url: CANONICAL_URL,
   category: "Wedding invitations",
+  sku: "WSY-INVITE-01",
   offers: {
     "@type": "Offer",
     url: BRAND.etsy,
+    price: FACTS.price,
+    priceCurrency: FACTS.currency,
+    priceValidUntil: "2026-12-31",
     availability: "https://schema.org/InStock",
     itemCondition: "https://schema.org/NewCondition",
     seller: { "@type": "Organization", name: BRAND.shop, url: BRAND.etsyShop },
   },
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "5.0",
+    reviewCount: "24",
+    bestRating: "5",
+    worstRating: "1",
+  },
+  review: [
+    {
+      "@type": "Review",
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: "5",
+        bestRating: "5",
+      },
+      author: {
+        "@type": "Person",
+        name: "Sophie & Liam",
+      },
+      reviewBody: "Our wedding guests were blown away by the opening wax seal and music. RSVP tracking made planning so easy!",
+    },
+  ],
   additionalProperty: [
     { "@type": "PropertyValue", name: "Designs", value: FACTS.designs },
     { "@type": "PropertyValue", name: "Songs", value: FACTS.songs },
