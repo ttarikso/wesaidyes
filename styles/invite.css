@@ -337,24 +337,29 @@ details[open] .chev { transform: rotate(-135deg) translateY(-3px); }
 .rsvp-done .btn-line { background: none; color: inherit; padding: 0; min-height: 0; text-decoration: underline; text-underline-offset: 0.2em; }
 
 /* footer: columns above, the names below */
-.iv-foot { min-height: 72svh; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr auto auto; padding: 40px var(--m) 24px; }
+.iv-foot { min-height: 72svh; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr auto auto; padding: 40px var(--m) calc(76px + env(safe-area-inset-bottom)); }
 .iv-foot-cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; }
 .iv-foot-cols p { color: var(--soft); }
 .iv-foot-cols p.strong { color: inherit; font-weight: 600; }
 .iv-foot-cols a { color: inherit; }
 .iv-foot-names { grid-row: 3; white-space: nowrap; line-height: 1.12; overflow: visible; padding-block: 0.16em; }
 .iv-foot-names span { display: inline-block; font-size: var(--names-size, 12vw); }
-.iv-legal { grid-row: 4; margin-top: 20px !important; font-size: var(--step-small); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; }
-@media (max-width: 699px) { .iv-foot-cols { grid-template-columns: 1fr 1fr; } }
+.iv-legal { grid-row: 4; margin-top: 24px !important; font-size: var(--step-small); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; }
+@media (max-width: 699px) {
+  .iv-foot { padding: 32px var(--m) 24px; }
+  .iv-foot-cols { grid-template-columns: 1fr 1fr; }
+}
 
-/* music control: plain, square, sits on the page edge */
+/* music control: floating pill sits on the page edge */
 .iv-music {
   position: fixed; z-index: 30; left: max(var(--m), env(safe-area-inset-left)); bottom: max(16px, env(safe-area-inset-bottom));
-  display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border: 0; border-radius: 0; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border: 0; border-radius: 999px; cursor: pointer;
   background: var(--on-bg); color: var(--bg); font: inherit; font-size: var(--step-small); font-weight: 500;
-  transition: transform var(--t-press) var(--ease-out);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08), 0 0 0 1px color-mix(in srgb, var(--bg) 15%, transparent);
+  transition: transform var(--t-press) var(--ease-out), opacity 140ms ease;
 }
 .iv-music:active { transform: scale(0.96); }
+@media (hover: hover) { .iv-music:hover { opacity: 0.92; } }
 @media (max-width: 699px) { .iv-music { left: auto; right: var(--m); bottom: auto; top: 12px; height: 40px; padding: 0 12px; } }
 
 /* ---------------------------------------------------------------- motion */
