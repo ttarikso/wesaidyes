@@ -342,7 +342,7 @@ details[open] .chev { transform: rotate(-135deg) translateY(-3px); }
 .iv-foot-cols p { color: var(--soft); }
 .iv-foot-cols p.strong { color: inherit; font-weight: 600; }
 .iv-foot-cols a { color: inherit; }
-.iv-foot-names { grid-row: 3; white-space: nowrap; line-height: var(--display-lead); overflow: clip; padding-block: 0.08em; }
+.iv-foot-names { grid-row: 3; white-space: nowrap; line-height: 1.12; overflow: visible; padding-block: 0.16em; }
 .iv-foot-names span { display: inline-block; font-size: var(--names-size, 12vw); }
 .iv-legal { grid-row: 4; margin-top: 20px !important; font-size: var(--step-small); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; }
 @media (max-width: 699px) { .iv-foot-cols { grid-template-columns: 1fr 1fr; } }
