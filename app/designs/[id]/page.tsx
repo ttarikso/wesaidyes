@@ -7,7 +7,7 @@ import { DESIGN_COPY } from "@/lib/designs";
 import { PageNav, SiteFooter } from "@/components/site/Chrome";
 import Crumbs from "@/components/site/Crumbs";
 import JsonLd from "@/components/site/JsonLd";
-import { PRODUCT_ID, abs, breadcrumbs, graph } from "@/lib/seo";
+import { abs, breadcrumbs, graph } from "@/lib/seo";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -57,7 +57,7 @@ export default async function Design({ params }: Props) {
     ["Wax seal", c.seal],
     ["Typeface", `${face(getTheme(id).type.display)} for names and titles, or one of ${FACTS.headingFonts} other heading fonts`],
     ["Best for", c.bestFor],
-    ["Buying", "One payment on Etsy, any number of guests, no subscription"],
+    ["Price", `US$${FACTS.price} on Etsy, one payment, any number of guests, no subscription`],
   ];
   return (
     <div className="site" id="top">
@@ -69,8 +69,7 @@ export default async function Design({ params }: Props) {
         url: abs(`/designs/${id}`),
         color: c.colours,
         brand: { "@type": "Brand", name: BRAND.name },
-        isVariantOf: { "@id": PRODUCT_ID },
-        offers: { "@type": "Offer", url: BRAND.etsy, availability: "https://schema.org/InStock", seller: { "@type": "Organization", name: BRAND.shop, url: BRAND.etsyShop } },
+        offers: { "@type": "Offer", url: BRAND.etsy, price: FACTS.price, priceCurrency: FACTS.currency, availability: "https://schema.org/InStock", seller: { "@type": "Organization", name: BRAND.shop, url: BRAND.etsyShop } },
       })} />
       <PageNav />
       <Crumbs items={crumbs} />

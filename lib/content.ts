@@ -13,7 +13,7 @@ export const FAQ: [string, string][] = [
 ];
 
 export const FACT_ROWS: [string, string][] = [
-  ["Buying", "One payment on Etsy. No subscription. See the Etsy listing for the current price."],
+  ["Price", `US$${FACTS.price} on Etsy, one payment. No subscription.`],
   ["What you get", "One wedding invitation website with an envelope opening, music, countdown, your story and photos, the order of the day, a map link, a calendar file and an RSVP form."],
   ["Designs", `${FACTS.designs} designs, each with its own paper, wax seal, flowers and typefaces, plus ${FACTS.headingFonts} heading fonts to choose from.`],
   ["Songs", `${FACTS.songs} original tracks, or no music.`],

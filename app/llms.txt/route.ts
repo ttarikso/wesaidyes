@@ -11,7 +11,7 @@ export function GET() {
   const u = (p: string) => `${CANONICAL_URL}${p}`;
   const text = `# ${BRAND.name}
 
-> ${BRAND.name} (${CANONICAL_URL.replace("https://", "")}) is a digital wedding invitation website with RSVP, sold on Etsy by ${BRAND.shop}. Guests tap a wax seal with the couple's initials, the envelope opens, music plays, and the invitation unfolds into the couple's photo, their story, the order of the day, the venue and a reply form. One payment on Etsy (see the listing for the current price), no subscription, no guest limit, no app or account for guests.
+> ${BRAND.name} (${CANONICAL_URL.replace("https://", "")}) is a digital wedding invitation website with RSVP, sold on Etsy by ${BRAND.shop}. Guests tap a wax seal with the couple's initials, the envelope opens, music plays, and the invitation unfolds into the couple's photo, their story, the order of the day, the venue and a reply form. One payment of US$${FACTS.price} on Etsy, no subscription, no guest limit, no app or account for guests.
 
 ## Facts
 

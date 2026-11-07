@@ -17,8 +17,10 @@ export const CANONICAL_URL = "https://www.wesaidyes.site";
 
 // The facts search engines and AI answers quote. Keep in step with the Etsy listing.
 export const FACTS = {
-  price: process.env.NEXT_PUBLIC_PRODUCT_PRICE || "19.99",
-  currency: process.env.NEXT_PUBLIC_PRODUCT_CURRENCY || "USD",
+  // Etsy listing price. Change it here whenever it changes on Etsy: the page rows, llms.txt and the
+  // structured data all read it, and Google expects the marked-up price to match the visible one.
+  price: "29.00",
+  currency: "USD",
   designs: 20,
   headingFonts: 6,
   songs: 20,
