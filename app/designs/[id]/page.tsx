@@ -7,7 +7,7 @@ import { DESIGN_COPY } from "@/lib/designs";
 import { PageNav, SiteFooter } from "@/components/site/Chrome";
 import Crumbs from "@/components/site/Crumbs";
 import JsonLd from "@/components/site/JsonLd";
-import { abs, breadcrumbs, graph } from "@/lib/seo";
+import { abs, breadcrumbs, graph, offer } from "@/lib/seo";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -69,7 +69,7 @@ export default async function Design({ params }: Props) {
         url: abs(`/designs/${id}`),
         color: c.colours,
         brand: { "@type": "Brand", name: BRAND.name },
-        offers: { "@type": "Offer", url: BRAND.etsy, price: FACTS.price, priceCurrency: FACTS.currency, availability: "https://schema.org/InStock", seller: { "@type": "Organization", name: BRAND.shop, url: BRAND.etsyShop } },
+        offers: offer(BRAND.etsy),
       })} />
       <PageNav />
       <Crumbs items={crumbs} />

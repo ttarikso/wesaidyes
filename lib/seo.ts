@@ -26,6 +26,50 @@ export const website = () => ({
   publisher: { "@id": ORG_ID },
 });
 
+export const offer = (url = BRAND.etsy) => ({
+  "@type": "Offer",
+  url,
+  price: FACTS.price,
+  priceCurrency: FACTS.currency,
+  validFrom: "2024-01-01",
+  priceValidUntil: "2027-12-31",
+  availability: "https://schema.org/InStock",
+  itemCondition: "https://schema.org/NewCondition",
+  seller: { "@type": "Organization", name: BRAND.shop, url: BRAND.etsyShop },
+  shippingDetails: {
+    "@type": "OfferShippingDetails",
+    shippingRate: {
+      "@type": "MonetaryAmount",
+      value: "0.00",
+      currency: FACTS.currency,
+    },
+    shippingDestination: {
+      "@type": "DefinedRegion",
+      addressCountry: "US",
+    },
+    deliveryTime: {
+      "@type": "ShippingDeliveryTime",
+      handlingTime: {
+        "@type": "QuantitativeValue",
+        minValue: 0,
+        maxValue: 0,
+        unitCode: "DAY",
+      },
+      transitTime: {
+        "@type": "QuantitativeValue",
+        minValue: 0,
+        maxValue: 0,
+        unitCode: "DAY",
+      },
+    },
+  },
+  hasMerchantReturnPolicy: {
+    "@type": "MerchantReturnPolicy",
+    applicableCountry: "US",
+    returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+  },
+});
+
 export const product = () => ({
   "@type": "Product",
   "@id": PRODUCT_ID,
@@ -38,15 +82,7 @@ export const product = () => ({
   url: CANONICAL_URL,
   category: "Wedding invitations",
   sku: "WSY-INVITE-01",
-  offers: {
-    "@type": "Offer",
-    url: BRAND.etsy,
-    price: FACTS.price,
-    priceCurrency: FACTS.currency,
-    availability: "https://schema.org/InStock",
-    itemCondition: "https://schema.org/NewCondition",
-    seller: { "@type": "Organization", name: BRAND.shop, url: BRAND.etsyShop },
-  },
+  offers: offer(BRAND.etsy),
   additionalProperty: [
     { "@type": "PropertyValue", name: "Designs", value: FACTS.designs },
     { "@type": "PropertyValue", name: "Songs", value: FACTS.songs },
